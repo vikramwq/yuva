@@ -435,6 +435,11 @@
     <color name="overlay_color">#bcbcbc</color>
 
 
+    <color name="white_shadow">#bcbcbc</color>
+
+    <color name="edittext_color">#FF817979</color>
+    <color name="text_color">#FF817979</color>
+    <color name="edit_button_color">#c94a30</color>
 
 
 </resources>
