@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:mContext="mobito.com.intextv.activity.SearchActivity"
+    tools:showIn="@layout/activity_search">
+
+
+    <FrameLayout
+        android:id="@+id/more_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- DROP DOWN -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp"
+                app:contentPadding="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#EEEEEE"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:visibility="gone">
+
+                    <!-- LANGUAGE DROP DOWN -->
+                    <com.multitv.yuv.customview.DropDownTextView
+                        android:id="@+id/activity_search_dropdown_lang"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:background="#EEEEEE"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0.2dp"
+                        android:layout_height="18dp"
+                        android:background="#222222" />
+
+                    <!-- Pricing DROP DOWN -->
+                    <com.multitv.yuv.customview.DropDownTextView
+                        android:id="@+id/activity_search_dropdown_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:background="#EEEEEE"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+                    <View
+                        android:layout_width="0.2dp"
+                        android:layout_height="18dp"
+                        android:background="#222222"
+                        android:visibility="gone" />
+
+                    <!-- LANGUAGE DROP DOWN -->
+                    <com.multitv.yuv.customview.DropDownTextView
+                        android:id="@+id/activity_search_dropdown_provider"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.35"
+                        android:background="#EEEEEE"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/search_count_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <com.multitv.yuv.customview.MKRRecyclerView
+                android:id="@+id/search_recylerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.multitv.yuv.ui.CustomTextView
+                    android:id="@+id/empty_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/no_Records_found_on_search"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:theme="@style/AppTheme.RedAccent"
+            android:visibility="gone" />
+
+
+    </FrameLayout>
+
+    <!-- RECENT/TRENDING LIST -->
+
+    <ScrollView
+        android:id="@+id/activity_search_layout_suggestion_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <LinearLayout
+                android:id="@+id/acticity_search_recent_trending_outer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trending"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1px"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/bule_sky"
+                        android:textSize="17sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#1c1c1c" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.multitv.yuv.customview.HorizontalVerticalLinearLayout
+                        android:id="@+id/activity_search_trending_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_trending_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/activity_search_trending_container"
+                        android:layout_gravity="end"
+                        android:padding="10dp"
+                        android:src="@mipmap/downarrow" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/acticity_search_recent_recent_outer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recents"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1px"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/acticity_search_imageView_clear_recent_recent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/bule_sky"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#1c1c1c" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.multitv.yuv.customview.HorizontalVerticalLinearLayoutForRecent
+                        android:id="@+id/activity_search_resent_search_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_recent_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/activity_search_resent_search_container"
+                        android:layout_gravity="end"
+                        android:padding="10dp"
+                        android:src="@mipmap/downarrow" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- SUGGESTION LIST -->
+    <ListView
+        android:id="@+id/activity_search_listView_suggestiion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/white"
+        android:dividerHeight="0.5dp"
+        android:listSelector="@android:color/transparent"
+        android:visibility="gone" />
+</RelativeLayout>

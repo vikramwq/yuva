@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/tab_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/tab_item_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:src="@mipmap/ic_home_icon" />
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/tab_item_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Home"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+</LinearLayout>

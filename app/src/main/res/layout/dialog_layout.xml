@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<RelativeLayout xmlns:android='http://schemas.android.com/apk/res/android'
+    android:layout_width='fill_parent'
+    android:layout_height='fill_parent'
+    android:background="@drawable/rounded_corner_layout"
+    android:gravity="center_horizontal"
+    android:orientation='vertical'
+    android:padding='10dp'>
+
+
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_close" />
+
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/close_btn"
+        android:layout_margin="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="This section is not available. Kindly login to access it."
+        android:textColor="#000"
+        android:textSize="20dp" />
+
+
+    <com.multitv.yuv.ui.CustomButton
+        android:id='@+id/btn_login'
+        android:layout_width='match_parent'
+        android:layout_height='50dp'
+        android:layout_below="@+id/title"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_btn_bg"
+        android:text="Login"
+        android:textColor="#FFF"
+        android:textSize="15dp" />
+
+
+</RelativeLayout>

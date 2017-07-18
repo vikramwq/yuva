@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    tools:mContext="com.multitv.yuv.fragment.AccountFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/textview_account"
+        android:layout_width="match_parent"
+        android:textSize="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_height="match_parent"
+         />
+
+</RelativeLayout>

@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/light_gray"
+    android:layout_height="match_parent"
+    tools:mContext="com.multitv.yuv.fragment.HelpFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <!--<TextView
+        android:layout_width="match_parent"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/txt_help"
+        android:textSize="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:text="HELP" />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:id="@+id/web_help"
+        android:layout_below="@+id/txt_help"
+        android:layout_height="match_parent"/>-->
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/textview_help"
+        android:layout_width="match_parent"
+        android:textSize="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        />
+
+</RelativeLayout>

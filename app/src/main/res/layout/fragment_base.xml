@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        style="@style/MyCustomTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/tab_background"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/red"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/selected_tab_colour"
+        app:tabTextAppearance="@android:style/TextAppearance.Medium"
+        app:tabTextColor="@color/white"></android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tab_layout" />
+
+
+    <FrameLayout
+        android:id="@+id/base_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray" />
+
+    <View
+        android:id="@+id/base_fragment_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BB000000"
+        android:visibility="gone" />
+
+    <!--<ListView-->
+    <!--android:id="@+id/base_fragment_listView_menu_option"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:divider="@android:color/transparent" />-->
+
+</RelativeLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/fragment_video_outer_option_menu_button"
+        layout="@layout/home_option_menu_icon" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/fragment_video_outer_option_menu_button"
+        android:layout_toRightOf="@+id/fragment_video_outer_option_menu_button"
+        android:background="@color/tab_inside"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/white"
+        app:tabMode="scrollable"
+        style="@style/MyCustomTabLayout"
+        app:tabSelectedTextColor="#ffffff"
+        app:tabTextColor="@color/white"/>
+
+   <!-- <android.support.v4.view.ViewPager
+        android:visibility="gone"
+        android:id="@+id/view_pager_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/sliding_tabs_video" />-->
+
+</RelativeLayout>

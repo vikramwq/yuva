@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/_2sdp"
+    android:layout_margin="2dp"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_155sdp"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/channel_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                >
+
+                <ImageView
+                    android:id="@+id/img_play"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="left"
+                    android:gravity="left"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:scaleType="fitXY"
+                    android:background="@mipmap/playbutton"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|right"
+                    android:layout_marginBottom="5dp"
+                    >
+
+                    <com.multitv.yuv.ui.CustomTextView
+                        android:id="@+id/duration_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/duration_bg"
+                        android:padding="5dp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/txt_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_below="@+id/channel_frame_layout"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/genure_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:visibility="gone"
+            android:layout_below="@+id/txt_tv_title"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:textColor="#60000000"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/content_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_below="@+id/genure_tv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:textColor="#60000000"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

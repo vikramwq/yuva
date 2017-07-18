@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:padding="5dp">
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/suggestion_list_item_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sample title"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+</RelativeLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>--><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@color/red"--><!--android:gravity="center_vertical"--><!--android:padding="5dp">-->
+
+    <!--<TextView--><!--android:id="@+id/suggestion_list_item_textView"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:text="Sample title"--><!--android:textColor="@android:color/white"--><!--android:textSize="15sp"--><!--android:textStyle="bold" />--><!--</RelativeLayout>-->
+

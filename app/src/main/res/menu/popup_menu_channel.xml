@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/starplus"
+        android:title="Star Plus"/>
+
+    <item
+        android:id="@+id/sony"
+        android:title="Sony"/>
+
+    <item
+        android:id="@+id/sbtv"
+        android:title="Sub Tv"/>
+
+    <item
+        android:id="@+id/ztv"
+        android:title="Zee Tv"/>
+
+    <item
+        android:id="@+id/clrs"
+        android:title="Colors"/>
+
+    <item
+        android:id="@+id/zaction"
+        android:title="Zee Action"/>
+
+    <item
+        android:id="@+id/axn"
+        android:title="AXN"/>
+
+
+
+</menu>

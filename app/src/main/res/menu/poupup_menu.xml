@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:mContext="mobito.com.intextv.fragment.VideoTabFragment" >
+
+    <item
+        android:id="@+id/all"
+
+        android:title="All"/>
+
+    <item
+        android:id="@+id/comedy"
+        android:title="Comedy"/>
+
+    <item
+        android:id="@+id/horror"
+        android:title="Horror"/>
+
+    <item
+        android:id="@+id/drama"
+        android:title="Drama"/>
+
+    <item
+        android:id="@+id/action"
+        android:title="Action"/>
+
+    <item
+        android:id="@+id/regional"
+        android:title="Regional"/>
+
+
+
+</menu>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#404040"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#d9d9d9"
+        android:orientation="vertical"
+        app:cardBackgroundColor="#d9d9d9"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+
+            <com.multitv.yuv.ui.CustomEditText
+                android:id="@+id/phone_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:digits="0123456789"
+                android:hint="Phone Number"
+                android:imeOptions="actionSend"
+                android:inputType="number"
+                android:maxLength="10"
+                android:textColor="#676666"
+                android:textColorHint="#a2a2a2"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="3"
+                    android:background="#a2a2a2"></LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/or" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="3"
+                    android:background="#a2a2a2"></LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <com.multitv.yuv.ui.CustomEditText
+                android:id="@+id/email_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:hint="@string/email_txt"
+                android:imeOptions="actionSend"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textColor="#676666"
+                android:textColorHint="#a2a2a2"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/termsTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:text="" />
+
+
+            <com.multitv.yuv.ui.CustomButton
+                android:id="@+id/signInBtn"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/sign_up_btn_back"
+                android:onClick="SignInButtongoToHome"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:paddingTop="10dp"
+                android:text="Sign in"
+                android:textAllCaps="false"
+                android:textAlignment="center"
+                android:textColor="@color/white_bg"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+
+
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_weight="3"
+                        android:background="#a2a2a2"></LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/or" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_weight="3"
+                        android:background="#a2a2a2"></LinearLayout>
+
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress_signin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/social_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/facebook_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="loginFromFacebook"
+                    android:src="@drawable/ic_fb" />
+
+
+                <ImageView
+                    android:id="@+id/google_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="loginFromGoogle"
+                    android:src="@drawable/google_plus" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    </ScrollView>
+</LinearLayout>
+
+

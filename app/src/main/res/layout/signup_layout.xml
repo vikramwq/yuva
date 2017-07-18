@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#404040"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"></include>
+
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#d9d9d9"
+        android:orientation="horizontal"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="true">
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#404040"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.9"
+                android:background="#d9d9d9"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:id="@+id/ll_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/action_bar_bg"
+                    android:layout_gravity="center"
+                    android:background="#d9d9d9"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp"
+
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/content_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@null"
+                        android:orientation="vertical">
+
+                        <!--
+
+
+                                                <android.support.design.widget.TextInputLayout
+                                                    android:id="@+id/input_email"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginTop="30dp"
+                                                    android:textColorHint="#FFF">-->
+
+
+                        <com.multitv.yuv.ui.CustomEditText
+                            android:id="@+id/phone_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:digits="0123456789"
+                            android:hint="Phone Number"
+                            android:imeOptions="actionSend"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:textColor="#FFF"
+                            android:textColorHint="#FFF"
+                            android:textSize="@dimen/text_size_small"
+                            android:textStyle="bold" />
+
+
+                        <!--         </android.support.design.widget.TextInputLayout>-->
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_weight="3"
+                                android:background="#373737"></LinearLayout>
+
+                            <ImageView
+                                android:layout_width="90px"
+                                android:layout_height="90px"
+                                android:src="@drawable/or" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_weight="3"
+                                android:background="#373737"></LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                        <!--
+                                                <android.support.design.widget.TextInputLayout
+                                                    android:id="@+id/input_phone_field"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginTop="10dp"
+                                                    android:textColorHint="#FFF"
+                                                    app:passwordToggleDrawable="@drawable/ic_eye"
+                                                    app:passwordToggleEnabled="true"
+
+                                                    app:passwordToggleTint="#FFF">-->
+
+                        <com.multitv.yuv.ui.CustomEditText
+                            android:id="@+id/email_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:hint="@string/email_txt"
+                            android:imeOptions="actionSend"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:textColor="#FFF"
+                            android:textColorHint="#FFF"
+                            android:textSize="@dimen/text_size_small"
+                            android:textStyle="bold" />
+                        <!--  </android.support.design.widget.TextInputLayout>-->
+
+
+                        <com.multitv.yuv.ui.CustomButton
+                            android:id="@+id/signInBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="30dp"
+                            android:background="@drawable/sign_up_btn_back"
+                            android:onClick="SignInButtongoToHome"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="80dp"
+                            android:paddingRight="80dp"
+                            android:paddingTop="10dp"
+                            android:text="SIGN IN"
+                            android:textAlignment="center"
+                            android:textColor="@color/white_bg"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+
+                        <ProgressBar
+                            android:id="@+id/progress_signin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+
+                            android:layout_gravity="center_horizontal"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_weight="3"
+                                android:background="#373737"></LinearLayout>
+
+                            <ImageView
+                                android:layout_width="90px"
+                                android:layout_height="90px"
+                                android:src="@drawable/or" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_weight="3"
+                                android:background="#373737"></LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/social_bg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+                            <ImageView
+                                android:id="@+id/facebook_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:onClick="loginFromFacebook"
+                                android:src="@drawable/ic_fb" />
+
+
+                            <ImageView
+                                android:id="@+id/google_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:onClick="loginFromGoogle"
+                                android:src="@drawable/google_plus" />
+
+
+                        </LinearLayout>
+
+                        <!--   <CustomButton
+                               android:id="@+id/skipBtn"
+                               android:layout_width="140dp"
+                               android:layout_height="40dp"
+                               android:layout_gravity="bottom|center"
+                               android:layout_margin="2dp"
+                               android:background="@drawable/rounded_btn_bg"
+                               android:onClick="skip"
+                               android:text="Skip"
+                               android:textColor="#FFF" />-->
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
+
+

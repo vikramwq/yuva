@@ -1,0 +1,290 @@
+<resources>
+    <string name="app_name">YUV</string>
+
+    <!-- ================================================================================== =
+    =======================================================================-->
+
+
+    <string name="trending">Trending</string>
+    <string name="recents">Recent Search</string>
+
+    <string name="notify_reminder_title">Reminder</string>
+    <string name="notify_reminder_mess_2">will be starting in 15 min</string>
+    <string name="notify_reminder_mess_3">will be starting in 2 min</string>
+    <string name="notify_ok">Ok</string>x
+    <string name="notify_play">Play</string>
+
+    <string name="remove_reminder_mess">Are you sure to cancel this reminder for</string>
+    <string name="remove_reminder_ok">Yes</string>
+    <string name="remove_reminder_cancel">No</string>
+
+    <string name="add_reminder_ok">Ok</string>
+    <string name="add_reminder_cancel">Skip</string>
+    <string name="add_reminder_mess_1">Currently</string>
+    <string name="add_reminder_mess_2">is showing</string>
+    <string name="add_reminder_mess_3">To set a reminder for</string>
+    <string name="add_reminder_mess_4">press ok</string>
+
+    <string name="activity_setting_notification">Notification</string>
+    <string name="activity_setting_mature_filter">Parental Control</string>
+    <string name="activity_setting_select_language">App Language</string>
+
+    <string name="dialog_lang_message">Language selection will restart the application, surely you want to change the language to</string>
+    <string name="dialog_lang_button_ok">Yes</string>
+    <string name="dialog_lang_button_cancel">No</string>
+
+    <!-- Userprofile tab option -->
+    <string name="setting">Settings</string>
+    <string name="reminder_tab">Reminders</string>
+
+    <string name="network_error">something did not go through! Please check your network connection and try again</string>
+    <string name="invaild_password">Please enter correct password Or Email and try again</string>
+
+    <!-- MATURITY DIALOG -->
+    <string name="dialog_maturiry_content_or">OR</string>
+    <string name="dialog_maturiry_content_phone_number">Phone Number</string>
+    <string name="dialog_maturiry_content_phone_number_hint">Enter your Phone Number</string>
+    <string name="dialog_maturiry_content_email">E-Mail</string>
+    <string name="dialog_maturiry_content_email_hint">E-Mail for user verification</string>
+    <string name="dialog_maturiry_content_submit">Yes</string>
+    <string name="submit_btn">Submit</string>
+    <string name="dialog_maturiry_content_cancel">No</string>
+    <string name="dialog_maturiry_content_valid_value">Please insert valid OTP</string>
+    <string name="dialog_maturiry_content_invalid_email">Invalid Email</string>
+    <string name="dialog_maturiry_content_invalid_phone_number">Invalid Phone Number</string>
+    <string name="dialog_maturiry_content_invalid_phone_otp">Invalid OTP</string>
+
+    <string name="logout_msg">Logout successfully</string>
+    <string name="logout_empty">Please Login first.</string>
+
+    <string name="dialog_wrong_message_email">Entered E-Mail address is invalid</string>
+    <string name="dialog_wrong_message_phone_number">Entered Phone No. address is invalid</string>
+    <string name="dialog_wrong_message_ok">ok</string>
+
+    <string name="dialog_maturiry_otp_input_message_hint">Please entered the received OTP</string>
+    <string name="dialog_maturiry_otp_input_ok">Yes</string>
+    <string name="dialog_maturiry_otp_input_cancel">No</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="facebook_app_id">471328093222894</string>
+    <string name="channels">Channels</string>
+
+
+    <string name="action_settings">Settings</string>
+
+    <string name="admofi_banner">fy89t4-011040-5825c84f</string>
+    <string name="admofi_interstitial">fy89t4-011040-5825ca4c</string>
+    <string name="admofi_native">fy89t4-011000-5624fbf0</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fb_btn">Facebook</string>
+    <string name="google_btn">Google+</string>
+    <string name="or">Or</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+    <string name="more">More from this series</string>
+    <string name="msg_token_fmt">TOKEN</string>
+    <string name="title_activity_multi_tv_player">MultiTvPlayerActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_more_data">MoreDataActivity</string>
+    <string name="title_activity_user_data">UserProfileActivity</string>
+    <string name="title_activity_user_edit_profile">EditUserProfileActivity</string>
+    <string name="title_activity_channel_guide_activity">ChannelGuideActivity</string>
+    <string name="title_activity_notification_list_screen">NotificationsActivity</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_viu_player">Viu player</string>
+    <string name="viu_site_id">Multi Tv</string>
+    <string name="viu_slot_id">sdk</string>
+    <string name="viu_api_key">Fpunp5UwbMzCJFH5V0FuXTToCZxrU5yZQUpx0eKh</string>
+    <string name="gmail_login">https://www.googleapis.com/oauth2/v4/token</string>
+    <string name="skip_ad_remaining_time">Skip ad in  </string>
+    <string name="Splash_Resume_Message">Ad: Press play to resume content</string>
+    <string name="cancel_txt">Cancel</string>
+    <string name="logout_message">Are you sure you want to Sign out ?</string>
+    <string name="ok_txt">OK</string>
+    <string name="skip_ad">Skip Ad</string>
+    <string name="ratevideo">Rate this Video</string>
+    <string name="no_record_found_txt">Something has gone wrong.
+        We will be back soon</string>
+    <string name="more_txt">See More ></string>
+    <string name="next_day_txt">Next day >></string>
+    <string name="featured_txt">Featured</string>
+    <string name="recommended_txt">Recommended</string>
+
+    <!-- TODO: profile edit text  -->
+    <string name="fist_name_text">First Name  *</string>
+    <string name="last_name_text">Last Name  *</string>
+    <string name="phone_text">Phone No</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="edit_photo_text">Add Photo</string>
+    <string name="facebook_text">Sign in with Facebook</string>
+    <string name="email_text">Email</string>
+    <string name="date0fbirth_text">Date of birth</string>
+    <string name="mark_item">   *  Marked items are mandatory</string>
+    <string name="rated_tab">Rated</string>
+    <!-- TODO: player screen and activity and fragment  -->
+    <string name="likes_hint">Likes :</string>
+    <string name="total_result">Total results : </string>
+    <string name="star_cast_hint">Star Cast : </string>
+    <string name="delmotion_like">Dailymotion Likes :  </string>
+    <string name="vimeo_like">Vimeo Likes :  </string>
+    <string name="youtube_like">Youtube Likes :  </string>
+    <string name="delmotion_view_hint">Dailymotion Views :  </string>
+    <string name="vimeo_view_hint">Vimeo Views :  </string>
+    <string name="youtube_view_hint">Youtube Views :  </string>
+    <string name="views_hint">VIEWS : </string>
+    <string name="player_title">Title :  </string>
+    <string name="player_decs">Description : </string>
+    <string name="sony_episode">Episode :  </string>
+    <string name="home_intex_item">Multi Tv</string>
+    <string name="minute">min</string>
+    <string name="hours">hrs</string>
+    <string name="watch_text">Watched : </string>
+    <string name="not_available_text">N/A</string>
+    <string name="date_format">dd-MM-yyyy</string>
+    <string name="favorite_tab_text">Favourite</string>
+    <string name="watching_tab_text">Watching</string>
+    <string name="loding_hint">Loading...</string>
+    <string name="no_info_available">No info available</string>
+
+
+    <!-- TODO: about us text  -->
+    <string name="app_version_text">App Version</string>
+    <string name="app_rated">Rate us</string>
+    <string name="coming_soon_text_hint">Coming Soon</string>
+    <string name="app_version_number">0.0</string>
+    <string name="tc_hint">T &amp; C</string>
+    <string name="privacy_policy_hint">Privacy Policy</string>
+
+    <!-- TODO: home channel logo name text -->
+    <string name="sony_live_text">Sony Liv</string>
+    <string name="viu_text">Viu</string>
+    <string name="live_tv_text">Live TV</string>
+    <string name="rate_hint">Rate us</string>
+    <string name="user_details">Enter Your Details</string>
+
+    <!-- TODO: profile tab name  -->
+    <string name="favorite_tab">Favourite</string>
+    <string name="watch_tab">Watch List</string>
+    <string name="like_tab">Likes</string>
+    <string name="edit_profile">Personal details</string>
+
+    <string name="more_items_player">More Videos</string>
+    <string name="related_items_player">Related Videos</string>
+    <string name="related_items_player_sony">More from Sony</string>
+    <string name="related_items_player_viu">More from Viu</string>
+
+    <string-array name="title">
+        <item>@string/watch_tab</item>
+        <item>@string/favorite_tab</item>
+        <item>@string/like_tab</item>
+        <!--   <item>@string/reminder_tab</item>
+           <item>@string/setting</item>-->
+        <item>@string/edit_profile</item>
+    </string-array>
+
+    <!--<item>@string/edit_profile</item>-->
+
+    <!-- TODO: profile tab name  -->
+    <string name="dialog_logout">Signout</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_camera_photo">Take Photo</string>
+    <string name="dialog_gallery_photo">Choose from Library</string>
+
+    <!--Language Activity-->
+    <string name="select_text">Select Language</string>
+    <string name="next_text">Next</string>
+
+    <!--Viu player Activity-->
+    <string name="title">Title : </string>
+    <string name="description">Description : </string>
+    <string name="star_cast">Star cast : </string>
+
+    <!--Splash Activity-->
+    <string name="copyright_text">© Multi Tv</string>
+    <string name="viu_realtde_items">Viu Related Items</string>
+
+    <!--Push History Screen-->
+    <string name="remove_menu">Remove From inbox</string>
+    <string name="notifications_screen_title">Notifications</string>
+
+    <!--Push History Alert Dialog screen-->
+    <string name="btn_play_now">Play Now</string>
+    <string name="epg_reminder">Do you want to set a reminder for</string>
+    <string name="on">On</string>
+    <string name="no_Records_found">Something has gone wrong.\n We will back soon</string>
+    <string name="no_Records_found_on_search">No result found</string>
+
+    <string name="time">time</string>
+    <string name="profile_error">Profile detail is not getting saved</string>
+    <string name="empty_reminders">You have not set any reminders till now </string>
+    <string name="empty_likes">You have not liked any Video Yet </string>
+    <string name="empty_faveroite">You have not yet selected any video as your Favourite. Start creating your favourite list today</string>
+    <string name="empty_watching">Seems like you have not yet Watched any Videos on Multi Tv till now. Lets start now </string>
+
+    <!--TvGuideChannelFragment-->
+    <string name="reminder_set_text">Reminder has been set</string>
+
+    <!--Terms and Condition Activity-->
+    <string name="accept_and_continue">Accept &amp; Continue</string>
+
+    <!--Youtube-->
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+
+    <!--Sign In Screen-->
+    <string name="btn_signup">SIGN UP</string>
+    <string name="hint_username">User Name</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_forgot_psswd">FORGOT PASSWORD?</string>
+    <string name="btn_signin">SIGN IN</string>
+    <string name="sign_in_with">OR Sign in with</string>
+    <string name="veqta_connect">Log In</string>
+    <string name="forgot_title">Forgot Password</string>
+    <!--Sign Up Screen-->
+    <string name="hint_email">Email</string>
+    <string name="hint_mobile">Mobile Number</string>
+    <string name="sign_up_with">OR Sign up with</string>
+    <string name="mobile_txt">Mobile Number</string>
+    <string name="enter_email_address">Enter Email ID</string>
+    <string name="otp_hint">Please Enter OTP</string>
+    <string name="confirm_msg">Please enter the confirmation code we send to your mobile number</string>
+    <string name="confirm_msg_email">Please enter the confirmation code we send to your email id</string>
+    <string name="already_registered">Already Registered? Login Now</string>
+    <string name="otp_screen">Verify OTP</string>
+    <string name="otp_send">Verify Account</string>
+    <string name="otp_mag">We need to verify your mobile number. we will send  a PIN to the mobile number you enter below</string>
+    <string name="password_txt">Password</string>
+    <string name="old_pass">Old Password</string>
+    <string name="new_pass">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="or_signup_other">OR Sign up with</string>
+    <string name="otp_mobile">Change Mobile No.</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <!--Verify Otp Screen-->
+    <string name="verify_otp">Enter OTP</string>
+    <string name="hint_otp">OTP</string>
+    <string name="btn_verify">VERIFY</string>
+    <string name="email_txt">Email</string>
+    <string name="or_sign_other">Or sign in with</string>
+    <string name="forget_txt">Forgot Password?</string>
+
+    <string name="signUp_btn">Sign Up</string>
+    <string name="login_txt">LOGIN</string>
+    <string name="skip">Skip</string>
+
+    <string name="crop_image_activity_title"></string>
+    <string name="crop_image_menu_rotate_left">Rotate counter clockwise</string>
+    <string name="crop_image_menu_rotate_right">Rotate</string>
+    <string name="crop_image_menu_crop">Crop</string>
+    <string name="pick_image_intent_chooser_title">Select source</string>
+
+
+    <string name="email_forgot_passowrd">Please  enter  your registered  email id</string>
+    <string name="email_forgot_passowrd_msg">we have received a forgot password request from your account.To recover your password,Please check here. If you did not make this request please write to feedback @dollywoodplay.com
+</string>
+
+</resources>

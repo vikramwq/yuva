@@ -1,0 +1,29 @@
+<resources>>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    </style>
+
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/status_bar_color</item>
+        <item name="colorAccent">@color/tab_background</item>
+        <item name="colorPrimaryDark">@color/status_bar_color</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="TextLabelStyle" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
+
+</resources>

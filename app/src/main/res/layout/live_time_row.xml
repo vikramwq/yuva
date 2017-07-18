@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:id="@+id/vikram"
+    android:background="@null"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp">
+
+
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_time_hour"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_1sdp"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/myview"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="22dp"
+        android:background="@color/white"
+        android:layout_toRightOf="@+id/txt_time_hour"
+        android:layout_marginStart="2dp" />
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_time_minute"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_alignBottom="@+id/myview"
+        android:layout_toRightOf="@+id/myview"
+        android:layout_toEndOf="@+id/myview"
+        android:layout_marginLeft="1dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="5dp"/>
+</RelativeLayout>

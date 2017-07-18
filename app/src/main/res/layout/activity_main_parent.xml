@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                layout="@layout/activity_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:theme="@style/AppTheme.RedAccent" />
+
+
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.multitv.yuv.ui.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:gravity="center_horizontal"
+                    android:text="Something went wrong! Please check your network connection and try again."
+                    android:textColor="#FFF" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_refresh" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/global_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#BB000000"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/banner_ad_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black" />
+</LinearLayout>

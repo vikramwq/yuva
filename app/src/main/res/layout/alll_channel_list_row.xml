@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:http="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/channel_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/place_holder" />
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/mType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/img_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@mipmap/guide"
+            android:clickable="true"
+            android:padding="20dp" />
+
+        <ImageView
+            android:id="@+id/img_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@mipmap/favorite"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left">
+
+            <ImageView
+                android:id="@+id/img_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:background="@mipmap/playbutton"
+                android:visibility="gone" />
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/itemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_play"
+                android:background="@color/transparent_black_forty"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/program_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemTitle"
+                android:background="@color/transparent_black_forty"
+                android:fontFamily="sans-serif-light"
+                android:paddingBottom="@dimen/_5sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right">
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/time_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
+
+
+            <RatingBar
+                style="@style/customRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/time_duration"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:visibility="invisible" />
+
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:background="@color/light_gray" />
+
+
+</LinearLayout>

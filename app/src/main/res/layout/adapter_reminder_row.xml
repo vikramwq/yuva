@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/adapter_reminder_row_root"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_gravity="center"
+        android:layout_margin="2dp"
+        android:clickable="false"
+        app:cardCornerRadius="@dimen/_2sdp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false">
+
+            <RelativeLayout
+                android:id="@+id/image_layout"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:clickable="false">
+
+                <ImageView
+                    android:id="@+id/adapter_reminder_row_imageView_thumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:scaleType="centerCrop"/>
+
+                <!--android:transitionName="videoTransition"-->
+
+                <TextView
+                    android:id="@+id/adapter_reminder_row_textView_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:background="@drawable/duration_bg"
+                    android:clickable="false"
+                    android:padding="4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/image_layout"
+                android:clickable="false"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/adapter_reminder_row_textView_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false"
+                    android:maxLines="1"
+                    android:text="title"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/adapter_reminder_row_textView_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/category"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:clickable="false"
+                    android:text="channel"
+                    android:textColor="@color/colorGray"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

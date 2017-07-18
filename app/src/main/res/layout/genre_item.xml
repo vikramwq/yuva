@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/_2sdp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_160sdp"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/channel_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/genreImg"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_140sdp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                tools:src="@mipmap/place_holder" />
+
+
+        </FrameLayout>
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/genreItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/channel_frame_layout"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/_2sdp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white"
+            tools:text="" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+
+
+
+
+
+
+

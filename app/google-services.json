@@ -1,0 +1,394 @@
+{
+  "project_info": {
+    "project_number": "930063458983",
+    "firebase_url": "https://vdioplay.firebaseio.com",
+    "project_id": "vdioplay",
+    "storage_bucket": "vdioplay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:3ebb61519447c179",
+        "android_client_info": {
+          "package_name": "com.multitvsolution.vdioplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:8d5fd686ce17d671",
+        "android_client_info": {
+          "package_name": "com.multitvsolution.dollywoodplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-rlcn1iuls1j6n3t25ucpf32h0lpk8cv8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.multitvsolution.dollywoodplay",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:95b29ea397fcf4dc",
+        "android_client_info": {
+          "package_name": "com.cls.multitv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-bt00sodf7sis7mpt97ejatrc2s1kqjap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cls.multitv",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:9fbff02c5e671281",
+        "android_client_info": {
+          "package_name": "com.gemini.films"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-av20b6t9f48b1vp5al6qtvl2skbp2d9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gemini.films",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:d52a1e80d7c835e4",
+        "android_client_info": {
+          "package_name": "com.kavipuvi.viamedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-okts7h80jdhqlekj073j6091v84ag6h0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kavipuvi.viamedia",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:0c15db4e9ec7b2bc",
+        "android_client_info": {
+          "package_name": "com.barwin.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-9h5ljkdupp2urenj82v3sbg2r7lv1q55.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.barwin.app",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:11620cb6d871121f",
+        "android_client_info": {
+          "package_name": "com.multitv.dishtv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-rr98sh500894n1a8qo7olc9f23fe7a68.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.multitv.dishtv",
+            "certificate_hash": "b5e4994e4691f6aa9eb8d706f8226913bd32cef2"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:d9675ad1418aba28",
+        "android_client_info": {
+          "package_name": "com.doordarshan.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-8chbo9vugnq9ecmjlg7f495bfntb17c9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.doordarshan.app",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930063458983:android:7ab9375f9c826ef0",
+        "android_client_info": {
+          "package_name": "com.multitv.yuv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930063458983-cf6f82kuov9amvld6li1go8uud57snhg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.multitv.yuv",
+            "certificate_hash": "8cbd97eb565464905c32cb7ebebaf236f6b34891"
+          }
+        },
+        {
+          "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkSCBwO0orDI39RXZoXyOFW-WENRD7e3g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930063458983-1sh6g80fecq9och8cort6ep5vqa304v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

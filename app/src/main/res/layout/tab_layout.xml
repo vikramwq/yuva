@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/channelName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EEEEEE"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
+
+        <!-- LANGUAGE DROP DOWN -->
+        <com.multitv.yuv.customview.DropDownTextView
+            android:id="@+id/channel_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="#EEEEEE"
+            android:gravity="center_vertical"
+            android:paddingBottom="7dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="7dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0.2dp"
+            android:layout_height="18dp"
+            android:background="#222222" />
+
+        <!-- Pricing DROP DOWN -->
+        <com.multitv.yuv.customview.DropDownTextView
+            android:id="@+id/channel_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="#EEEEEE"
+            android:gravity="center_vertical"
+            android:paddingBottom="7dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="7dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0.2dp"
+            android:layout_height="18dp"
+            android:background="#222222" />
+
+        <!-- LANGUAGE DROP DOWN -->
+        <com.multitv.yuv.customview.DropDownTextView
+            android:id="@+id/date_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#EEEEEE"
+            android:gravity="center_vertical"
+            android:paddingBottom="7dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="7dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="105dp"
+                android:background="@color/tab_inside"
+                android:padding="@dimen/_4sdp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_9sdp"
+                    android:layout_marginTop="@dimen/_7sdp">
+
+                    <com.multitv.yuv.customview.VerticalTextView
+                        android:id="@+id/program_ap_tab"
+                        style="@style/verticalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_1sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:background="@color/tab_inside"
+                        android:fontFamily="sans-serif-thin"
+                        android:gravity="bottom|right"
+                        android:padding="0dp"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <com.multitv.yuv.customview.VerticalTextView
+                        android:id="@+id/program_mins_tab"
+                        style="@style/verticalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/program_ap_tab"
+                        android:layout_marginBottom="@dimen/_1sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:background="@color/tab_inside"
+                        android:fontFamily="sans-serif-thin"
+                        android:gravity="bottom|right"
+                        android:padding="0dp"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <com.multitv.yuv.customview.VerticalTextView
+                        android:id="@+id/program_colon_tab"
+                        style="@style/verticalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/program_mins_tab"
+                        android:layout_marginLeft="@dimen/_8sdp"
+                        android:background="@color/tab_inside"
+                        android:gravity="bottom|right"
+                        android:padding="@dimen/_1sdp"
+                        android:text="|"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <com.multitv.yuv.customview.VerticalTextView
+                        android:id="@+id/program_hour_tab"
+                        style="@style/verticalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@color/tab_inside"
+                        android:fontFamily="sans-serif-thin"
+                        android:gravity="bottom|right"
+                        android:padding="@dimen/_1sdp"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/_23sdp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/light_gray"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/program_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/channal_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/program_name"
+                    android:layout_marginLeft="5dp" />
+
+                <ImageView
+                    android:id="@+id/channal_logo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/_15sdp" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/program_logo"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/place_holder" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.multitv.yuv.customview.MKRRecyclerView
+            android:id="@+id/tv_recyler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:theme="@style/AppTheme.RedAccent"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/empty_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/no_Records_found"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</LinearLayout>

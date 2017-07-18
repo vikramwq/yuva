@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_notification_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/notification_row_bg"
+    android:elevation="5dp"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@drawable/triangle" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/tv_notification_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:text="Offer for movie buffs" />
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/tv_notification_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            tools:text="Book movie tickets for Wajah Tum Ho and La La Land. Use Code: MOVIE200 and get up upto Rupee 200 Cashback*." />
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/tv_notification_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            tools:text="Dec 15 11:05 AM" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/more_button"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/unread_icon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/red_dot" />
+    </RelativeLayout>
+</LinearLayout>

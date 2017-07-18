@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:background="@color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="22sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center|left"
+            android:layout_gravity="left|center"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/like_txt"
+        android:textColor="@color/black"
+        android:text="@string/logout_message"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_gravity="right|center"
+        android:gravity="right|center"
+        android:layout_marginTop="30dp"
+        android:background="@color/profile_inside_bg">
+
+        <TextView
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:gravity="right|center"
+            android:text="@string/com_facebook_loginview_cancel_action"
+            android:textColor="@color/black"
+            android:background="@null"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/ok_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:gravity="right|center"
+            android:textColor="@color/black"
+            android:text="@string/com_facebook_loginview_log_out_action"
+            android:background="@null"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="15dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/background" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_yuv_logo" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/background"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="-80dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/intex_profile"
+            app:civ_border_color="@color/semiTransparentWhite"
+            app:civ_border_width="0dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/ageTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="musician, singer, songwriter"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="90dp"
+        android:src="@mipmap/or" />
+
+
+</RelativeLayout>

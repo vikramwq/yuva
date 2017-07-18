@@ -1,0 +1,59 @@
+<resources>
+    <dimen name="action_bar_title_size_large">18sp</dimen>
+    <dimen name="action_bar_title_size_small">12sp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="item_width">100dp</dimen>
+    <dimen name="tool_bar_height">56dp</dimen>
+    <dimen name="popup_width">140dp</dimen>
+    <dimen name="popup_height_single_item">30dp</dimen>
+    <dimen name="padding">5dp</dimen>
+    <dimen name="otp_text_size">14sp</dimen>
+
+
+
+
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+
+    <dimen name="text_size_medium_low">15sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_large_extra">25sp</dimen>
+    <dimen name="text_size_large_extra_much">28sp</dimen>
+
+    <dimen name="image_height_vertical">220dp</dimen>
+    <dimen name="image_width_vertical">120dp</dimen>
+
+
+
+
+    <dimen name="image_height_live">200dp</dimen>
+    <dimen name="image_width_live">150dp</dimen>
+    <dimen name="image_height_video_bg">230dp</dimen>
+    <dimen name="subscription_height">120dp</dimen>
+    <dimen name="subscription_height2">115dp</dimen>
+    <dimen name="image_height_adapter">200dp</dimen>
+    <dimen name="image_height_home_cat">190dp</dimen>
+
+
+
+    <dimen name="image_height_video">170dp</dimen>
+    <dimen name="image_width_video">140dp</dimen>
+    <dimen name="home_image_width_video">160dp</dimen>
+    <dimen name="home_main_image_width_video">190dp</dimen>
+
+
+
+    <dimen name="image_height_horizental">120dp</dimen>
+    <dimen name="image_width_horizental">220dp</dimen>
+
+
+
+
+
+</resources>

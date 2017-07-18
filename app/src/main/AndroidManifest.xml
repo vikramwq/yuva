@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.multitv.yuv">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission
+        android:name="android.permission.READ_OWNER_DATA"
+        android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    L
+    <application
+        android:name=".application.AppController"
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/icon_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".activity.SplashScreen"
+            android:configChanges="locale|layoutDirection"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter
+                android:icon="@drawable/icon_launcher"
+                android:priority="1">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="player.multitvsolution.com"
+                    android:pathPrefix="/player/vodhtml"
+                    android:scheme="http" />
+                <data
+                    android:host="player.multitvsolution.com"
+                    android:pathPrefix="/player/vodhtml"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".service.UpdatePushStatus" />
+
+        <receiver android:name=".broadcast.NotificationBroadcastReceiver" />
+
+        <activity
+            android:name=".activity.HomeActivity"
+            android:configChanges="locale|layoutDirection"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SignupScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/SignTheme" />
+        <activity
+            android:name=".activity.OtpScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".imagecrop.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CropScreenTheme" />
+        <!--
+             <activity
+             android:name=".activity.TermAndConditionActivity"
+             android:configChanges="locale|layoutDirection"
+             android:screenOrientation="portrait" />
+        -->
+
+        <activity
+            android:name=".activity.LanguageActivity"
+            android:configChanges="locale|layoutDirection"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MultiTvPlayerActivity"
+            android:configChanges="orientation|screenSize|locale|layoutDirection"
+            android:label="@string/title_activity_multi_tv_player"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name=".download.DownloadCompletionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".firebase.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        -->
+        <activity
+            android:name=".activity.MoreDataActivity"
+            android:configChanges="locale|layoutDirection"
+            android:label="@string/title_activity_more_data"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.XYZ" />
+        <activity
+            android:name=".activity.UserProfileActivity"
+            android:configChanges="locale|layoutDirection"
+            android:label="@string/title_activity_user_data"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Mytheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <receiver android:name=".utilities.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utilities.SmsListener">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+
+        <!-- <receiver android:name=".broadcast.DateChangeLocalBroadcast"><intent-filter><action android:name="DateChangeLocalBroadcast"/></intent-filter></receiver> -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="75e9f934fbb1d3e391b5bc94498372711591266c" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".activity.GenreList"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".activity.DownloadedMediaListing"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".activity.GenreBasedContentScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".activity.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".activity.PlayerActivity"
+            android:configChanges="orientation|screenSize|locale|layoutDirection" />
+        <activity android:name=".activity.UserProfileScreen" />
+        <activity android:name=".activity.InterestChooserScreen" />
+        <activity android:name=".activity.PlaylistScreen" />
+        <activity android:name=".activity.ContentScreen"></activity>
+    </application>
+
+</manifest>

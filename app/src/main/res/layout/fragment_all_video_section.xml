@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/section_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/section_image_view"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <com.multitv.yuv.ui.CustomTextView
+        android:id="@+id/section_title"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="@string/recommended_txt"
+        android:textColor="@color/white_bg"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.multitv.yuv.ui.CustomButton
+            android:id="@+id/section_btnMore"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:text="@string/more_txt"
+            android:textAllCaps="false"
+            android:textColor="@color/see_more"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
