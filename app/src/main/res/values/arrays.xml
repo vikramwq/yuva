@@ -21,19 +21,15 @@
     </string-array>
 
     <integer-array name="images">
-        <item>@drawable/argentina</item>
         <item>@drawable/bolivia</item>
         <item>@drawable/brazil</item>
-        <item>@drawable/chile</item>
         <item>@drawable/costa_rica</item>
         <item>@drawable/venezuela</item>
         <item>@drawable/bolivia</item>
         <item>@drawable/brazil</item>
         <item>@drawable/peru</item>
         <item>@drawable/venezuela</item>
-        <item>@drawable/chile</item>
         <item>@drawable/paraguay</item>
-        <item>@drawable/argentina</item>
         <item>@drawable/venezuela</item>
         <item>@drawable/panama</item>
         <item>@drawable/paraguay</item>

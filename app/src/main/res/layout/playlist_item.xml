@@ -27,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                fresco:failureImage="@drawable/chile"
                 fresco:failureImageScaleType="fitXY"
                 fresco:placeholderImage="@mipmap/place_holder"
                 fresco:placeholderImageScaleType="fitXY" />

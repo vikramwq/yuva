@@ -24,10 +24,10 @@
             <ImageView
                 android:id="@+id/bannerImg"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="190dp"
                 android:layout_marginBottom="20dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/chile" />
+                 />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabButton"
