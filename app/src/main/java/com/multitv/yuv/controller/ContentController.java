@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.cipher.MultitvCipher;
 
@@ -63,11 +64,10 @@ public class ContentController {
                         final String result = new String(mcipher.decryptmyapi(mObj.optString("result")));
                         Log.d(this.getClass().getName(), "result from content controller====>> " + result);
 
-                        JSONObject jsonObject=new JSONObject(result);
-                        String contentData=jsonObject.getString("content");
+                        JSONObject jsonObject = new JSONObject(result);
+                        String contentData = jsonObject.getString("content");
 
                         NotificationCenter.getInstance().postNotificationName(NotificationCenter.didContentReceived, contentData);
-
 
 
                     }
@@ -135,15 +135,129 @@ public class ContentController {
     }
 
 
+    public void subscribeChannel(final String channelId, String isSubscribed) {
+        String url;
+        if (isSubscribed.equals("1")) {
+            url = ApiRequest.BASE_URL_VERSION_3 + "channel/unsubscribe/token/" + ApiRequest.TOKEN;
+        } else {
+            url = ApiRequest.BASE_URL_VERSION_3 + "channel/subscribe/token/" + ApiRequest.TOKEN;
+        }
+
+        SharedPreference sharedPreference = new SharedPreference();
+        final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
+
+        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + "    " + url);
+
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject mObj = new JSONObject(response);
+                    if (mObj.optInt("code") == 1) {
+
+                        Log.d("ContentController", "Subscription done");
 
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Tracer.error("ContentController", "" + e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
+                NotificationCenter.getInstance().postNotificationName(NotificationCenter.didContentReceivedFailed, null);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                try {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("channel_id", channelId);
+                    params.put("customer_id", "" + userID);
+                    params.put("token", ApiRequest.TOKEN);
+
+                    return checkParams(params);
+                } catch (Exception e) {
+                    ExceptionUtils.printStacktrace(e);
+                } catch (IncompatibleClassChangeError e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+        // Adding request to request queue
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+
+    }
 
 
+    public void doNotificationTask(final String channelId, final String isNotified) {
 
 
+        String url = ApiRequest.BASE_URL_VERSION_3 + "channel/subscribe/token/" + ApiRequest.TOKEN;
 
 
+        SharedPreference sharedPreference = new SharedPreference();
+        final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
 
+        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + "    " + url);
+
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject mObj = new JSONObject(response);
+                    if (mObj.optInt("code") == 1) {
+                        Log.d("ContentController", "Notification done");
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Tracer.error("ContentController", "" + e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
+                NotificationCenter.getInstance().postNotificationName(NotificationCenter.didContentReceivedFailed, null);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                try {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("channel_id", channelId);
+                    params.put("customer_id", "" + userID);
+                    params.put("token", ApiRequest.TOKEN);
+                    params.put("donot_notify", "1");
+
+                    return checkParams(params);
+                } catch (Exception e) {
+                    ExceptionUtils.printStacktrace(e);
+                } catch (IncompatibleClassChangeError e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+        // Adding request to request queue
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+
+    }
 
 
 }

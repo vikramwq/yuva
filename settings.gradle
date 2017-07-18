@@ -1,1 +1,1 @@
-include ':app', ':easydeviceinfo-2.1.1', ':SmoothPlayerSDK-release', ':vmax', ':library-release', ':googlemediaframework-release', ':diagonallayout', ':bubblepicker' //':googlemedia',
+include ':app', ':easydeviceinfo-2.1.1', ':SmoothPlayerSDK-release', ':vmax', ':library-release', ':googlemediaframework-release' //':googlemedia',

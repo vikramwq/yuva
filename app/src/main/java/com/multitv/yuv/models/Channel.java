@@ -1,10 +1,12 @@
 package com.multitv.yuv.models;
 
+import java.io.Serializable;
+
 /**
  * Created by arungoyal on 17/07/17.
  */
 
-public class Channel {
+public class Channel implements Serializable{
 
 
     private String id;
@@ -18,6 +20,16 @@ public class Channel {
     private String created_on;
     private String total_subscribers;
     private String is_subscriber;
+    private String notification;
+
+
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setNotification(String notification) {
+        this.notification = notification;
+    }
 
     public String getId() {
         return id;

@@ -28,6 +28,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -102,6 +103,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.1-2'
+    }
+    dependencies {
 //        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.0'
     }
 }
@@ -136,7 +140,7 @@ dependencies {
 
 
 
-
+    compile "org.jetbrains.kotlin:kotlin-stdlib:"
     compile 'com.facebook.fresco:fresco:0.6.1'
     compile 'com.github.igalata:Bubble-Picker:v0.2.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'

@@ -458,7 +458,7 @@ public class UserProfileActivity extends AppCompatActivity implements ImageSende
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(UserProfileActivity.this);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Ubuntu-regular.ttf");
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
         CustomTFSpan tfSpan = new CustomTFSpan(tf);
         SpannableString spannableString = new SpannableString(getResources().getString(R.string.app_name));
         spannableString.setSpan(tfSpan, 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -675,7 +675,7 @@ public class UserProfileActivity extends AppCompatActivity implements ImageSende
     }
 
     private void startCropImageActivity(Uri imageUri) {
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Ubuntu-regular.ttf");
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
         SpannableString string = new SpannableString("Profile Image");
         string.setSpan(new TypefaceSpan(tf), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

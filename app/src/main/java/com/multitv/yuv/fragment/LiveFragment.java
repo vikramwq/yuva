@@ -67,7 +67,7 @@ public class LiveFragment extends Fragment {
 
     private String fragmentName;
     private ChannelsData channelsData;
-    private String mediaBaseUrl,bannerbaseUrl;
+    private String mediaBaseUrl, bannerbaseUrl;
 //    private MainLiveAdapter mainAdapter;
 
 
@@ -100,10 +100,16 @@ public class LiveFragment extends Fragment {
     private void getContentData(final boolean isLoadMoreRequest) {
 
 
-        Log.d(this.getClass().getName(), "channels api====" + "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN);
+        String url;
 
+        if (userID != null && userID.length() > 0) {
+            url = "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN + "?customer_id=" + userID;
+        } else {
+            url = "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN;
+        }
+        Log.d(this.getClass().getName(), "channels api====" + url);
         StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
-                "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN, new Response.Listener<String>() {
+                url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String response) {
                 new Thread(new Runnable() {
@@ -206,7 +212,7 @@ public class LiveFragment extends Fragment {
 //                sectionList.add(dataModel);
 
 
-                LiveSectionListDataAdapter adapter = new LiveSectionListDataAdapter(parentContext, videoData.getChannels(), mediaBaseUrl,bannerbaseUrl);
+                LiveSectionListDataAdapter adapter = new LiveSectionListDataAdapter(parentContext, videoData.getChannels(), mediaBaseUrl, bannerbaseUrl);
                 contentRecycler.setAdapter(adapter);
 
 
@@ -228,11 +234,8 @@ public class LiveFragment extends Fragment {
 
     private void initilizeMainRecyclerView(boolean isFeatureAvailable) {
         sectionList = new ArrayList<SectionDataModel1>();
-//        mainAdapter = new MainLiveAdapter(getActivity(), sectionList, isFeatureAvailable, fragmentName);
         contentRecycler.setHasFixedSize(true);
         contentRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-//        contentRecycler.setAdapter(mainAdapter);
-//        contentRecycler.addOnScrollListener(scrollListener);
 
     }
 

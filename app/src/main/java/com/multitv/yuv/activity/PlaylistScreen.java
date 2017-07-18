@@ -1,7 +1,10 @@
 package com.multitv.yuv.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +13,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,9 +35,12 @@ import com.multitv.yuv.adapter.PlaylistAdapter;
 import com.multitv.yuv.adapter.VideoPlaylistAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.controller.ContentController;
+import com.multitv.yuv.models.Channel;
 import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.Interest;
 import com.multitv.yuv.models.PlaylistData;
+import com.multitv.yuv.models.PlaylistItem;
 import com.multitv.yuv.models.home.Cat_cntn;
 import com.multitv.yuv.models.video.Video;
 import com.multitv.yuv.utilities.ExceptionUtils;
@@ -40,12 +48,14 @@ import com.multitv.yuv.utilities.Json;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlaylistScreen extends AppCompatActivity {
@@ -56,39 +66,47 @@ public class PlaylistScreen extends AppCompatActivity {
     private String TAG = this.getClass().getSimpleName();
     private PlaylistData playListData;
     private RecyclerView playlistRecyclerview, videoRecyclerview;
-    private TextView moreVideoButton;
+    private TextView moreVideoButton, subscribedCount, titleTxt, morePlayListButton;
     private Video videoData;
     private ProgressBar main_progress_bar;
     private FloatingActionButton fabButton;
     private Toolbar toolbar;
+    private Channel channel;
+    private ImageView subscribeLayout;
+    private ImageView notificationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_screen);
-        id = getIntent().getStringExtra("id");
-        String banner = getIntent().getStringExtra("banner");
-        String channelName = getIntent().getStringExtra("channelName");
+
+        channel = (Channel) getIntent().getSerializableExtra("channel");
+        String baseUrl = getIntent().getStringExtra("baseUrl");
+        String profileBaseURL = getIntent().getStringExtra("profileBaseUrl");
+
+        id = channel.getId();
 
 
         bannerImg = (ImageView) findViewById(R.id.bannerImg);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        subscribeLayout = (ImageView) findViewById(R.id.subscribeLayout);
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("");
+        toolbar.setTitle("" + channel.getFirst_name());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Utilities.applyFontForToolbarTitle(PlaylistScreen.this);
+        Log.d(this.getClass().getName(), "bbanner=======" + baseUrl + channel.getBanner_image());
 
-        TextView toolbar_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        toolbar_title.setText(channelName);
-
-        Log.d(this.getClass().getName(), "bbanner=======" + banner);
         playlistRecyclerview = (RecyclerView) findViewById(R.id.playlistRecyclerview);
         videoRecyclerview = (RecyclerView) findViewById(R.id.videoRecyclerview);
         fabButton = (FloatingActionButton) findViewById(R.id.fabButton);
+        subscribedCount = (TextView) findViewById(R.id.subscribedCount);
         playlistRecyclerview.setVisibility(View.VISIBLE);
         moreVideoButton = (TextView) findViewById(R.id.moreVideoButton);
         main_progress_bar = (ProgressBar) findViewById(R.id.main_progress_bar);
+        titleTxt = (TextView) findViewById(R.id.titleTxt);
+        morePlayListButton = (TextView) findViewById(R.id.morePlayListButton);
+        notificationBtn = (ImageView) findViewById(R.id.notificationBtn);
         moreVideoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,29 +119,62 @@ public class PlaylistScreen extends AppCompatActivity {
         });
 
 
+        setFabButton(profileBaseURL + channel.getPrfile_pic());
+
+        subscribedCount.setText(channel.getTotal_subscribers() + " " + getResources().getString(R.string.subscribers));
+
         Picasso.with(PlaylistScreen.this)
-                .load(banner.replace("\\", ""))
+                .load((baseUrl + channel.getBanner_image()).replace("\\", ""))
                 .into(bannerImg);
 
         playlistRecyclerview.setHasFixedSize(true);
         playlistRecyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-
         videoRecyclerview.setHasFixedSize(true);
         videoRecyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-
+        titleTxt.setText(channel.getFirst_name() + " " + channel.getLast_name());
         getContentData(false);
 
+        subscribeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentController.getInstance().subscribeChannel(id, channel.getIs_subscriber());
+                if (channel.getIs_subscriber().equals("0")) {
+//                    subscribeTxt.setTextColor(Color.parseColor("#a2a2a2"));
+                    channel.setIs_subscriber("1");
+                    subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
+                    notificationBtn.setVisibility(View.VISIBLE);
+                } else {
+//                    subscribeTxt.setTextColor(Color.parseColor("#e8711b"));
+                    channel.setIs_subscriber("0");
+                    subscribeLayout.setImageResource(R.mipmap.ic_subscription);
+                    notificationBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        if (channel.getIs_subscriber().equals("1")) {
+            subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
+            notificationBtn.setVisibility(View.VISIBLE);
+        } else {
+            subscribeLayout.setImageResource(R.mipmap.ic_subscription);
+            notificationBtn.setVisibility(View.GONE);
+        }
+
+
+        notificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
     }
 
 
     private void getContentData(final boolean isLoadMoreRequest) {
-
-
-        Log.d(this.getClass().getName(), "playlist api====" + ApiRequest.BASE_URL_VERSION_3 + "content/Playlist/token/" + ApiRequest.TOKEN + "?content_partner=" + id);
-
         StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
                 ApiRequest.BASE_URL_VERSION_3 + "content/Playlist/token/" + ApiRequest.TOKEN + "?content_partner=" + id, new Response.Listener<String>() {
             @Override
@@ -142,12 +193,16 @@ public class PlaylistScreen extends AppCompatActivity {
                                 showDisplayPlaylistData(playListData, isLoadMoreRequest);
                                 getContentVideos();
 
+                            } else {
+                                getContentVideos();
                             }
                         } catch (Exception e) {
                             ExceptionUtils.printStacktrace(e);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    getContentVideos();
+
 //                                    isLoading = false;
 //                                    if (progressBarMain != null && progressBarMain.isShown())
 //                                        progressBarMain.setVisibility(View.GONE);
@@ -191,8 +246,23 @@ public class PlaylistScreen extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                playlistRecyclerview.setNestedScrollingEnabled(false);
-                playlistRecyclerview.setAdapter(new PlaylistAdapter(PlaylistScreen.this, playListData.getPlayList()));
+
+
+                List<PlaylistItem> playlistItems = playListData.getPlayList();
+
+                if (playlistItems != null && playlistItems.size() > 6) {
+                    List<PlaylistItem> playlListItemList = playlistItems.subList(0, 5);
+
+                    morePlayListButton.setVisibility(View.VISIBLE);
+                    playlistRecyclerview.setNestedScrollingEnabled(false);
+                    playlistRecyclerview.setAdapter(new PlaylistAdapter(PlaylistScreen.this, playlListItemList));
+                } else {
+                    morePlayListButton.setVisibility(View.GONE);
+                    playlistRecyclerview.setNestedScrollingEnabled(false);
+                    playlistRecyclerview.setAdapter(new PlaylistAdapter(PlaylistScreen.this, playListData.getPlayList()));
+                }
+
+
             }
         });
 
@@ -204,13 +274,17 @@ public class PlaylistScreen extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-
-                ArrayList<Cat_cntn> arrayList = new ArrayList<Cat_cntn>(6);
-                arrayList.addAll(videoData.content);
-                videoRecyclerview.setNestedScrollingEnabled(false);
-                videoRecyclerview.setAdapter(new VideoPlaylistAdapter(PlaylistScreen.this, arrayList));
-
+                if (videoData != null && videoData.content.size() > 0) {
+                    if (videoData.content.size() > 6) {
+                        moreVideoButton.setVisibility(View.VISIBLE);
+                        videoRecyclerview.setNestedScrollingEnabled(false);
+                        videoRecyclerview.setAdapter(new VideoPlaylistAdapter(PlaylistScreen.this, videoData.content.subList(0, 5)));
+                    } else {
+                        moreVideoButton.setVisibility(View.GONE);
+                        videoRecyclerview.setNestedScrollingEnabled(false);
+                        videoRecyclerview.setAdapter(new VideoPlaylistAdapter(PlaylistScreen.this, videoData.content));
+                    }
+                }
             }
         });
 
@@ -311,6 +385,35 @@ public class PlaylistScreen extends AppCompatActivity {
             default:
                 return false;
         }
+
+    }
+
+    private void setFabButton(String imageUrl) {
+
+        int widthAndHeightOfIcon = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+        final Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                fabButton.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+        };
+
+        Picasso.with(this)
+                .load(imageUrl)
+                .resize(widthAndHeightOfIcon, widthAndHeightOfIcon)
+
+                .into(target);
+
 
     }
 }

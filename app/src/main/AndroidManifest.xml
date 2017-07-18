@@ -198,7 +198,8 @@
         <activity android:name=".activity.UserProfileScreen" />
         <activity android:name=".activity.InterestChooserScreen" />
         <activity android:name=".activity.PlaylistScreen" />
-        <activity android:name=".activity.ContentScreen"></activity>
+        <activity android:name=".activity.ContentScreen" />
+        <activity android:name=".activity.ForgetPassword"></activity>
     </application>
 
 </manifest>

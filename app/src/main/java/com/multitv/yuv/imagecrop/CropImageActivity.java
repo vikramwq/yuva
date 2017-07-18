@@ -92,7 +92,7 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Ubuntu-regular.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
         if (actionBar != null) {
             String title = mOptions.activityTitle != null && !mOptions.activityTitle.isEmpty()
                     ? mOptions.activityTitle

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,20 +111,23 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
             String duration = String.valueOf(singleItem.duration);
 
-//            if (duration != null && !duration.equals(null)) {
-//                String splitTime[] = duration.split(":");
-//                String hours = splitTime[0];
-//                String minutes = splitTime[1];
-//                String seconds = splitTime[2];
-//
-//                if (hours.equals("00")) {
-//                    holder.durationTxt.setText(minutes + ":" + seconds + " " + mContext.getResources().getString(R.string.minute));
-//                } else {
-//                    holder.durationTxt.setText(hours + ":" + minutes + " " + mContext.getResources().getString(R.string.hours));
-//                }
-//            } else {
-//                holder.durationTxt.setVisibility(View.GONE);
-//            }
+
+            Log.d(this.getClass().getName(),"duration==========>>>> "+duration);
+
+            if (duration != null && !duration.equals(null)) {
+                String splitTime[] = duration.split(":");
+                String hours = splitTime[0];
+                String minutes = splitTime[1];
+                String seconds = splitTime[2];
+
+                if (hours.equals("00")) {
+                    holder.durationTxt.setText(minutes + ":" + seconds + " " + mContext.getResources().getString(R.string.minute));
+                } else {
+                    holder.durationTxt.setText(hours + ":" + minutes + " " + mContext.getResources().getString(R.string.hours));
+                }
+            } else {
+                holder.durationTxt.setVisibility(View.GONE);
+            }
 
             for (int i = 0; i < singleItem.thumbs.size(); i++) {
 //                Log.d(this.getClass().getName(),"layoutOrientation=======>>>>"+layoutOrientation);

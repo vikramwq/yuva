@@ -144,6 +144,8 @@ public class ContentFragment extends Fragment implements NotificationCenter.Noti
                 String storedData = Utilities.readFromFile(getActivity(), fragmentName + ".txt");
                 if (storedData != null && storedData.trim().length() > 0) {
                     videoData = Json.parse(storedData.trim(), Video.class);
+                    count=videoData.content.size();
+                    totalCount=videoData.totalCount;
                     showDisplayPlaylistData(videoData, false);
                 }
             }
@@ -152,6 +154,8 @@ public class ContentFragment extends Fragment implements NotificationCenter.Noti
             String storedData = Utilities.readFromFile(getActivity(), fragmentName + ".txt");
             if (storedData != null && storedData.trim().length() > 0) {
                 videoData = Json.parse(storedData.trim(), Video.class);
+                count=videoData.content.size();
+                totalCount=videoData.totalCount;
                 showDisplayPlaylistData(videoData, false);
             }
         }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,9 +82,12 @@ public class ContentAdapter extends RecyclerView.Adapter {
 
                 String description = content.des;
                 if (description != null && !TextUtils.isEmpty(description)) {
+
+                    Log.d(this.getClass().getName(),"description==========>>>>  "+content.title+"        "+description);
                     ((ContentAdapter.SingleItemRowHolder) holder).source_type.setText(description.trim());
-                } else
-                    ((ContentAdapter.SingleItemRowHolder) holder).source_type.setVisibility(View.GONE);
+                }
+//                else
+//                    ((ContentAdapter.SingleItemRowHolder) holder).source_type.setVisibility(View.GONE);
 
 //                if (content.meta.genre != null && !content.meta.genre.trim().isEmpty()) {
 //                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.VISIBLE);

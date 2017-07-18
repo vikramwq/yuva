@@ -181,6 +181,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     Fragment homeFragment;
     TextView txtName;
+    private ImageView signOutBtn;
 
 
     @Override
@@ -220,7 +221,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         ButterKnife.bind(this);
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(getResources().getDrawable(R.drawable.toolbar_icon));
@@ -251,6 +251,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         View headerLayout = navigationView.getHeaderView(0);
 
+        signOutBtn = (ImageView) headerLayout.findViewById(R.id.signOutBtn);
         txtName = (TextView) headerLayout.findViewById(R.id.txtName);
         profile_image = (ImageView) headerLayout.findViewById(R.id.profile_image);
 
@@ -301,6 +302,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         getMenuItems(navigationView);
 
+
+        signOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isOTPVerified) {
+                    String msg = "Are you sure you want to logout from " + getResources().getString(R.string.app_name);
+
+                    showLogoutDialog(msg);
+                } else {
+                    Intent intent1 = new Intent(HomeActivity.this, SignupScreen.class);
+                    startActivity(intent1);
+                    finish();
+
+                }
+
+
+            }
+        });
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -801,7 +821,28 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 String menuTitle = menuModel.leftMenuArrayList.get(i).pageTitle;
 
                 if (!isOTPVerified && "Sign out".equalsIgnoreCase(menuTitle)) {
+
                     menuTitle = "Sign in";
+
+                    Picasso.with(context)
+                            .load(menuModel.leftMenuArrayList.get(i).thumbnail)
+                            .placeholder(R.mipmap.place_holder)
+                            .error(R.mipmap.place_holder)
+                            .fit() // will explain later
+                            .into(signOutBtn);
+
+
+                } else if ("Sign out".equalsIgnoreCase(menuTitle)) {
+
+
+                    Log.d(this.getClass().getName(), "signout icon=====>> " + menuModel.leftMenuArrayList.get(i).thumbnail);
+                    Picasso.with(context)
+                            .load(menuModel.leftMenuArrayList.get(i).thumbnail)
+                            .placeholder(R.mipmap.place_holder)
+                            .error(R.mipmap.place_holder)
+                            .fit() // will explain later
+                            .into(signOutBtn);
+
                 }
 
 

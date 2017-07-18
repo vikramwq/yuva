@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +68,7 @@ public class LiveSectionListDataAdapter extends RecyclerView.Adapter<LiveSection
     public LiveSectionListDataAdapter.SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v;
 
-        v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_video_card_landscape, null);
+        v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.channel_item, null);
 
         LiveSectionListDataAdapter.SingleItemRowHolder mh = new LiveSectionListDataAdapter.SingleItemRowHolder(v);
         return mh;
@@ -78,15 +79,14 @@ public class LiveSectionListDataAdapter extends RecyclerView.Adapter<LiveSection
 
         Channel singleItem = itemsList.get(position);
         String url = null;
-        holder.cardView.setLayoutParams(new RecyclerView.LayoutParams
-                (ScreenUtils.getScreenWidth(mContext) / 4, RecyclerView.LayoutParams.WRAP_CONTENT));
+        holder.cardView.setLayoutParams(new LinearLayout.LayoutParams
+                (ScreenUtils.getScreenWidth(mContext) / 4, ScreenUtils.getScreenWidth(mContext) / 4));
 
         if (singleItem != null) {
             if (singleItem.getFirst_name() != null && singleItem.getFirst_name().trim().length() > 0) {
                 holder.contentTitle.setText(singleItem.getFirst_name());
             }
 
-            holder.durationTxt.setVisibility(View.GONE);
             int placeHolder;
 
             placeHolder = R.mipmap.place_holder;
@@ -112,8 +112,6 @@ public class LiveSectionListDataAdapter extends RecyclerView.Adapter<LiveSection
 
         @BindView(R.id.card_view)
         public CardView cardView;
-        @BindView(R.id.duration_tv)
-        public TextView durationTxt;
         @BindView(R.id.thumbnail)
         public ImageView mImageView;
         @BindView(R.id.content_title)
@@ -129,9 +127,9 @@ public class LiveSectionListDataAdapter extends RecyclerView.Adapter<LiveSection
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, PlaylistScreen.class);
-                    intent.putExtra("id", itemsList.get(getAdapterPosition()).getId());
-                    intent.putExtra("banner", bannerbaseUrl + itemsList.get(getAdapterPosition()).getBanner_image());
-                    intent.putExtra("channelName", itemsList.get(getAdapterPosition()).getFirst_name());
+                    intent.putExtra("channel", itemsList.get(getAdapterPosition()));
+                    intent.putExtra("baseUrl",bannerbaseUrl);
+                    intent.putExtra("profileBaseUrl",mediaBaseUrl);
                     mContext.startActivity(intent);
 
                 }
