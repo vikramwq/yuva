@@ -322,7 +322,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, UserProfileScreen.class);
+                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
                 intent.putExtra("header_click", "header_click");
                 startActivity(intent);
                 drawer.closeDrawer(GravityCompat.START);

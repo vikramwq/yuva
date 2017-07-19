@@ -420,7 +420,6 @@
     <color name="list_black_shadow">#191919</color>
 
 
-
     <color name="semiTransparentWhite">#40FFFFFF</color>
 
     <color name="blueStart">#4EFFF3</color>
@@ -436,6 +435,7 @@
 
 
     <color name="white_shadow">#bcbcbc</color>
+
 
     <color name="edittext_color">#FF817979</color>
     <color name="text_color">#FF817979</color>
