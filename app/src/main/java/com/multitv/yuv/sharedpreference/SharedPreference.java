@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.multitv.yuv.exatras.SharedPrefManager.PREFS_NAME;
+
 
 public class SharedPreference {
     // Shared Preferences
@@ -546,5 +548,23 @@ public class SharedPreference {
         editor.putString(key, value);
         editor.commit();
     }
+
+
+    public void setUserIfLoginVeqta(Context context, String key, String value) {
+        if (context == null)
+            return;
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String getUserIfLoginVeqta(Context context, String key) {
+        if (context == null)
+            return null;
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String position = prefs.getString(key, "");
+        return position;
+    }
+
 
 }

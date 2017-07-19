@@ -112,11 +112,11 @@ public class MoreRecommendedAdapter extends RecyclerView.Adapter {
                 } else
                     ((MoreRecommendedAdapter.SingleItemRowHolder) holder).source_type.setVisibility(View.GONE);
 
-                if (content.meta.genre != null && !content.meta.genre.trim().isEmpty()) {
-                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.VISIBLE);
-                    ((SingleItemRowHolder) holder).genre_sony.setText(content.meta.genre);
-                } else
-                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.GONE);
+//                if (content.meta.genre != null && !content.meta.genre.trim().isEmpty()) {
+//                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.VISIBLE);
+//                    ((SingleItemRowHolder) holder).genre_sony.setText(content.meta.genre);
+//                } else
+//                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.GONE);
 
 //                if (content. != null && !content.date_created.trim().isEmpty()) {
 //                    ((SingleItemRowHolder) holder).date_created.setText(content.date_created);

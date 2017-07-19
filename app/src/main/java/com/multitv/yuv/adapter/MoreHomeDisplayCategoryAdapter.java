@@ -136,11 +136,11 @@ public class MoreHomeDisplayCategoryAdapter extends RecyclerView.Adapter {
                     ((SingleItemRowHolder) holder).content_type.setVisibility(View.GONE);
 
 
-                if (mContent.meta.genre != null && !mContent.meta.genre.isEmpty()) {
-                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.VISIBLE);
-                    ((SingleItemRowHolder) holder).genre_sony.setText(mContent.meta.genre);
-                } else
-                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.GONE);
+//                if (mContent.meta.genre != null && !mContent.meta.genre.isEmpty()) {
+//                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.VISIBLE);
+//                    ((SingleItemRowHolder) holder).genre_sony.setText(mContent.meta.genre);
+//                } else
+//                    ((SingleItemRowHolder) holder).genre_sony.setVisibility(View.GONE);
 
 
                 if (createdDate != null && !createdDate.isEmpty())

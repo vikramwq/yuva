@@ -13,7 +13,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.facebook.login.LoginManager;
 import com.multitv.cipher.MultitvCipher;
 import com.multitv.yuv.activity.HomeActivity;
-import com.multitv.yuv.activity.SignupScreen;
+import com.multitv.yuv.activity.LoginScreen;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.db.MediaDbConnector;
@@ -166,7 +166,7 @@ public class AppSessionUtil1 {
         sharedPreference.setPreferenceBoolean(AppController.applicationContext, sharedPreference.KEY_IS_LOGGED_IN, false);
         LoginManager.getInstance().logOut();
 
-        Intent intent = new Intent(getApplicationContext(), SignupScreen.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getApplicationContext(), LoginScreen.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("logout", "NoStatus");
         HomeActivity.getInstance().startActivity(intent);

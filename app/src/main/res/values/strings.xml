@@ -24,6 +24,8 @@
     <string name="add_reminder_mess_2">is showing</string>
     <string name="add_reminder_mess_3">To set a reminder for</string>
     <string name="add_reminder_mess_4">press ok</string>
+    <string name="fb_error">Something went wrong while logging in to Facebook. Please try again</string>
+    <string name="login_error_msg">Please enter registered Email Id</string>
 
     <string name="activity_setting_notification">Notification</string>
     <string name="activity_setting_mature_filter">Parental Control</string>
@@ -284,7 +286,7 @@
     <string name="subscribed">Subscribed</string>
     <string name="subscribers">Subscribers</string>
     <string name="email">Email</string>
-
+    <string name="forgot_password_successful_message">Please check your registered Email Id for further instructions</string>
     <string name="email_forgot_passowrd">Please  enter  your registered  email id</string>
     <string name="email_forgot_passowrd_msg">we have received a forgot password request from your account.To recover your password,Please check here. If you did not make this request please write to feedback @dollywoodplay.com
 </string>

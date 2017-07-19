@@ -65,7 +65,9 @@ public class ApiRequest {
 
     public static final String LOGIN_API = "/user/login/token/" + TOKEN;
 
-
+    public static String SIGNUP_URL = "/user/add/token/" + TOKEN;
+    public static String LOGIN_URL1 = "/user/social/token/" + TOKEN;
+    public static String FORGET_URL = "/user/forgot/token/" + TOKEN;
 
 
 }

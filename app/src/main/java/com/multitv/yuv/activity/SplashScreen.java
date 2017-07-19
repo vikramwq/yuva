@@ -394,10 +394,10 @@ public class SplashScreen extends AppCompatActivity implements NotificationCente
     //Go for User Login
     private void goToLoginScreen() {
         boolean isLoggedIn = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_LOGGED_IN);
-        boolean isSkipEnabled = sharedPreference.getPreferenceBoolean(this, Constant.IS_SKIP_ENABLED);
+//        boolean isSkipEnabled = sharedPreference.getPreferenceBoolean(this, Constant.IS_SKIP_ENABLED);
         Intent intent;
 
-        if (!isSkipEnabled) {
+
             if (isLoggedIn) {
                 boolean isOTPVerfied = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_OTP_VERIFIED);
                 if (isOTPVerfied) {
@@ -408,12 +408,10 @@ public class SplashScreen extends AppCompatActivity implements NotificationCente
                 }
             } else {
                 //LoginUtils.getOTP(this);
-                intent = new Intent(this, SignupScreen.class);
+                intent = new Intent(this, LoginScreen.class);
             }
 
-        } else {
-            intent = new Intent(this, HomeActivity.class);
-        }
+
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

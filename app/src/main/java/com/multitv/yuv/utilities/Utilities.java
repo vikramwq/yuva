@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.multitv.yuv.R;
-import com.multitv.yuv.activity.SignupScreen;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
+import com.multitv.yuv.activity.LoginScreen;
 import com.multitv.yuv.application.AppController;
 
 
@@ -282,7 +282,7 @@ public class Utilities {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                Intent intent = new Intent(ctxt, SignupScreen.class);
+                Intent intent = new Intent(ctxt, LoginScreen.class);
                 ctxt.startActivity(intent);
 
             }

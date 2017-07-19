@@ -66,13 +66,14 @@
                         android:src="@mipmap/filter"
                         android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/genre"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:padding="9dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_genre" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/genre"-->
+                        <!--android:layout_width="48dp"-->
+                        <!--android:layout_height="48dp"-->
+                        <!--android:padding="9dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:src="@drawable/ic_genre"-->
+                        <!--android:visibility="gone" />-->
 
                     <RelativeLayout
                         android:id="@+id/rl_notification"

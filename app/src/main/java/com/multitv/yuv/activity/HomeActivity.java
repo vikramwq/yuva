@@ -134,8 +134,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.filter)
     ImageView mFilter;
 
-    @BindView(R.id.genre)
-    ImageView mGenre;
+//    @BindView(R.id.genre)
+//    ImageView mGenre;
     @BindView(R.id.rl_notification)
     RelativeLayout mNotifybell;
     @BindView(R.id.tv_notification_count)
@@ -238,7 +238,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         mFilter.setOnClickListener(this);
         mSearch.setOnClickListener(this);
-        mGenre.setOnClickListener(this);
+//        mGenre.setOnClickListener(this);
         mCalander.setOnClickListener(this);
         mNotifybell.setOnClickListener(this);
         drawer = (DrawerLayout) findViewById(drawer_layout);
@@ -312,7 +312,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     showLogoutDialog(msg);
                 } else {
-                    Intent intent1 = new Intent(HomeActivity.this, SignupScreen.class);
+                    Intent intent1 = new Intent(HomeActivity.this, LoginScreen.class);
                     startActivity(intent1);
                     finish();
 
@@ -393,12 +393,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void showSearchMice() {
-        mGenre.setVisibility(View.VISIBLE);
+//        mGenre.setVisibility(View.VISIBLE);
         mSearch.setVisibility(View.VISIBLE);
     }
 
     private void hideSearchMice() {
-        mGenre.setVisibility(View.GONE);
+//        mGenre.setVisibility(View.GONE);
         mSearch.setVisibility(View.GONE);
         mFilter.setVisibility(View.GONE);
         //mNotifybell.setVisibility(View.GONE);
@@ -614,7 +614,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     showLogoutDialog(msg);
                 } else {
-                    Intent intent1 = new Intent(HomeActivity.this, SignupScreen.class);
+                    Intent intent1 = new Intent(HomeActivity.this, LoginScreen.class);
                     startActivity(intent1);
                     finish();
 
@@ -1321,7 +1321,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void goToLoginActivity() {
         clearSharePrefernces();
-        Intent intent = new Intent(HomeActivity.this, SignupScreen.class);
+        Intent intent = new Intent(HomeActivity.this, LoginScreen.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("logout", "NoStatus");
         startActivity(intent);

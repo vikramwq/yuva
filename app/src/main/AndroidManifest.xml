@@ -86,17 +86,12 @@
         <activity
             android:name=".activity.OtpScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme" />
+            android:theme="@style/AppTheme1" />
         <activity
             android:name=".imagecrop.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CropScreenTheme" />
-        <!--
-             <activity
-             android:name=".activity.TermAndConditionActivity"
-             android:configChanges="locale|layoutDirection"
-             android:screenOrientation="portrait" />
-        -->
+
 
         <activity
             android:name=".activity.LanguageActivity"
@@ -199,8 +194,15 @@
         <activity android:name=".activity.InterestChooserScreen" />
         <activity android:name=".activity.PlaylistScreen" />
         <activity android:name=".activity.ContentScreen" />
-        <activity android:name=".activity.ForgetPassword" />
-        <activity android:name=".activity.LoginScreen"></activity>
+        <activity
+            android:name=".activity.ForgetPassword"
+            android:theme="@style/AppTheme1" />
+        <activity
+            android:name=".activity.LoginScreen"
+            android:theme="@style/AppTheme1" />
+        <activity
+            android:name=".activity.SignupActivityNew"
+            android:theme="@style/AppTheme1"></activity>
     </application>
 
 </manifest>

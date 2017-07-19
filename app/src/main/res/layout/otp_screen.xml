@@ -114,6 +114,7 @@
                 android:layout_gravity="center"
                 android:hint="@string/otp_hint"
                 android:inputType="text|number"
+
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#FFF"
                 android:textColorHint="#FFF" />
@@ -153,7 +154,7 @@
                 android:layout_marginLeft="@dimen/_50sdp"
                 android:layout_marginRight="@dimen/_50sdp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/rounded_btn_bg"
+                android:background="@drawable/custom_button_login"
                 android:onClick="verifieOtpBtnClick"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"

@@ -83,6 +83,28 @@
     </style>
 
 
+    <style name="AppTheme1" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/white</item>
+        <item name="android:windowDisablePreview">true</item>
+        <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <!--  It should be true otherwise action mode will not overlay toolbar -->
+        <item name="windowActionModeOverlay">true</item>
+
+        <!--  For Custom Action Mode Background Color/Drawable -->
+
+    </style>
+
+
     <style name="MyTextInputLayout" parent="LoginTheme">
         <item name="colorAccent">@color/white</item>
     </style>

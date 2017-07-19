@@ -13,7 +13,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.multitv.yuv.BuildConfig;
-import com.multitv.yuv.activity.SignupScreen;
+import com.multitv.yuv.activity.LoginScreen;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.db.MediaDbConnector;
 import com.multitv.yuv.locale.LocaleHelper;
@@ -203,7 +203,7 @@ public class AppController extends MultiDexApplication {
         sharedPreference.setPreferenceBoolean(this, sharedPreference.KEY_IS_LOGGED_IN, false);
         LoginManager.getInstance().logOut();
 
-        Intent intent = new Intent(getApplicationContext(), SignupScreen.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getApplicationContext(), LoginScreen.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("logout", "NoStatus");
         startActivity(intent);

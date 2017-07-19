@@ -21,6 +21,7 @@ import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.interfaces.SignUpListener;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.AppConfig;
+import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppUtils;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.PreferenceData;
@@ -45,7 +46,7 @@ public class SignUpController {
 
     private Context mContext;
     private SignUpListener mSignUpListener;
-    private final String TAG = AppConfig.BASE_TAG + ".SignUpController";
+    private final String TAG = ".SignUpController";
 
 
     public SignUpController(Context context, SignUpListener signUpListener) {
@@ -56,18 +57,18 @@ public class SignUpController {
     public void sendInfoToServer(final String id, final String firstName, final String lastName, final String gender, final String link, final String locale, final String name, final String email, final String location, final String dob, final int loginThrough, final String phoneNum) {
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                AppUtils.generateUrl(getApplicationContext(), ApiRequest.SOCIAL_LOGIN_URL), new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.LOGIN_URL1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Tracer.error(TAG, response);
+                Log.e(TAG, response);
                 mSignUpListener.onSuccess(response);
-
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
+                Log.e("SIGNUPACTIVITY", "****SIGNUP-SocialApi****" + "Error: " + error.getMessage());
+                mSignUpListener.onError();
             }
         }) {
             @Override
@@ -77,28 +78,10 @@ public class SignUpController {
                     final String networkType = getNetType(mContext);
 
                     final String token = FirebaseInstanceId.getInstance().getToken();
-                    if (token != null) {
-                        PreferenceData.setFCMToken(mContext, token);
-                    }
 
-
-                    String loginUsing = null;
-
-
-                    Log.d(this.getClass().getName(),"API social login=="+  AppUtils.generateUrl(getApplicationContext(), ApiRequest.SOCIAL_LOGIN_URL));
-                    Log.d(this.getClass().getName(), "FCM token==" + token);
-//                    final String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
                     final String android_id = ((TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                    SharedPreference sharedPreference = new SharedPreference();
-                    sharedPreference.setPreferencesString(mContext, "android_id", android_id);
-                    final String version = AppUtils.getVersionNameAndCode(mContext)[0];
-                    final int verCode = Integer.parseInt(AppUtils.getVersionNameAndCode(mContext)[1]);
-
-                    Tracer.debug("CODE", String.valueOf(verCode));
-
                     TelephonyManager manager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
                     final String carrierName = manager.getNetworkOperatorName();
-                    //manager.getDeviceId();
 
                     final int os_version_code = android.os.Build.VERSION.SDK_INT;
 
@@ -116,13 +99,13 @@ public class SignUpController {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("os_version", String.valueOf(os_version_code));
-                        jsonObject.put("app_version", version);
+                        jsonObject.put("app_version", "1.0");
                         jsonObject.put("network_type", networkType);
                         jsonObject.put("network_provider", carrierName);
                         dodjson = jsonObject.toString();
                     } catch (JSONException e) {
-                        ExceptionUtils.printStacktrace(e);
-                        Tracer.error("LOGIN_PARAM", "getParams:1 " + e.getMessage());
+                        //ExceptionUtils.printStacktrace(e);
+                        Log.e("LOGIN_PARAM", "getParams:1 " + e.getMessage());
                     }
 
                     JSONObject jsonObject1 = new JSONObject();
@@ -137,8 +120,8 @@ public class SignUpController {
 
                         ddjson = jsonObject1.toString();
                     } catch (JSONException e) {
-                        ExceptionUtils.printStacktrace(e);
-                        Tracer.error("LOGIN_PARAM", "getParams:2 " + e.getMessage());
+                        //ExceptionUtils.printStacktrace(e);
+                        Log.e("LOGIN_PARAM", "getParams:2 " + e.getMessage());
                     }
 
                     String provider = "";
@@ -149,14 +132,10 @@ public class SignUpController {
                     }
                     String type = "";
                     if (loginThrough == 0) {
-                        if (!TextUtils.isEmpty(phoneNum)) {
+                        if (!TextUtils.isEmpty(phoneNum))
                             type = "phone";
-                            loginUsing = phoneNum;
-                        } else if (!TextUtils.isEmpty(email)) {
-
+                        else if (!TextUtils.isEmpty(email))
                             type = "email";
-                            loginUsing = email;
-                        }
                     } else {
                         type = "social";
                     }
@@ -188,14 +167,14 @@ public class SignUpController {
                         socialJson = socialJsonObject.toString();
 
                     } catch (JSONException e) {
-                        ExceptionUtils.printStacktrace(e);
-                        Tracer.error("LOGIN_PARAM", "getParams:2 " + e.getMessage());
+                        // ExceptionUtils.printStacktrace(e);
+                        Log.e("LOGIN_PARAM", "getParams:2 " + e.getMessage());
                     }
 
 
                     Map<String, String> params = new HashMap<>();
 
-                    params.put("phone", loginUsing);
+                    params.put("phone", phone);
                     params.put("type", type);
                     params.put("dd", ddjson);
                     params.put("dod", dodjson);
@@ -206,29 +185,29 @@ public class SignUpController {
 
                     Set<String> keySet = params.keySet();
                     for (String key : keySet) {
-                        Tracer.error("LOGIN_PARAM", "getParams: " + key + "   " + params.get(key));
+                        Log.e("LOGIN_PARAM", "getParams: " + key + "   " + params.get(key));
                     }
-                    return checkParams(params);
+                    return params;
                 } catch (Exception e) {
-                    ExceptionUtils.printStacktrace(e);
+                    Log.e("SignUp-Error1", e.getMessage());
                 } catch (IncompatibleClassChangeError e) {
-                    e.printStackTrace();
+                    Log.e("SignUp-Error2", e.getMessage());
                 }
 
                 return null;
             }
         };
-        // Adding request to request queue
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
-    private String getNetType(Context context) {
+    public String getNetType(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
         if (null != activeNetInfo) {
-            Tracer.debug("getNetType : ", activeNetInfo.toString());
+            Log.e("getNetType : ", activeNetInfo.toString());
             if (activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 return "wifi";
             } else if (activeNetInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -237,7 +216,6 @@ public class SignUpController {
                 if (type == TelephonyManager.NETWORK_TYPE_UNKNOWN || type == TelephonyManager.NETWORK_TYPE_GPRS || type == TelephonyManager.NETWORK_TYPE_EDGE) {
                     return "mobile";
                 } else {
-
                     return "Other";
                 }
             }
@@ -246,14 +224,4 @@ public class SignUpController {
     }
 
 
-    private Map<String, String> checkParams(Map<String, String> map) {
-        Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pairs = (Map.Entry<String, String>) it.next();
-            if (pairs.getValue() == null) {
-                map.put(pairs.getKey(), "");
-            }
-        }
-        return map;
-    }
 }
