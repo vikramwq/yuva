@@ -8,9 +8,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.multitv.yuv.sharedpreference.SharedPreference;
-import com.multitv.yuv.utilities.Tracer;
 import com.multitv.cipher.MultitvCipher;
+import com.multitv.yuv.api.ApiRequest;
+import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.sharedpreference.SharedPreference;
+import com.multitv.yuv.utilities.AppUtils;
+import com.multitv.yuv.utilities.ExceptionUtils;
+import com.multitv.yuv.utilities.NotificationCenter;
+import com.multitv.yuv.utilities.Tracer;
 
 import org.json.JSONObject;
 
@@ -18,12 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import com.multitv.yuv.api.ApiRequest;
-import com.multitv.yuv.application.AppController;
-import com.multitv.yuv.utilities.AppUtils;
-import com.multitv.yuv.utilities.ExceptionUtils;
-import com.multitv.yuv.utilities.NotificationCenter;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -94,8 +93,6 @@ public class ContentController {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 try {
-
-
                     Map<String, String> params = new HashMap<>();
 
                     params.put("player_code", contentCode);
