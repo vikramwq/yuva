@@ -99,16 +99,65 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_marginTop="10dp">
 
 
-                        <com.multitv.yuv.ui.CustomTextView
-                            android:id="@+id/genderTxt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gender"
-                            android:textColor="#FFF"
-                            android:textSize="13sp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/genderTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:drawableEnd="@mipmap/ic_dropdown_login"
+                                android:text="Gender"
+                                android:textColor="#FFF"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="2dp"
+                                android:background="#FFF"></LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/ageTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:drawableEnd="@mipmap/ic_dropdown_login"
+                                android:text="Age"
+                                android:textColor="#FFF"
+                                android:textSize="14sp" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="2dp"
+                                android:background="#FFF"></LinearLayout>
+
+
+                        </LinearLayout>
 
 
                     </LinearLayout>

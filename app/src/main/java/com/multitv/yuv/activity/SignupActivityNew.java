@@ -129,11 +129,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         initGoogleFb();
 
 
-        String udata = "Gender";
-        SpannableString content = new SpannableString(udata);
-        content.setSpan(new UnderlineSpan(), 0, udata.length(), 0);
-        genderTxt.setText(content);
-
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

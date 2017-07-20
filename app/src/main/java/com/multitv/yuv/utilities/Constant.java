@@ -110,17 +110,15 @@ public class Constant {
     public static final String TABLE_ID = "id";
     public static final String TABLE_FILED_CONTENT_ID = "content_id";
 
-
-
-
-
-
-
-
-
-
-
-
+    //SharedPreference
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String GENDER = "gender";
+    public static final String DATE_OF_BIRTH = "date_of_birth";
+    public static final String CONTACT_NUMBER = "mobile_number";
+    public static final String LOCATION = "location";
+    public static final String INTEREST = "interest";
+    public static final String IMAGE_URL = "image_url";
 
 
     public static final String COUNTRIES = "[ \n" +
@@ -368,12 +366,6 @@ public class Constant {
             "{\"name\": \"Zambia\", \"code\": \"ZM\"}, \n" +
             "{\"name\": \"Zimbabwe\", \"code\": \"ZW\"} \n" +
             "]";
-
-
-
-
-
-
 
 
 }
