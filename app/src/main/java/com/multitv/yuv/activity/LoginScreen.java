@@ -283,7 +283,6 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                             if (otpStatus.equalsIgnoreCase("1")) {
                                 sharedPreference.setFromLogedIn(LoginScreen.this, "fromLogedin", "veqta");
                                 sharedPreference.setUserIfLoginVeqta(LoginScreen.this, "through", "1");
-
                                 moveToHomeScreen();
                             } else {
                                 if (!TextUtils.isEmpty(user.contact_no) && TextUtils.isEmpty(user.otp)) {
@@ -448,7 +447,6 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
 
 
     public void moveToHomeScreen() {
-
         sharedPreference.setPreferenceBoolean(LoginScreen.this, sharedPreference.KEY_IS_OTP_VERIFIED);
         sharedPreference.setPreferenceBoolean(LoginScreen.this, sharedPreference.KEY_IS_LOGGED_IN);
         Intent intent = new Intent(LoginScreen.this, HomeActivity.class);

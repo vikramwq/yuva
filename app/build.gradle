@@ -141,6 +141,10 @@ dependencies {
 
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:"
+    compile 'com.arello-mobile:moxy-app-compat:1.1.1'
+    kapt 'com.arello-mobile:moxy-compiler:1.1.1'
+
+
     compile 'com.facebook.fresco:fresco:0.6.1'
     compile 'com.github.igalata:Bubble-Picker:v0.2.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'

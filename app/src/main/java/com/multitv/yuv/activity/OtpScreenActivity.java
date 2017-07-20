@@ -57,11 +57,11 @@ import com.multitv.yuv.utilities.Utilities;
 
 
 public class OtpScreenActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
-    private EditText otpField;
+    private EditText otpField,mobileNumberField;
     private SharedPreference sharedPreference;
     private String user_id, phoneNumber, provider, package_name;
     private ProgressBar progressBar;
-    private LinearLayout Verifie_bg;
+    private LinearLayout Verifie_bg,mobileNumber_bg;
     private Intent subscriptionIntent;
     private TextView titleTxt;
     private Button verifieBtn;
@@ -105,7 +105,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
         subscriptionIntent = getIntent();
         String RECEIVED = subscriptionIntent.getStringExtra("getOtp");
-
         int usedForLogin = subscriptionIntent.getIntExtra("usedForLogin", 0);
 
         titleTxt = (TextView) findViewById(R.id.titleTxt);
@@ -119,16 +118,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
             }
             titleTxt.setText(getResources().getString(R.string.confirm_msg));
         }
-
-//        if (!TextUtils.isEmpty(RECEIVED)) {
-//            if (RECEIVED.equalsIgnoreCase("RECEIVED")) {
-//                Verifie_bg.setVisibility(View.VISIBLE);
-//                phoneNumber = subscriptionIntent.getStringExtra("phone");
-//            } else if (RECEIVED.equalsIgnoreCase("NOT_RECEIVED")) {
-//                Verifie_bg.setVisibility(View.GONE);
-//            }
-//        }
-
 
         new CountDownTimer(32000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -150,7 +139,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
     }
 
-
     public void verifieOtpBtnClick(View v) {
         String otp = otpField.getText().toString();
         if (!TextUtils.isEmpty(otp) && !TextUtils.isEmpty(user_id)) {
@@ -164,79 +152,68 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
 
     public void reSendOtpbtn(View v) {
-//
-        if (LoginScreen.getInstance() != null) {
-            ((LoginScreen) LoginScreen.getInstance())
-                    .closeActivity();
-        }
-
-        Intent intent = new Intent(OtpScreenActivity.this, LoginScreen.class);
-        startActivity(intent);
-
-        finish();
-
-
-//        if (!AppNetworkAlertDialog.isNetworkConnected(OtpScreenActivity.this)) {
-//            Toast.makeText(OtpScreenActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-//
-//            progressLayout.setVisibility(View.GONE);
-//            return;
-//        }
-//        progressLayout.setVisibility(View.VISIBLE);
-//
-//        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-//                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
-//
-//            @Override
-//            public void onResponse(String response) {
-//                Log.e("GENRATE_otp_api", response);
-//                progressLayout.setVisibility(View.GONE);
-//                try {
-//                    JSONObject mObj = new JSONObject(response);
-//                    if (mObj.optInt("code") == 1) {
-//                        Log.e("OTP-FROM-VEQTA", "GENRATE_otp_api" + mObj.getString("result"));
-//                        Verifie_bg.setVisibility(View.VISIBLE);
-//                        mobileNumber_bg.setVisibility(View.GONE);
-//                        Toast.makeText(OtpScreenActivity.this,  "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
-//                    } else {
-//                        String error = new String(mObj.optString("error"));
-//                        progressLayout.setVisibility(View.GONE);
-//                        if (!TextUtils.isEmpty(error))
-//                            Toast.makeText(OtpScreenActivity.this,  "" + error, Toast.LENGTH_LONG).show();
-//                    }
-//                } catch (Exception e) {
-//                    Log.e("OTP-FROM-VEQTA", "Error" + "" + e.getMessage());
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("OTP-FROM-VEQTA", "Error: " + error.getMessage());
-//
-//                progressLayout.setVisibility(View.GONE);
-//            }
-//        }) {
-//
-//            @Override
-//            protected Map<String, String> getParams() {
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("type", "mobile");
-//                params.put("user_id", user_id);
-//                params.put("value", mobileNumber);
-//
-//                return params;
-//            }
-//        };
-//
-//        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//
-//        AppController.getInstance().addToRequestQueue(jsonObjReq);
-
-
+        //resendOtp();
     }
 
+    private void resendOtp(final String mobileNumber){
+        if (LoginScreen.getInstance() != null) {
+            ((LoginScreen) LoginScreen.getInstance()).closeActivity();
+        }
+        if (!AppNetworkAlertDialog.isNetworkConnected(OtpScreenActivity.this)) {
+            Toast.makeText(OtpScreenActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("GENRATE_otp_api", response);
+                progressBar.setVisibility(View.GONE);
+                try {
+                    JSONObject mObj = new JSONObject(response);
+                    if (mObj.optInt("code") == 1) {
+                        Log.e("OTP-FROM-Yuva", "GENRATE_otp_api" + mObj.getString("result"));
+                        Verifie_bg.setVisibility(View.VISIBLE);
+                        mobileNumber_bg.setVisibility(View.GONE);
+                        Toast.makeText(OtpScreenActivity.this,  "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
+                    } else {
+                        String error = new String(mObj.optString("error"));
+                        progressBar.setVisibility(View.GONE);
+                        if (!TextUtils.isEmpty(error))
+                            Toast.makeText(OtpScreenActivity.this,  "" + error, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Log.e("OTP-FROM-Yuva", "Error" + "" + e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("OTP-FROM-Yuva", "Error: " + error.getMessage());
+
+                progressBar.setVisibility(View.GONE);
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("type", "mobile");
+                params.put("user_id", user_id);
+                params.put("value", mobileNumber);
+
+                return params;
+            }
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
 
     private void checkOtp(final String otp, final String user_id) {
         if (!AppNetworkAlertDialog.isNetworkConnected(OtpScreenActivity.this)) {
@@ -338,8 +315,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
             @Override
             public void run() {
                 Intent intent = new Intent(OtpScreenActivity.this, HomeActivity.class);
-
-
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -350,22 +325,11 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-
         if (id == NotificationCenter.didReceiveSmsCode) {
-
             Log.d(this.getClass().getName(), "OTP received===" + String.valueOf(args[0]));
-
             otpField.setText(String.valueOf(args[0]));
-
-//            if (otpField.getText() != null && otpField.getText().toString().length() > 0) {
-//                checkOtp(otpField.getText().toString(), user_id);
-//            }
-
             Utilities.setWaitingForSms(false);
-
         }
-
-
     }
 
 
