@@ -438,7 +438,8 @@
 
 
     <color name="edittext_color">#FF817979</color>
-    <color name="text_color">#FF817979</color>
+    <color name="text_color_secondary">#FF817979</color>
+    <color name="text_color_primary">#000000</color>
     <color name="edit_button_color">#c94a30</color>
 
     <color name="theme_colour">#e8711b</color>
