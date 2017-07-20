@@ -267,16 +267,12 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                 @Override
                 public void onClick(View view) {
                     try {
-
                         if (share_url != null && share_url.length() > 0) {
                             String appPackageName = getPackageName();
-
                             String appLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
                             Log.d(this.getClass().getName(), "appLink============>>>" + appLink);
-
                             StringBuffer stringBuffer = new StringBuffer();
                             stringBuffer.append("I am watching this awesome video " + share_url + " on Dollywood Play. \n\n Visit Dollywood app on " + appLink);
-
                             Uri shreVideoUrl = Uri.parse(share_url);
                             Intent intent = new Intent(Intent.ACTION_SEND);
                             intent.setType("text/plain");

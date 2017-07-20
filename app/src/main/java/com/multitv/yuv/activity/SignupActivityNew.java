@@ -15,7 +15,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputType;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -87,7 +89,8 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     private GoogleApiClient mGoogleApiClient;
     private String user_id, password, mPhoneNum, firstName, LastName, mGender = "", mFirstName = "", mLastName = "", mUserName = "", mDob = "", mEmail = "", confirmPasswordStr = "";
     private Toolbar toolbar;
-    private TextInputLayout input_username,input_lastName,input_email_field,input_mobileNumber,input_password,input_confirm_password;
+    private TextInputLayout input_username, input_lastName, input_email_field, input_mobileNumber, input_password, input_confirm_password;
+    private TextView genderTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +114,13 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         email_field = (EditText) findViewById(R.id.email);
         passwordField = (EditText) findViewById(R.id.password);
         confirmPasswordField = (EditText) findViewById(R.id.confirm_password);
-        input_username=(TextInputLayout)findViewById(R.id.input_username);
-        input_lastName=(TextInputLayout)findViewById(R.id.input_lastName);
-        input_email_field=(TextInputLayout)findViewById(R.id.input_email_field);
-        input_mobileNumber=(TextInputLayout)findViewById(R.id.input_mobileNumber);
-        input_password=(TextInputLayout)findViewById(R.id.input_password);
-        input_confirm_password=(TextInputLayout)findViewById(R.id.input_confirm_password);
-
+        input_username = (TextInputLayout) findViewById(R.id.input_username);
+        input_lastName = (TextInputLayout) findViewById(R.id.input_lastName);
+        input_email_field = (TextInputLayout) findViewById(R.id.input_email_field);
+        input_mobileNumber = (TextInputLayout) findViewById(R.id.input_mobileNumber);
+        input_password = (TextInputLayout) findViewById(R.id.input_password);
+        input_confirm_password = (TextInputLayout) findViewById(R.id.input_confirm_password);
+        genderTxt = (TextView) findViewById(R.id.genderTxt);
         passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         confirmPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         goToHomeActivityFromSignUp = (Button) findViewById(R.id.signInBtn);
@@ -125,6 +128,11 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         sharedPreference = new SharedPreference();
         initGoogleFb();
 
+
+        String udata = "Gender";
+        SpannableString content = new SpannableString(udata);
+        content.setSpan(new UnderlineSpan(), 0, udata.length(), 0);
+        genderTxt.setText(content);
 
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

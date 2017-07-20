@@ -1,72 +1,74 @@
-package com.multitv.yuv.activity;
-
-import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.igalata.bubblepicker.model.BubbleGradient;
-import com.igalata.bubblepicker.model.PickerItem;
-import com.igalata.bubblepicker.rendering.BubblePicker;
-import com.multitv.yuv.R;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-
-
-import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.igalata.bubblepicker.model.BubbleGradient;
-import com.igalata.bubblepicker.model.PickerItem;
-import com.igalata.bubblepicker.rendering.BubblePicker;
-import com.multitv.cipher.MultitvCipher;
-import com.multitv.yuv.application.AppController;
-import com.multitv.yuv.models.Interest;
-import com.multitv.yuv.models.InterestData;
-import com.multitv.yuv.utilities.Json;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-/**
- * Created by Lenovo on 17-07-2017.
- */
-
-public class InterestChooserScreen extends AppCompatActivity {
-    String bubbleListUrl = "http://api.multitvsolution.com/automatorapi/v3/interest/list/token/59689749397fb";
-    private ProgressBar progress_bar_bottom_home;
-    private List<Interest> interestsArraylist = new ArrayList<>();
-    private BubblePicker bubblePicker;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_interest_chooser_screen);
-        bubblePicker = (BubblePicker) findViewById(R.id.picker);
-        progress_bar_bottom_home = (ProgressBar) findViewById(R.id.progress_bar_bottom_home);
+//package com.multitv.yuv.activity;
+//
+//import android.content.res.TypedArray;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+//import android.os.Bundle;
+//
+//import com.igalata.bubblepicker.adapter.BubblePickerAdapter;
+//import com.igalata.bubblepicker.model.BubbleGradient;
+//import com.igalata.bubblepicker.model.PickerItem;
+//import com.igalata.bubblepicker.rendering.BubblePicker;
+//import com.multitv.yuv.R;
+//
+//import org.jetbrains.annotations.NotNull;
+//
+//import java.util.ArrayList;
+//
+//
+//import android.content.res.TypedArray;
+//import android.graphics.Typeface;
+//import android.os.Bundle;
+//import android.support.annotation.Nullable;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+//import android.util.Log;
+//import android.view.View;
+//import android.widget.ProgressBar;
+//
+//import com.android.volley.DefaultRetryPolicy;
+//import com.android.volley.Request;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.StringRequest;
+//import com.igalata.bubblepicker.model.BubbleGradient;
+//import com.igalata.bubblepicker.model.PickerItem;
+//import com.igalata.bubblepicker.rendering.BubblePicker;
+//import com.multitv.cipher.MultitvCipher;
+//import com.multitv.yuv.application.AppController;
+//import com.multitv.yuv.models.Interest;
+//import com.multitv.yuv.models.InterestData;
+//import com.multitv.yuv.utilities.Json;
+//
+//import org.jetbrains.annotations.NotNull;
+//import org.json.JSONObject;
+//
+//import java.util.ArrayList;
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Map;
+//
+//
+///**
+// * Created by Lenovo on 17-07-2017.
+// */
+//
+//public class InterestChooserScreen extends AppCompatActivity {
+//    String bubbleListUrl = "http://api.multitvsolution.com/automatorapi/v3/interest/list/token/59689749397fb";
+//    private ProgressBar progress_bar_bottom_home;
+//    private List<Interest> interestsArraylist = new ArrayList<>();
+//    private BubblePicker bubblePicker;
+//
+//    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_interest_chooser_screen);
+//        bubblePicker = (BubblePicker) findViewById(R.id.picker);
+//        progress_bar_bottom_home = (ProgressBar) findViewById(R.id.progress_bar_bottom_home);
 //        getBubbleInterestListCall(bubbleListUrl);
-    }
-
+//    }
+//
+//
 //    private void getBubbleInterestListCall(String url) {
 //        progress_bar_bottom_home.setVisibility(View.VISIBLE);
 //        StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
@@ -149,10 +151,10 @@ public class InterestChooserScreen extends AppCompatActivity {
 //                item.setGradient(new BubbleGradient(colors.getColor((position * 2) % 8, 0),
 //                        colors.getColor((position * 2) % 8 + 1, 0), BubbleGradient.VERTICAL));
 //                item.setTypeface(tf);
-//                item.setTextColor(ContextCompat.getColor(BubblePickerActivity.this, android.R.color.white));
+//                item.setTextColor(ContextCompat.getColor(InterestChooserScreen.this, android.R.color.white));
 //                //item.setBackgroundImage(ContextCompat.getDrawable(BubblePickerActivity.this, images.getResourceId(position, 0)));
 //                return item;
 //            }
 //        });
 //    }
-}
+//}
