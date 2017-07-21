@@ -14,7 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.multitv.multitvcommonsdk.utils.GPSTracker;
 import com.multitv.yuv.R;
 import com.multitv.yuv.locale.LocaleHelper;
 import com.multitv.yuv.models.User;
+import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppSessionUtil1;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Json;
@@ -57,11 +60,11 @@ import com.multitv.yuv.utilities.Utilities;
 
 
 public class OtpScreenActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
-    private EditText otpField,mobileNumberField;
+    private EditText otpField, mobileNumberField;
     private SharedPreference sharedPreference;
-    private String user_id, phoneNumber, provider, package_name;
+    private String user_id, phoneNumber;
     private ProgressBar progressBar;
-    private LinearLayout Verifie_bg,mobileNumber_bg;
+    private LinearLayout Verifie_bg, mobileNumber_bg;
     private Intent subscriptionIntent;
     private TextView titleTxt;
     private Button verifieBtn;
@@ -97,15 +100,30 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
         sharedPreference.setLoginOtpSentStatus(OtpScreenActivity.this, "status", "0");
         user_id = sharedPreference.getPreferencesString(this, "user_id" + "_" + ApiRequest.TOKEN);
+        mobileNumberField = (EditText) findViewById(R.id.mobileNumber);
         otpField = (EditText) findViewById(R.id.otp);
         progressBar = (ProgressBar) findViewById(R.id.progress_signin);
         Verifie_bg = (LinearLayout) findViewById(R.id.Verifie_bg);
+        mobileNumber_bg = (LinearLayout) findViewById(R.id.mobileNumber_bg);
         verifieBtn = (Button) findViewById(R.id.verifieBtn);
-
+        TextView resendOtpTextview = (TextView) findViewById(R.id.resendOtpTextview);
+        SpannableString content = new SpannableString("RESEND OTP");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        resendOtpTextview.setText(content);
 
         subscriptionIntent = getIntent();
         String RECEIVED = subscriptionIntent.getStringExtra("getOtp");
         int usedForLogin = subscriptionIntent.getIntExtra("usedForLogin", 0);
+        if (!TextUtils.isEmpty(RECEIVED)) {
+            if (RECEIVED.equalsIgnoreCase("RECEIVED")) {
+                Verifie_bg.setVisibility(View.VISIBLE);
+                mobileNumber_bg.setVisibility(View.GONE);
+                phoneNumber = subscriptionIntent.getStringExtra("phone");
+            } else if (RECEIVED.equalsIgnoreCase("NOT_RECEIVED")) {
+                Verifie_bg.setVisibility(View.GONE);
+                mobileNumber_bg.setVisibility(View.VISIBLE);
+            }
+        }
 
         titleTxt = (TextView) findViewById(R.id.titleTxt);
         if (usedForLogin == 1) {
@@ -151,11 +169,27 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
     }
 
 
-    public void reSendOtpbtn(View v) {
-        //resendOtp();
+    public void resendOtpTextviewClickListener(View v) {
+        if (otpField != null)
+            otpField.setText("");
+        Verifie_bg.setVisibility(View.GONE);
+        mobileNumber_bg.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(phoneNumber)) {
+            mobileNumberField.setText(phoneNumber);
+        }
     }
 
-    private void resendOtp(final String mobileNumber){
+    public void submitMobileNumberForOtp(View v) {
+        if (validate()) {
+            String mobile = mobileNumberField.getText().toString();
+            if (!TextUtils.isEmpty(mobile) && !TextUtils.isEmpty(user_id))
+                resendOtp(mobile);
+            else
+                Toast.makeText(OtpScreenActivity.this, "Please Enter Vaild Mobile Number", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void resendOtp(final String mobileNumber) {
         if (LoginScreen.getInstance() != null) {
             ((LoginScreen) LoginScreen.getInstance()).closeActivity();
         }
@@ -178,12 +212,12 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
                         Log.e("OTP-FROM-Yuva", "GENRATE_otp_api" + mObj.getString("result"));
                         Verifie_bg.setVisibility(View.VISIBLE);
                         mobileNumber_bg.setVisibility(View.GONE);
-                        Toast.makeText(OtpScreenActivity.this,  "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(OtpScreenActivity.this, "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
                     } else {
                         String error = new String(mObj.optString("error"));
                         progressBar.setVisibility(View.GONE);
                         if (!TextUtils.isEmpty(error))
-                            Toast.makeText(OtpScreenActivity.this,  "" + error, Toast.LENGTH_LONG).show();
+                            Toast.makeText(OtpScreenActivity.this, "" + error, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     Log.e("OTP-FROM-Yuva", "Error" + "" + e.getMessage());
@@ -320,7 +354,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
                 finish();
             }
         }, 10);
-
     }
 
     @Override
@@ -342,7 +375,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
                 finish();
                 return true;
-
 
             default:
                 return false;
@@ -418,5 +450,21 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+    private boolean validate() {
+        boolean valid = true;
+        String mobile = mobileNumberField.getText().toString();
+
+        if (TextUtils.isEmpty(mobile)) {
+            mobileNumberField.setError("Mobile Number can not be blank");
+            valid = false;
+        }
+        if (!AppConstants.isValidMobile(mobile)) {
+            mobileNumberField.setError("Invalid phone number");
+            valid = false;
+        }
+
+        return valid;
     }
 }
