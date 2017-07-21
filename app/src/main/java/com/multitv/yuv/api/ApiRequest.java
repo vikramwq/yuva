@@ -68,6 +68,6 @@ public class ApiRequest {
     public static String SIGNUP_URL = "/user/add/token/" + TOKEN;
     public static String LOGIN_URL1 = "/user/social/token/" + TOKEN;
     public static String FORGET_URL = "/user/forgot/token/" + TOKEN;
-
+    public static String LIVE_URL = BASE_URL_VERSION_3 + "/channel/list/token/" + TOKEN;
 
 }

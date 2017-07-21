@@ -11,7 +11,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.login.LoginManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.iainconnor.objectcache.CacheManager;
+import com.iainconnor.objectcache.DiskCache;
 import com.multitv.yuv.BuildConfig;
 import com.multitv.yuv.activity.LoginScreen;
 import com.multitv.yuv.api.ApiRequest;
@@ -22,12 +28,6 @@ import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.ConnectionManager;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Tracer;
-import com.crashlytics.android.Crashlytics;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.iainconnor.objectcache.CacheManager;
-import com.iainconnor.objectcache.DiskCache;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +39,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class AppController extends MultiDexApplication {
 
@@ -91,6 +93,9 @@ public class AppController extends MultiDexApplication {
         ConnectionManager.getInstance(this).startConnectionTracking();
         applicationHandler = new Handler(applicationContext.getMainLooper());
         Fresco.initialize(this);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+        Realm.setDefaultConfiguration(config);
     }
 
     public static synchronized AppController getInstance() {

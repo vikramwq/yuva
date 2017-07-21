@@ -22,23 +22,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.reflect.TypeToken;
 import com.iainconnor.objectcache.GetCallback;
-
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.PagerAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.locale.LocaleHelper;
+import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.categories.Category;
 import com.multitv.yuv.models.categories.Vod;
 import com.multitv.yuv.models.menu.MenuModel;
@@ -54,6 +43,19 @@ import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
 import com.multitv.yuv.utilities.VersionUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.multitv.yuv.utilities.Constant.EXTRA_SHOW_LIVE_TAB;
@@ -203,10 +205,28 @@ public class BaseFragment extends Fragment {
 
     }
 
+    @Subscribe
+    public void onEvent(ChannelsData channelsData) {
+        if (pager != null)
+            pager.setCurrentItem(5);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 

@@ -17,21 +17,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.multitv.cipher.MultitvCipher;
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.LiveSectionListDataAdapter;
-//import com.barwin.app.adapter.MainLiveAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.SectionDataModel1;
-import com.multitv.yuv.models.home.LiveData;
 import com.multitv.yuv.sharedpreference.SharedPreference;
-import com.multitv.yuv.utilities.AppUtils;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
-import com.google.gson.Gson;
-import com.multitv.cipher.MultitvCipher;
 
 import org.json.JSONObject;
 
@@ -41,6 +38,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+//import com.barwin.app.adapter.MainLiveAdapter;
 
 /**
  * Created by arungoyal on 30/06/17.
@@ -98,14 +97,12 @@ public class LiveFragment extends Fragment {
 
 
     private void getContentData(final boolean isLoadMoreRequest) {
-
-
         String url;
 
         if (userID != null && userID.length() > 0) {
-            url = "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN + "?customer_id=" + userID;
+            url = ApiRequest.LIVE_URL + "?customer_id=" + userID;
         } else {
-            url = "http://api.multitvsolution.com/automatorapi/v3/channel/list/token/" + ApiRequest.TOKEN;
+            url = ApiRequest.LIVE_URL;
         }
         Log.d(this.getClass().getName(), "channels api====" + url);
         StringRequest jsonObjReq = new StringRequest(Request.Method.GET,

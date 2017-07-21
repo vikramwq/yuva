@@ -2,26 +2,23 @@ package com.multitv.yuv.models;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by arungoyal on 17/07/17.
  */
 
-public class Channel implements Serializable{
-
-
+public class Channel extends RealmObject implements Serializable {
     private String id;
     private String first_name;
     private String last_name;
-
     private String description;
-
     private String prfile_pic;
     private String banner_image;
     private String created_on;
     private String total_subscribers;
     private String is_subscriber;
     private String notification;
-
 
     public String getNotification() {
         return notification;
