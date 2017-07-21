@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/rating_menu"
+        android:title="Add Rating" />
+
+
+    <item
+        android:id="@+id/report_menu"
+        android:title="Report Menu" />
+
+
+</menu>

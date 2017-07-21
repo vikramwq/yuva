@@ -21,8 +21,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -104,7 +106,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private String typePlayer,
             favorite, like;
     private Button btnPlay;
-    private TextView tittle_text, start_catTxt, like_txt;
+    private TextView tittle_text, like_txt;
     private ExpandableTextView desc_text;
     private Handler handler;
 
@@ -134,6 +136,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private GifImageView downloadGifImg;
     private boolean isHandlerStarted;
     private String contentSessionId;
+    private LinearLayout menuLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,14 +146,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
-
         setContentView(R.layout.activity_player_parent);
-
-//        downloadThread = new DownloadThread(this);
-//        downloadThread.start();
-
         sharedPreference = new SharedPreference();
-
         user_id = sharedPreference.getPreferencesString(this, "user_id" + "_" + ApiRequest.TOKEN);
         isLoggedIn = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_LOGGED_IN);
         isOTPVerified = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_OTP_VERIFIED);
@@ -178,12 +175,13 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private void initialize() {
         tittle_text = (TextView) findViewById(R.id.tittle);
         like_txt = (TextView) findViewById(R.id.like_txt);
-        start_catTxt = (TextView) findViewById(R.id.start_catTxt);
+//        start_catTxt = (TextView) findViewById(R.id.start_catTxt);
         desc_text = (ExpandableTextView) findViewById(R.id.expand_text_view);
         framePlayerLayout = (FrameLayout) findViewById(R.id.sony_player_layout);
         player_image = (ImageView) findViewById(R.id.player_image);
         btn_share = (ImageView) findViewById(R.id.btn_share);
         btn_like = (ImageView) findViewById(R.id.like);
+        menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
         btn_favorite = (ImageView) findViewById(R.id.btn_favorite);
         btn_download = (ImageView) findViewById(R.id.btn_download);
         downloadGifImg = (GifImageView) findViewById(R.id.btn_download_gif);
@@ -230,13 +228,35 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                 if (contentData.category_ids != null && contentData.category_ids.size() > 0)
                     categoryID = contentData.category_ids.get(0);
             }
-            if (contentData.start_cast != null && !contentData.start_cast.isEmpty()) {
-                start_catTxt.setVisibility(View.VISIBLE);
-                start_catTxt.setText(getResources().getString(R.string.star_cast_hint) + contentData.start_cast);
-            } else {
-                start_catTxt.setVisibility(View.GONE);
-            }
+
+
+
+
+
+
+
+
             setupViewPager();
+
+
+            menuLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    PopupMenu popup = new PopupMenu(MultiTvPlayerActivity.this, v);
+                    popup.getMenuInflater().inflate(R.menu.player_menu, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Toast.makeText(MultiTvPlayerActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                    });
+
+                    popup.show();//showing popup menu
+
+
+                }
+            });
             //createTabIcons();
 
             //--likes----
@@ -252,15 +272,15 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                 getLikeToServer();
             }
 
-            if (!TextUtils.isEmpty(likeStoredFromPreference)) {
-                like = likeStoredFromPreference;
-                if (like.equalsIgnoreCase("0"))
-                    btn_like.setImageResource(R.mipmap.unlike_bg);
-                else
-                    btn_like.setImageResource(R.mipmap.like_fill);
-            } else {
-                getLikeToServer();
-            }
+//            if (!TextUtils.isEmpty(likeStoredFromPreference)) {
+//                like = likeStoredFromPreference;
+//                if (like.equalsIgnoreCase("0"))
+//                    btn_like.setImageResource(R.mipmap.unlike_bg);
+//                else
+//                    btn_like.setImageResource(R.mipmap.like_fill);
+//            } else {
+//                getLikeToServer();
+//            }
 
 
             btn_share.setOnClickListener(new View.OnClickListener() {
@@ -311,33 +331,33 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             else
                 favorite = "" + contentData.favorite;
 
-            if (!TextUtils.isEmpty(favorite)) {
-                if (favorite.equalsIgnoreCase("1")) {
-                    btn_favorite.setImageResource(R.mipmap.fav_fill);
-                } else {
-                    btn_favorite.setImageResource(R.mipmap.favorite);
-                }
-            }
-            btn_favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isOTPVerified) {
-                        if (favorite != null && favorite.equalsIgnoreCase("1")) {
-                            markContentFvrtOrLike(1, 0);
-                        } else {
-                            markContentFvrtOrLike(1, 1);
-                        }
-                    } else {
-                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
-                    }
-                }
-            });
+//            if (!TextUtils.isEmpty(favorite)) {
+//                if (favorite.equalsIgnoreCase("1")) {
+//                    btn_favorite.setImageResource(R.mipmap.fav_fill);
+//                } else {
+//                    btn_favorite.setImageResource(R.mipmap.favorite);
+//                }
+//            }
+//            btn_favorite.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (isOTPVerified) {
+//                        if (favorite != null && favorite.equalsIgnoreCase("1")) {
+//                            markContentFvrtOrLike(1, 0);
+//                        } else {
+//                            markContentFvrtOrLike(1, 1);
+//                        }
+//                    } else {
+//                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
+//                    }
+//                }
+//            });
 
 
             if (download_path != null && download_path.length() > 0 && contentData.download_expiry > 0) {
-                btn_download.setImageResource(R.drawable.ic_download);
+                btn_download.setImageResource(R.mipmap.ic_download_player);
             } else {
-                btn_download.setImageResource(R.drawable.ic_download_disable);
+                btn_download.setImageResource(R.mipmap.ic_download_disabled);
             }
 
             downloadGifImg.setOnClickListener(new View.OnClickListener() {
@@ -1024,6 +1044,18 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             AppSessionUtil1.sendHeartBeat(MultiTvPlayerActivity.this);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
