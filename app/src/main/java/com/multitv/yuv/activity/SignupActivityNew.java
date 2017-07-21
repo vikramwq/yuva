@@ -1,31 +1,24 @@
 package com.multitv.yuv.activity;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputType;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,98 +42,89 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.CategoryAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
-import com.multitv.yuv.controller.SignUpController;
-import com.multitv.yuv.interfaces.SignUpListener;
-import com.multitv.yuv.models.User;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppNetworkAlertDialog;
-import com.multitv.yuv.utilities.Json;
-import com.multitv.yuv.utilities.MultitvCipher;
 import com.multitv.yuv.utilities.Utilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//----location ---
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
-import android.location.LocationManager;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-import static com.multitv.yuv.utilities.Utilities.hideKeyboard;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 
-public class SignupActivityNew extends AppCompatActivity implements SignUpListener{
+public class SignupActivityNew extends AppCompatActivity implements ConnectionCallbacks,
+        OnConnectionFailedListener,
+        LocationListener,
+        ResultCallback<LocationSettingsResult> {
     private EditText email_field, passwordField, mobileNumberField, firstNameField, /*lastNameField,*/
             confirmPasswordField;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
-    private TextView signUp_btn;
     private Button goToHomeActivityFromSignUp;
     private ProgressBar progressBar;
-    private GoogleSignInOptions gso;
-    private int RC_SIGN_IN = 3;
     SharedPreference sharedPreference;
-    private int loginThrough;
-    private GoogleApiClient mGoogleApiClient;
     PopupWindow popupWindow;
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private String user_id, password, mPhoneNum, firstName, LastName, mGender = "", mFirstName = "", mLastName = "", mUserName = "", mDob = "", mEmail = "", confirmPasswordStr = "";
     private Toolbar toolbar;
     private TextInputLayout input_username, /*input_lastName,*/
             input_email_field, input_mobileNumber, input_password, input_confirm_password;
     private TextView genderTxt, ageTxt, locationTxt;
     private LinearLayout ageLayout, genderLayout;
-    LocationRequest mLocationRequest;
-    private LocationCallback mCallback;
-    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 9009;
-    private LocationManager locationManager;
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    private boolean mRequestingLocationUpdates = true;
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-
-    private static Location sLastLocation;
+    //--for Location update -----
+    protected static final String TAG = "MainActivity";
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    protected final static String KEY_REQUESTING_LOCATION_UPDATES = "requesting-location-updates";
+    protected final static String KEY_LOCATION = "location";
+    protected final static String KEY_LAST_UPDATED_TIME_STRING = "last-updated-time-string";
+    protected GoogleApiClient mGoogleApiClient;
+    protected LocationRequest mLocationRequest;
+    protected LocationSettingsRequest mLocationSettingsRequest;
+    protected Location mCurrentLocation;
+    protected Boolean mRequestingLocationUpdates;
+    private RelativeLayout containerLayout;
+    private String ageGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,18 +141,16 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Utilities.applyFontForToolbarTitle(SignupActivityNew.this);
 
-        signUp_btn = (TextView) findViewById(R.id.signUp_btn);
         firstNameField = (EditText) findViewById(R.id.firstName);
-//        lastNameField = (EditText) findViewById(R.id.lastName);
         mobileNumberField = (EditText) findViewById(R.id.mobileNumber);
         email_field = (EditText) findViewById(R.id.email);
         passwordField = (EditText) findViewById(R.id.password);
         confirmPasswordField = (EditText) findViewById(R.id.confirm_password);
         input_username = (TextInputLayout) findViewById(R.id.input_username);
-//        input_lastName = (TextInputLayout) findViewById(R.id.input_lastName);
         input_email_field = (TextInputLayout) findViewById(R.id.input_email_field);
         input_mobileNumber = (TextInputLayout) findViewById(R.id.input_mobileNumber);
         input_password = (TextInputLayout) findViewById(R.id.input_password);
+        containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
 
         ageLayout = (LinearLayout) findViewById(R.id.ageLayout);
         genderLayout = (LinearLayout) findViewById(R.id.genderLayout);
@@ -177,15 +160,11 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         genderTxt = (TextView) findViewById(R.id.genderTxt);
         ageTxt = (TextView) findViewById(R.id.ageTxt);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         confirmPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         goToHomeActivityFromSignUp = (Button) findViewById(R.id.signInBtn);
         progressBar = (ProgressBar) findViewById(R.id.progress_signin);
         sharedPreference = new SharedPreference();
-
-
 
 
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
@@ -201,13 +180,8 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
                     if (validate()) {
                         String mpassword = passwordField.getText().toString();
                         mFirstName = firstNameField.getText().toString();
-
                         String ageGroup = ageTxt.getText().toString();
-
                         String gender = genderTxt.getText().toString();
-
-//                        mLastName = lastNameField.getText().toString();
-
                         String[] nameArr = mFirstName.split(" ");
                         if (nameArr.length >= 2) {
                             mFirstName = nameArr[0];
@@ -248,14 +222,10 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             }
         });
 
-
         ageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 showDropdown(v);
-
             }
         });
 
@@ -270,61 +240,21 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         locationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                if (checkAndRequestPermissions()) {
-
-                }
+                getAddress(locationTxt);
             }
         });
 
 
-
-
-
+        //---for location view -----
+        mRequestingLocationUpdates = false;
+        buildGoogleApiClient();
+        createLocationRequest();
+        buildLocationSettingsRequest();
     }
-
-
-    private boolean checkAndRequestPermissions() {
-
-
-        int permissionExternalStorage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        int permissionReadPhone = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionExternalStorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-
-        if (permissionReadPhone != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_PHONE_STATE);
-        }
-
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
-            return false;
-        }
-        return true;
-    }
-
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 
 
     private void showDropdownGender(View view) {
-
         popupWindow = new PopupWindow(this);
-
         ListView listView = new ListView(this);
         String[] arr = {"Male", "Female"};
         List<String> list = Arrays.asList(arr);
@@ -336,8 +266,10 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-
                 genderTxt.setText(adapter.getItem(position));
+                if (!TextUtils.isEmpty(genderTxt.getText())) {
+                    ageGroup = genderTxt.getText().toString();
+                }
             }
         });
 
@@ -345,15 +277,12 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         popupWindow.setWidth(400);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.showAsDropDown(view);
-
     }
 
     private void showDropdown(View view) {
-
         popupWindow = new PopupWindow(this);
-
         ListView listView = new ListView(this);
-        String[] arr = {"11-20", "21-30", "31-40", "41-50", "51-60"};
+        String[] arr = {"Below 18", "18-24", "25-35", "Above 35"};
         List<String> list = Arrays.asList(arr);
         final CategoryAdapter adapter = new CategoryAdapter(SignupActivityNew.this, R.layout.category_item, list);
         listView.setAdapter(adapter);
@@ -364,7 +293,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 ageTxt.setText(adapter.getItem(position));
-
                 popupWindow.dismiss();
             }
         });
@@ -375,117 +303,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         popupWindow.showAsDropDown(view);
 
     }
-
-
-    public void signUpFromFacebook(View v) {
-        if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
-            Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.GONE);
-            return;
-        } else {
-            fb_login();
-        }
-    }
-
-    public void signUpFromGoogle(View v) {
-        if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
-            Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.GONE);
-            return;
-        } else {
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
-    }
-
-
-    private void sendOtp(final String mnUMBER, final String userId, final String provider) {
-        sharedPreference.setPreferencesString(this, "user_id" + "_" + ApiRequest.TOKEN, "" + userId);
-        if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
-            Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-        progressBar.setVisibility(View.VISIBLE);
-
-        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.e("GENRATE_otp_api", response);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    final JSONObject mObj = new JSONObject(response);
-                    if (mObj.optInt("code") == 1) {
-                        Log.e("OTP-FROM-VEQTA", "GENRATE_otp_api" + mObj.getString("result"));
-
-                        new Handler().postDelayed(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-
-                                if (!TextUtils.isEmpty(mnUMBER))
-                                    sharedPreference.setPhoneNumber(SignupActivityNew.this, "phone", mnUMBER);
-
-                                try {
-                                    Toast.makeText(SignupActivityNew.this, "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                Intent intent = new Intent(SignupActivityNew.this, OtpScreenActivity.class);
-                                intent.putExtra("getOtp", "RECEIVED");
-                                intent.putExtra("phone", mnUMBER);
-                                intent.putExtra("provider", provider);
-
-                                startActivity(intent);
-                                finish();
-                            }
-                        }, 100);
-
-                    } else {
-                        String error = new String(mObj.optString("error"));
-                        progressBar.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(error))
-                            Toast.makeText(SignupActivityNew.this, error, Toast.LENGTH_LONG).show();
-
-                    }
-                } catch (Exception e) {
-                    Log.e("OTP-FROM-VEQTA", "Error" + "" + e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("OTP-FROM-VEQTA", "Error: " + error.getMessage());
-
-                progressBar.setVisibility(View.GONE);
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("type", "mobile");
-                params.put("user_id", userId);
-                params.put("value", mnUMBER);
-
-                Log.e("phone", mnUMBER);
-                //Log.e("user_id", userId);
-
-                return params;
-            }
-        };
-
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
-    }
-
 
     public String getNetType() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -513,19 +330,31 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         String email = email_field.getText().toString();
         String password = passwordField.getText().toString();
         String firstName = firstNameField.getText().toString();
-//        String lastName = lastNameField.getText().toString();
         String confirmPassword = confirmPasswordField.getText().toString();
+        String genderString = genderTxt.getText().toString();
+        String locationAddress = locationTxt.getText().toString();
+        String ageString = ageTxt.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
+        if (TextUtils.isEmpty(locationAddress)) {
+            Toast.makeText(SignupActivityNew.this, "Location field cannot be lefte blank", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+
+        if (TextUtils.isEmpty(ageString)) {
+            Toast.makeText(SignupActivityNew.this, "Age field cannot be lefte blank", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+
+        if (TextUtils.isEmpty(genderString)) {
+            Toast.makeText(SignupActivityNew.this, "Gender field cannot be lefte blank", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
 
         if (TextUtils.isEmpty(firstName)) {
             input_username.setError("FirstName field cannot be left blank");
             valid = false;
         }
-//        if (TextUtils.isEmpty(lastName)) {
-//            input_lastName.setError("LastName field cannot be left blank");
-//            valid = false;
-//        }
 
 
         if (TextUtils.isEmpty(password)) {
@@ -537,10 +366,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             input_password.setError("Your password should be atleast 8 character long");
             valid = false;
         }
-       /* if (password.length() > 8) {
-            passwordField.setError("Your password should be atleast 8 character long");
-            valid = false;
-        }*/
 
         if (TextUtils.isEmpty(confirmPassword)) {
             input_confirm_password.setError("Your passwords do not match");
@@ -581,119 +406,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-
-    private void fb_login() {
-        progressBar.setVisibility(View.VISIBLE);
-        loginButton.setReadPermissions(new String[]{"email", "user_hometown", "user_likes", "public_profile"});
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                //Toast.makeText(getActivity(), "login success", Toast.LENGTH_SHORT).show();
-                String accessToken = loginResult.getAccessToken().getToken();
-                Log.e("accessToken", accessToken);
-                final GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject obj,
-                                                    GraphResponse response) {
-
-                                progressBar.setVisibility(View.GONE);
-
-                                Log.e("facebookResponce===", response.toString());
-                                try {
-                                    final String firstName = obj.optString("first_name");
-                                    final String lastName = obj.optString("last_name");
-                                    final String gender = obj.optString("gender");
-                                    final String mail_id = obj.optString("email");
-                                    Log.e("id", obj.optString("id"));
-                                    String id = obj.optString("id");
-
-                                    if (!TextUtils.isEmpty(gender)) {
-                                        mGender = gender;
-                                    }
-                                    String name = firstName;
-                                    if (!TextUtils.isEmpty(lastName)) {
-                                        name = name.concat(" " + lastName);
-                                    }
-                                    mFirstName = firstName;
-                                    mLastName = lastName;
-                                    mEmail = mail_id;
-                                    mUserName = name;
-
-                                    loginThrough = AppConstants.LOGIN_THROUGH_FB;
-
-                                    if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
-                                        Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-
-                                        progressBar.setVisibility(View.GONE);
-                                        return;
-                                    } else {
-                                        updateInfoToServer(id, mFirstName, mLastName, mGender, "", "", mUserName, mEmail,
-                                                "", mDob, loginThrough, mPhoneNum);
-                                    }
-
-
-                                    // profilePicUrlFromFb = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                    Log.e("first_name", obj.optString("first_name"));
-                                    Log.e("last_name", obj.optString("last_name"));
-                                    Log.e("gender", obj.optString("gender"));
-                                    Log.e("name", obj.optString("name"));
-                                    Log.e("link", obj.optString("link"));
-                                    Log.e("locale", obj.optString("locale"));
-                                    Log.e("Email:", obj.optString("email"));
-                                    if (!TextUtils.isEmpty(id)) {
-                                        final String URL_FB_IMAGE = "http://graph.facebook.com/" + id + "/picture?type=large&redirect=false";
-
-                                        AsyncTask.execute(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getProfileFromFb(URL_FB_IMAGE, firstName, lastName, gender, mail_id);
-                                            }
-                                        });
-
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Log.e("Fb-error: ", e.getMessage().toString());
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressBar.setVisibility(View.GONE);
-                                            Toast.makeText(SignupActivityNew.this, getString(R.string.fb_error), Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,link,email,picture,gender,locale,first_name,last_name");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
-
-            @Override
-            public void onCancel() {
-                System.out.println("onCancel");
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                System.out.println("onError");
-                progressBar.setVisibility(View.GONE);
-
-                try {
-                    Log.e("SignUpActivity", exception.getCause().toString());
-                    Toast.makeText(SignupActivityNew.this, getString(R.string.fb_error), Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    Log.e("SignUpActivity", e.getMessage());
-                }
-            }
-        });
-        loginButton.performClick();
     }
 
 
@@ -805,9 +517,25 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
                     params.put("last_name", last_name);
                     params.put("email", email);
                     params.put("password", password);
-                    params.put("age_group", ageGroup);
+                    if (!TextUtils.isEmpty(ageGroup)) {
+                        if (ageGroup.equalsIgnoreCase("below 18")) {
+                            params.put("age_group", "0-18");
+                        } else if (ageGroup.equalsIgnoreCase("above 35")) {
+                            params.put("age_group", "35-100");
+                        } else {
+                            params.put("age_group", ageGroup);
+                        }
+                    }
+
                     params.put("gender", gender);
+
                     params.put("phone", phone);
+
+                    if (mCurrentLocation != null) {
+                        params.put("lat", "" + mCurrentLocation.getLatitude());
+                        params.put("long", "" + mCurrentLocation.getLongitude());
+                    }
+
                     params.put("devicedetail", ddjson);
                     params.put("device_other_detail", dodjson);
                     Set<String> keySet = params.keySet();
@@ -831,267 +559,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            progressBar.setVisibility(View.VISIBLE);
-            GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(googleSignInResult);
-        }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-
-    @Override
-    public void onSuccess(String resultString) {
-        if ((progressBar.getVisibility() == View.VISIBLE))
-            progressBar.setVisibility(View.GONE);
-
-        try {
-            JSONObject mObj = new JSONObject(resultString);
-            if (mObj.optInt("code") == 1) {
-                MultitvCipher mcipher = new MultitvCipher();
-                String str = new String(mcipher.decryptmyapi(mObj.optString("result")));
-                Log.e("SignUpActivity", str);
-                User user = Json.parse(str.trim(), User.class);
-
-                if (!TextUtils.isEmpty(user.gender))
-                    mGender = user.gender;
-                if (!TextUtils.isEmpty(user.first_name))
-                    mFirstName = user.first_name;
-                else mFirstName = "";
-                if (!TextUtils.isEmpty(user.last_name))
-                    mLastName = user.last_name;
-                else mLastName = "";
-                if (!TextUtils.isEmpty(user.dob) && !user.dob.equals("0000-00-00"))
-                    mDob = user.dob;
-                if (!TextUtils.isEmpty(user.email))
-                    mEmail = user.email;
-
-                String provider = user.provider;
-                if (!TextUtils.isEmpty(provider)) {
-                    sharedPreference.setUserName(this, "first_name", mFirstName);
-                    sharedPreference.setUserLastName(this, "last_name", mLastName);
-                    sharedPreference.setDob(this, "dob", mDob);
-                    sharedPreference.setEmailId(this, "email_id", mEmail);
-
-
-                    if (!TextUtils.isEmpty(user.image))
-                        sharedPreference.setImageUrl(this, "imgUrl", user.image);
-
-                    if (mGender.equalsIgnoreCase("male")) {
-                        sharedPreference.setGender(this, "gender_id", "" + 0);
-                    } else if (mGender.equalsIgnoreCase("female")) {
-                        sharedPreference.setGender(this, "gender_id", "" + 1);
-                    }
-                }
-                if (!TextUtils.isEmpty(user.id)) {
-                    String otpVerifie = sharedPreference.getUserIfLoginVeqta(SignupActivityNew.this, "through");
-                    sharedPreference.setPreferencesString(this, "user_id" + "_" + ApiRequest.TOKEN, "" + user.id);
-                    sharedPreference.setPreferenceBoolean(this, sharedPreference.KEY_IS_LOGGED_IN);
-
-
-                    //==============move to dynamic way
-                    if (!TextUtils.isEmpty(user.contact_no) && !TextUtils.isEmpty(user.otp) && !TextUtils.isEmpty(user.provider)) {
-                        sendOtp(user.contact_no, user.id, user.provider);
-                    } else if (!TextUtils.isEmpty(user.contact_no) && TextUtils.isEmpty(user.otp)) {
-                        sharedPreference.setFromLogedIn(SignupActivityNew.this, "fromLogedin", "veqta");
-                        sharedPreference.setUserIfLoginVeqta(SignupActivityNew.this, "through", "1");
-                        sharedPreference.setPhoneNumber(SignupActivityNew.this, "phone", user.contact_no);
-                        moveToHomeScreen();
-                    } else if (TextUtils.isEmpty(user.contact_no) && !TextUtils.isEmpty(user.otp)) {
-                        moveToOtpScreenforSocial();
-                    } else if (TextUtils.isEmpty(user.contact_no) && TextUtils.isEmpty(user.otp)) {
-                        moveToOtpScreenforSocial();
-                    }
-                }
-
-            } else {
-                String error = mObj.optString("error");
-                if (!TextUtils.isEmpty(error))
-                    Toast.makeText(SignupActivityNew.this, error, Toast.LENGTH_LONG).show();
-
-            }
-        } catch (Exception e) {
-            Log.e("error", "" + e.getMessage());
-        }
-    }
-
-
-    @Override
-    public void onError() {
-        if ((progressBar.getVisibility() == View.VISIBLE))
-            progressBar.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.stopAutoManage(this);
-            mGoogleApiClient.disconnect();
-        }
-
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.stopAutoManage(this);
-            mGoogleApiClient.disconnect();
-        }
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-
-
-
-    private void updateInfoToServer(String id, String fName, String lName, String gender, String link, String locale, String name, String email, String location, String dob, int loginThrough, String phoneNo) {
-
-        if (!(progressBar.getVisibility() == View.VISIBLE))
-            progressBar.setVisibility(View.VISIBLE);
-        SignUpController signUpController = new SignUpController(this, this);
-        signUpController.sendInfoToServer(id, fName, lName, gender, link, locale, name, email, location, dob, loginThrough, phoneNo);
-    }
-
-    public void getProfileFromFb(String url, final String fname, final String lName, final String gender, final String email) {
-        StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
-                url, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.e("***FACEBOOK_IMAGE***", response);
-                    JSONObject mObj = new JSONObject(response);
-                    try {
-
-                        JSONObject newObj = mObj.getJSONObject("data");
-                        String profilePicUrlFromFb = newObj.optString("url");
-                        Log.e("***FB_IMAGE_URL***", profilePicUrlFromFb);
-                        if (!TextUtils.isEmpty(profilePicUrlFromFb))
-                            sharedPreference.setImageUrl(SignupActivityNew.this, "imgUrl", profilePicUrlFromFb);
-                    } catch (JSONException e) {
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error", "Error: " + error.getMessage());
-
-            }
-        });
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
-
-    }
-
-
-    //==============google plus login handle result from getting user information==============================================
-    //=========================================================================================
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.e("Result..... ", "handleSignInResult:" + result.getStatus().getStatusMessage());
-        //progressBar.setVisibility(View.GONE);
-        if (result.isSuccess()) {
-            GoogleSignInAccount information = result.getSignInAccount();
-            String personName = information.getDisplayName();
-            String gmail_id = information.getEmail();
-            String first_google_name = "", last_google_name = "";
-            String[] splited = personName.split("\\s+");
-            String id = information.getId();
-            if (splited.length > 0) {
-                first_google_name = splited[0];
-                if (splited.length > 1)
-                    last_google_name = splited[1];
-            }
-            if (!TextUtils.isEmpty(last_google_name)) {
-                sharedPreference.setGoogleLoginLastName(this, "googleLastName", last_google_name);
-            }
-
-            Log.e("person name", personName);
-            Log.e("email", gmail_id);
-
-            sharedPreference.setGoogleLoginUsername(this, "googleNAme", first_google_name);
-            sharedPreference.setGoogleLoginEmail(this, "emailFromGoogle", gmail_id);
-            String profilePic = null;
-            if (information.getPhotoUrl() != null) {
-                profilePic = information.getPhotoUrl().toString();
-                sharedPreference.setGoogleLoginProfilePic(SignupActivityNew.this, "ImageGoogleProfile", profilePic);
-                sharedPreference.setImageUrl(SignupActivityNew.this, "imgUrl", profilePic);
-                Log.e("personPhotoUrl", profilePic);
-            } else {
-                Log.e("personPhotoUrl", "Empty");
-            }
-            mFirstName = first_google_name;
-            mLastName = last_google_name;
-            mUserName = personName;
-            mEmail = gmail_id;
-            loginThrough = AppConstants.LOGIN_THROUGH_GOOGLE;
-
-
-            if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
-                Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
-                return;
-            } else {
-                updateInfoToServer(id, mFirstName, mLastName, mGender, "", "", mUserName, mEmail, "", mDob,
-                        loginThrough, mPhoneNum);
-            }
-        } else {
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(SignupActivityNew.this, "Google Login Failed", Toast.LENGTH_LONG).show();
-
-        }
-    }
-
-
-    public void moveToOtpScreenforSocial() {
-
-
-        if (LoginScreen.getInstance() != null) {
-            ((LoginScreen) LoginScreen.getInstance())
-                    .closeActivity();
-        }
-
-
-        sharedPreference.setPreferenceBoolean(SignupActivityNew.this, sharedPreference.KEY_IS_OTP_VERIFIED);
-        sharedPreference.setPreferenceBoolean(SignupActivityNew.this, sharedPreference.KEY_IS_LOGGED_IN);
-
-        Intent intent = new Intent(SignupActivityNew.this, HomeActivity.class);
-        intent.putExtra("getOtp", "NOT_RECEIVED");
-        startActivity(intent);
-        SignupActivityNew.this.finish();
-    }
-
-    public void moveToHomeScreen() {
-        if (LoginScreen.getInstance() != null) {
-            ((LoginScreen) LoginScreen.getInstance())
-                    .closeActivity();
-        }
-        Intent intent = new Intent(SignupActivityNew.this, HomeActivity.class);
-        startActivity(intent);
-        SignupActivityNew.this.finish();
-    }
-
 
     private void comeFromSubscription(String phone, String id) {
         sharedPreference.setPreferencesString(SignupActivityNew.this, "user_id" + "_" + ApiRequest.TOKEN, "" + id);
@@ -1145,8 +612,238 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
 
     }
 
+    //----------------------------------------------------------------------------------------------------------------
+    //-----------------------LOCATION UPDATE CODE ------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------
+
+    protected synchronized void buildGoogleApiClient() {
+        Log.i(TAG, "Building GoogleApiClient");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
 
 
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
 
+    protected void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        mLocationSettingsRequest = builder.build();
+        checkPermission();
+    }
+
+    protected void checkLocationSettings() {
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        mGoogleApiClient,
+                        mLocationSettingsRequest
+                );
+        result.setResultCallback(this);
+    }
+
+    @Override
+    public void onResult(LocationSettingsResult locationSettingsResult) {
+        final Status status = locationSettingsResult.getStatus();
+        switch (status.getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                Log.e(TAG, "All location settings are satisfied.");
+                startLocationUpdates();
+                break;
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                Log.e(TAG, "Location settings are not satisfied. Show the user a dialog to" +
+                        "upgrade location settings ");
+
+                try {
+
+                    status.startResolutionForResult(SignupActivityNew.this, REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "PendingIntent unable to execute request.");
+                }
+                break;
+            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                Log.e(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog " +
+                        "not created.");
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.e(TAG, "User agreed to make required location settings changes.");
+                        startLocationUpdates();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.e(TAG, "User chose not to make required location settings changes.");
+                        break;
+                }
+                break;
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // permission granted
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient,
+                mLocationRequest,
+                this
+        ).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                mRequestingLocationUpdates = true;
+
+            }
+        });
+
+    }
+
+    private static final int PERMISSION_REQUEST = 100;
+
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Snackbar.make(containerLayout, "You need to grant SEND SMS permission to send sms",
+                            Snackbar.LENGTH_LONG).setAction("OK", new View.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST);
+                        }
+                    }).show();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST);
+                }
+            } else {
+                checkLocationSettings();
+            }
+        } else {
+            checkLocationSettings();
+        }
+    }
+
+    //-----for get address from lat and long---------------
+    public void getAddress(TextView locationTextView) {
+        if (mCurrentLocation != null) {
+            Double latitude = mCurrentLocation.getLatitude();
+            Double longitude = mCurrentLocation.getLongitude();
+
+            Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+                if (addresses != null) {
+                    Address returnedAddress = addresses.get(0);
+                    StringBuilder strReturnedAddress = new StringBuilder();
+                    for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                        strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                    }
+                    if (!TextUtils.isEmpty(strReturnedAddress)) {
+                        locationTextView.setText(strReturnedAddress.toString());
+                        Log.e("LocationAddress", "" + strReturnedAddress.toString());
+                    }
+                } else {
+                    Log.e("LocationAddress", "Canont get Address!");
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                Log.e("LocationAddress", "Canont get Address!");
+            }
+        }
+
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.i(TAG, "Connected to GoogleApiClient");
+
+        if (mCurrentLocation == null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //permission granted---
+
+                return;
+            }
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "Connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mGoogleApiClient.isConnected()) {
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    protected void stopLocationUpdates() {
+
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient,
+                this
+        ).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                mRequestingLocationUpdates = false;
+            }
+        });
+    }
 }

@@ -14,7 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,7 +79,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black_semi_transparent));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.light_gray));
         }
         setContentView(R.layout.otp_screen);
 
@@ -104,7 +106,10 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         Verifie_bg = (LinearLayout) findViewById(R.id.Verifie_bg);
         mobileNumber_bg = (LinearLayout) findViewById(R.id.mobileNumber_bg);
         verifieBtn = (Button) findViewById(R.id.verifieBtn);
-
+        TextView resendOtpTextview = (TextView) findViewById(R.id.resendOtpTextview);
+        SpannableString content = new SpannableString("RESEND OTP");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        resendOtpTextview.setText(content);
 
         subscriptionIntent = getIntent();
         String RECEIVED = subscriptionIntent.getStringExtra("getOtp");
@@ -163,8 +168,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         }
     }
 
-
-    public void reSendOtpbtn(View v) {
+    public void resendOtpTextviewClickListener(View v) {
         if (otpField != null)
             otpField.setText("");
         Verifie_bg.setVisibility(View.GONE);

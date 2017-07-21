@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.filter)
     ImageView mFilter;
 
-//    @BindView(R.id.genre)
+    //    @BindView(R.id.genre)
 //    ImageView mGenre;
     @BindView(R.id.rl_notification)
     RelativeLayout mNotifybell;
@@ -210,14 +210,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             createAppSession();
         }
 
-
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Object value = getIntent().getExtras().get(key);
                 Tracer.debug(TAG, "Key: " + key + " Value: " + value);
             }
         }
-        ButterKnife.bind(this);
+        ButterKnife.bind(HomeActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -56,19 +56,19 @@ public class ForgetPassword extends AppCompatActivity {
         Utilities.applyFontForToolbarTitle(ForgetPassword.this);
         email_et = (EditText) findViewById(R.id.email_et);
         input_layout_email = (TextInputLayout) findViewById(R.id.input_layout_email);
-        progressBar=(ProgressBar)findViewById(R.id.progress_signin);
-        btnSubmit=(Button)findViewById(R.id.btnSubmit);
+        progressBar = (ProgressBar) findViewById(R.id.progress_signin);
+        btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard(v);
                 if (validate()) {
-                    String emailId=email_et.getText().toString();
+                    String emailId = email_et.getText().toString();
                     if (!TextUtils.isEmpty(emailId)) {
                         sendPasswordOnMail(emailId);
                     } else {
-                        Toast.makeText(ForgetPassword.this, getResources().getString(R.string.email_forgot_passowrd),Toast.LENGTH_LONG).show();
+                        Toast.makeText(ForgetPassword.this, getResources().getString(R.string.email_forgot_passowrd), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -77,20 +77,17 @@ public class ForgetPassword extends AppCompatActivity {
     }
 
 
-
     private boolean validate() {
         boolean valid = true;
-        String registerEmail=sharedPreference.getEmailID(ForgetPassword.this, "email_id");
         String email = email_et.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
 
         if (!email.matches(emailPattern)) {
             email_et.setError("Please enter a registered Email Id");
             valid = false;
         }
 
-        if(TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             email_et.setError("Please enter a registered Email Id");
             valid = false;
         }
@@ -98,6 +95,7 @@ public class ForgetPassword extends AppCompatActivity {
 
         return valid;
     }
+
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -151,44 +149,43 @@ public class ForgetPassword extends AppCompatActivity {
     }
 
 
-
-    private void sendPasswordOnMail(final String email){
+    private void sendPasswordOnMail(final String email) {
         if (!AppNetworkAlertDialog.isNetworkConnected(ForgetPassword.this)) {
-            Toast.makeText(ForgetPassword.this,getString(R.string.network_error),Toast.LENGTH_LONG).show();
+            Toast.makeText(ForgetPassword.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-               ApiRequest.BASE_URL_VERSION_3+ApiRequest.FORGET_URL, new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.FORGET_URL, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.e("LoginActivity","FORGOT-URL_:_"+ response);
+                Log.e("LoginActivity", "FORGOT-URL_:_" + response);
                 progressBar.setVisibility(View.GONE);
                 try {
                     JSONObject mObj = new JSONObject(response);
                     if (mObj.optInt("code") == 1) {
-                        String str=mObj.optString("result");
+                        String str = mObj.optString("result");
                         //customToast.showToastMessage(ForgotPasswordActivity.this,str);
                         Intent intent = new Intent(ForgetPassword.this, LoginScreen.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         ForgetPassword.this.finish();
-                        Toast.makeText(ForgetPassword.this,getResources().getString(R.string.forgot_password_successful_message),Toast.LENGTH_LONG).show();
-                        Log.e("LOGINACTIVITY","***FORGOT-URL-RESPONCE**"+str);
+                        Toast.makeText(ForgetPassword.this, getResources().getString(R.string.forgot_password_successful_message), Toast.LENGTH_LONG).show();
+                        Log.e("LOGINACTIVITY", "***FORGOT-URL-RESPONCE**" + str);
 
                     } else {
-                        String error =mObj.optString("result");
+                        String error = mObj.optString("result");
                         if (!TextUtils.isEmpty(error))
-                            Toast.makeText(ForgetPassword.this,"Please enter a registered Email Id",Toast.LENGTH_LONG).show();
+                            Toast.makeText(ForgetPassword.this, "Please enter a registered Email Id", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         email_et.setError("Please enter a registered Email Id");
                     }
                 } catch (Exception e) {
-                    Log.e("LoginActivity","FORGOT---****--Error"+""+e.getMessage());
+                    Log.e("LoginActivity", "FORGOT---****--Error" + "" + e.getMessage());
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(ForgetPassword.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgetPassword.this, getResources().getString(R.string.network_error), Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -215,9 +212,6 @@ public class ForgetPassword extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
-
-
-
 
 
 }

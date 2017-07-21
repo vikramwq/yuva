@@ -124,6 +124,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:background="@drawable/rounded_btn_bg"
+            android:onClick="submitMobileNumberForOtp"
             android:paddingBottom="10dp"
             android:paddingLeft="60dp"
             android:paddingRight="60dp"
@@ -132,7 +133,6 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="#FFF"
-            android:onClick="submitMobileNumberForOtp"
             android:textStyle="bold" />
 
 
@@ -146,7 +146,8 @@
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="50dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
+
 
 
         <com.multitv.yuv.ui.CustomTextView
@@ -188,11 +189,9 @@
                 android:layout_gravity="center"
                 android:hint="@string/otp_hint"
                 android:inputType="text|number"
-
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#FFF"
                 android:textColorHint="#FFF" />
-
 
         </android.support.design.widget.TextInputLayout>
 
@@ -209,13 +208,42 @@
 
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Didn't receive the OTP ?"
+                android:textColor="@color/white_shadow"
+                android:textSize="@dimen/text_size_resend_otp" />
+
+            <com.multitv.yuv.ui.CustomTextView
+                android:id="@+id/resendOtpTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:onClick="resendOtpTextviewClickListener"
+                tools:text="RESEND OTP"
+                android:textColor="@color/selected_tab_colour"
+                android:textSize="@dimen/text_size_resend" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/btnBg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/_40sdp"
             android:layout_marginRight="@dimen/_40sdp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -238,23 +266,6 @@
                 android:textColor="#FFF"
                 android:textStyle="bold" />
 
-
-            <ImageView
-                android:id="@+id/reSendOtpbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:onClick="reSendOtpbtn"
-
-                android:paddingTop="15dp"
-                android:src="@drawable/ic_resend_otp"
-                android:textColor="#FFF"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:text="Resend OTP" />
         </LinearLayout>
 
     </LinearLayout>
