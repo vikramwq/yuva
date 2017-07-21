@@ -61,6 +61,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -106,7 +107,7 @@ import android.location.LocationManager;
 
 import static com.multitv.yuv.utilities.Utilities.hideKeyboard;
 
-public class SignupActivityNew extends AppCompatActivity implements SignUpListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, ResultCallback<LocationSettingsResult> {
+public class SignupActivityNew extends AppCompatActivity implements SignUpListener{
     private EditText email_field, passwordField, mobileNumberField, firstNameField, /*lastNameField,*/
             confirmPasswordField;
     private LoginButton loginButton;
@@ -118,7 +119,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     private int RC_SIGN_IN = 3;
     SharedPreference sharedPreference;
     private int loginThrough;
-    private GoogleApiClient mGoogleApiClient, mGoogleApiClient1;
+    private GoogleApiClient mGoogleApiClient;
     PopupWindow popupWindow;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private String user_id, password, mPhoneNum, firstName, LastName, mGender = "", mFirstName = "", mLastName = "", mUserName = "", mDob = "", mEmail = "", confirmPasswordStr = "";
@@ -135,6 +136,8 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
+    private boolean mRequestingLocationUpdates = true;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     private static Location sLastLocation;
 
@@ -181,9 +184,9 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         goToHomeActivityFromSignUp = (Button) findViewById(R.id.signInBtn);
         progressBar = (ProgressBar) findViewById(R.id.progress_signin);
         sharedPreference = new SharedPreference();
-        initGoogleFb();
 
-        initGoogleAPIClient();
+
+
 
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,12 +273,13 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
 
 
                 if (checkAndRequestPermissions()) {
-                    if (mGoogleApiClient1 != null && mGoogleApiClient1.isConnected()) {
-                        showSettingDialog();
-                    }
+
                 }
             }
         });
+
+
+
 
 
     }
@@ -316,15 +320,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     }
 
 
-    private void initGoogleAPIClient() {
-        //Without Google API Client Auto Location Dialog will not work
-        mGoogleApiClient1 = new GoogleApiClient.Builder(SignupActivityNew.this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient1.connect();
-    }
 
     private void showDropdownGender(View view) {
 
@@ -849,22 +844,6 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void initGoogleFb() {
-        loginButton = new LoginButton(this);
-        callbackManager = CallbackManager.Factory.create();
-        //=======google plus login from custom button click============================================================
-        //  ===========================================================================
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
-                /*.requestIdToken(getString(R.string.default_web_client_id))*/
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-    }
 
 
     @Override
@@ -959,9 +938,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         }
 
 
-        if (mGoogleApiClient1 != null) {
-            mGoogleApiClient1.disconnect();
-        }
+
     }
 
     @Override
@@ -972,23 +949,15 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             mGoogleApiClient.disconnect();
         }
 
-        if (mGoogleApiClient1 != null) {
-            mGoogleApiClient1.disconnect();
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 
 
     private void updateInfoToServer(String id, String fName, String lName, String gender, String link, String locale, String name, String email, String location, String dob, int loginThrough, String phoneNo) {
@@ -1177,114 +1146,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     }
 
 
-    private void showSettingDialog() {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
-        locationRequest.setInterval(30 * 1000);
-        locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
-
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient1, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates state = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-
-                        Log.d(this.getClass().getName(), "successfull");
-
-//                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient1, createLocationRequest(), new LocationListener() {
-//                            @Override
-//                            public void onLocationChanged(Location location) {
-//
-//                                Log.d(this.getClass().getName(), "location found");
-//                            }
-//                        });
 
 
-//                        checkLocationAndInit();
-//                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,UPDATE_INTERVAL_IN_MILLISECONDS,5.1f,SignupActivityNew.this);
-
-
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(SignupActivityNew.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
-                        break;
-                }
-            }
-        });
-    }
-
-
-//    private void createLocationRequest() {
-//            mLocationRequest = new LocationRequest();
-//
-//        // Sets the desired interval for active location updates. This interval is
-//        // inexact. You may not receive updates at all if no location sources are available, or
-//        // you may receive them slower than requested. You may also receive updates faster than
-//        // requested if other applications are requesting location at a faster interval.
-//        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-//
-//        // Sets the fastest rate for active location updates. This interval is exact, and your
-//        // application will never receive updates faster than this value.
-//        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-//
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//    }
-//
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mGoogleApiClient1.connect();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-
-        Toast.makeText(SignupActivityNew.this, "location found  " + location.getLatitude(), Toast.LENGTH_LONG).show();
-
-
-    }
-
-    @Override
-    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-
-    }
-
-
-    private LocationRequest createLocationRequest() {
-        if (mLocationRequest == null) {
-            mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(5000);
-            mLocationRequest.setFastestInterval(1000);
-            mLocationRequest.setNumUpdates(1);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        }
-        return mLocationRequest;
-    }
 
 }
