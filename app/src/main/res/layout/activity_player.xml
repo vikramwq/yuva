@@ -306,7 +306,7 @@
                                     android:layout_marginLeft="@dimen/_15sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:src="@mipmap/unlike_bg"
-                                    android:visibility="gone" />
+                                   />
 
 
                                 <ImageView
@@ -324,7 +324,7 @@
                                     android:layout_marginRight="@dimen/_12sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:src="@mipmap/share"
-                                    android:visibility="gone" />
+                                   />
 
 
                             </LinearLayout>

@@ -79,7 +79,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black_semi_transparent));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.light_gray));
         }
         setContentView(R.layout.otp_screen);
 
@@ -167,7 +167,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
         }
     }
-
 
     public void resendOtpTextviewClickListener(View v) {
         if (otpField != null)

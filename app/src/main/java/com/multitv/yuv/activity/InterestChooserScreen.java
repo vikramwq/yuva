@@ -1,3 +1,6 @@
+/*
+import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.models.InterestData;
 package com.multitv.yuv.activity;
 
 import android.content.res.TypedArray;
@@ -49,9 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created by Lenovo on 17-07-2017.
- */
+
 
 public class InterestChooserScreen extends AppCompatActivity {
     String bubbleListUrl = "http://api.multitvsolution.com/automatorapi/v3/interest/list/token/59689749397fb";
@@ -157,3 +158,4 @@ public class InterestChooserScreen extends AppCompatActivity {
         });
     }
 }
+*/

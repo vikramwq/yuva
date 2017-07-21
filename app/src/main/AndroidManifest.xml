@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.multitv.yuv">
 
+
+    <!--<uses-sdk-->
+        <!--android:minSdkVersion="16"-->
+        <!--android:targetSdkVersion="23" />-->
+
+
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,6 +22,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission
         android:name="android.permission.READ_OWNER_DATA"
         android:required="false" />
@@ -79,10 +88,10 @@
             android:name=".activity.HomeActivity"
             android:configChanges="locale|layoutDirection"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.SignupScreen"
-            android:screenOrientation="portrait"
-            android:theme="@style/SignTheme" />
+        <!--<activity-->
+            <!--android:name=".activity.SignupScreen"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/SignTheme" />-->
         <activity
             android:name=".activity.OtpScreenActivity"
             android:screenOrientation="portrait"
@@ -191,7 +200,7 @@
             android:name=".activity.PlayerActivity"
             android:configChanges="orientation|screenSize|locale|layoutDirection" />
         <activity android:name=".activity.UserProfileScreen" />
-        <activity android:name=".activity.InterestChooserScreen" />
+        <!--<activity android:name=".activity.InterestChooserScreen" />-->
         <activity android:name=".activity.PlaylistScreen" />
         <activity android:name=".activity.ContentScreen" />
         <activity

@@ -149,6 +149,7 @@
         android:visibility="visible">
 
 
+
         <com.multitv.yuv.ui.CustomTextView
             android:id="@+id/screeName"
             android:layout_width="wrap_content"
