@@ -109,6 +109,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:backgroundTint="@color/white"
+                                    android:drawablePadding="5dp"
+                                    android:drawableStart="@mipmap/ic_email"
                                     android:hint="@string/email_txt"
                                     android:inputType="textEmailAddress"
                                     android:textColor="@color/white"
@@ -131,6 +133,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                                    android:drawablePadding="5dp"
+                                    android:drawableStart="@mipmap/ic_pass"
                                     android:hint="@string/password_txt"
                                     android:textColor="@color/white"
                                     android:textColorHint="@color/white"
@@ -245,8 +249,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
-
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </RelativeLayout>
     </ScrollView>

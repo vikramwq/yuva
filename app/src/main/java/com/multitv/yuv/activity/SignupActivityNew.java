@@ -1,15 +1,23 @@
 package com.multitv.yuv.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,8 +32,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,8 +64,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.multitv.yuv.R;
+import com.multitv.yuv.adapter.CategoryAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.controller.SignUpController;
@@ -69,14 +84,31 @@ import com.multitv.yuv.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+
+import android.location.LocationManager;
+
 import static com.multitv.yuv.utilities.Utilities.hideKeyboard;
 
-public class SignupActivityNew extends AppCompatActivity implements SignUpListener, GoogleApiClient.OnConnectionFailedListener {
-    private EditText email_field, passwordField, mobileNumberField, firstNameField, lastNameField, confirmPasswordField;
+public class SignupActivityNew extends AppCompatActivity implements SignUpListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, ResultCallback<LocationSettingsResult> {
+    private EditText email_field, passwordField, mobileNumberField, firstNameField, /*lastNameField,*/
+            confirmPasswordField;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private TextView signUp_btn;
@@ -86,11 +118,25 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     private int RC_SIGN_IN = 3;
     SharedPreference sharedPreference;
     private int loginThrough;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient, mGoogleApiClient1;
+    PopupWindow popupWindow;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private String user_id, password, mPhoneNum, firstName, LastName, mGender = "", mFirstName = "", mLastName = "", mUserName = "", mDob = "", mEmail = "", confirmPasswordStr = "";
     private Toolbar toolbar;
-    private TextInputLayout input_username, input_lastName, input_email_field, input_mobileNumber, input_password, input_confirm_password;
-    private TextView genderTxt;
+    private TextInputLayout input_username, /*input_lastName,*/
+            input_email_field, input_mobileNumber, input_password, input_confirm_password;
+    private TextView genderTxt, ageTxt, locationTxt;
+    private LinearLayout ageLayout, genderLayout;
+    LocationRequest mLocationRequest;
+    private LocationCallback mCallback;
+    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 9009;
+    private LocationManager locationManager;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
+
+    private static Location sLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,18 +155,27 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
 
         signUp_btn = (TextView) findViewById(R.id.signUp_btn);
         firstNameField = (EditText) findViewById(R.id.firstName);
-        lastNameField = (EditText) findViewById(R.id.lastName);
+//        lastNameField = (EditText) findViewById(R.id.lastName);
         mobileNumberField = (EditText) findViewById(R.id.mobileNumber);
         email_field = (EditText) findViewById(R.id.email);
         passwordField = (EditText) findViewById(R.id.password);
         confirmPasswordField = (EditText) findViewById(R.id.confirm_password);
         input_username = (TextInputLayout) findViewById(R.id.input_username);
-        input_lastName = (TextInputLayout) findViewById(R.id.input_lastName);
+//        input_lastName = (TextInputLayout) findViewById(R.id.input_lastName);
         input_email_field = (TextInputLayout) findViewById(R.id.input_email_field);
         input_mobileNumber = (TextInputLayout) findViewById(R.id.input_mobileNumber);
         input_password = (TextInputLayout) findViewById(R.id.input_password);
+
+        ageLayout = (LinearLayout) findViewById(R.id.ageLayout);
+        genderLayout = (LinearLayout) findViewById(R.id.genderLayout);
+        locationTxt = (TextView) findViewById(R.id.locationTxt);
+
         input_confirm_password = (TextInputLayout) findViewById(R.id.input_confirm_password);
         genderTxt = (TextView) findViewById(R.id.genderTxt);
+        ageTxt = (TextView) findViewById(R.id.ageTxt);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         confirmPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         goToHomeActivityFromSignUp = (Button) findViewById(R.id.signInBtn);
@@ -128,6 +183,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         sharedPreference = new SharedPreference();
         initGoogleFb();
 
+        initGoogleAPIClient();
 
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +198,21 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
                     if (validate()) {
                         String mpassword = passwordField.getText().toString();
                         mFirstName = firstNameField.getText().toString();
-                        mLastName = lastNameField.getText().toString();
+
+                        String ageGroup = ageTxt.getText().toString();
+
+                        String gender = genderTxt.getText().toString();
+
+//                        mLastName = lastNameField.getText().toString();
+
+                        String[] nameArr = mFirstName.split(" ");
+                        if (nameArr.length >= 2) {
+                            mFirstName = nameArr[0];
+                            mLastName = nameArr[1];
+                        } else {
+
+                        }
+
                         String number = mobileNumberField.getText().toString();
 
                         String confirmPassword = confirmPasswordField.getText().toString();
@@ -166,7 +236,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
                             progressBar.setVisibility(View.GONE);
                             return;
                         } else {
-                            sendInfoToServer(mFirstName, mLastName, mEmail, password, mPhoneNum);
+                            sendInfoToServer(mFirstName, mLastName, mEmail, password, mPhoneNum, ageGroup, gender);
                         }
 
                     }
@@ -175,6 +245,139 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             }
         });
 
+
+        ageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                showDropdown(v);
+
+            }
+        });
+
+        genderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDropdownGender(v);
+            }
+        });
+
+
+        locationTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (checkAndRequestPermissions()) {
+                    if (mGoogleApiClient1 != null && mGoogleApiClient1.isConnected()) {
+                        showSettingDialog();
+                    }
+                }
+            }
+        });
+
+
+    }
+
+
+    private boolean checkAndRequestPermissions() {
+
+
+        int permissionExternalStorage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        int permissionReadPhone = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionExternalStorage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+        if (permissionReadPhone != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_PHONE_STATE);
+        }
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private void initGoogleAPIClient() {
+        //Without Google API Client Auto Location Dialog will not work
+        mGoogleApiClient1 = new GoogleApiClient.Builder(SignupActivityNew.this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient1.connect();
+    }
+
+    private void showDropdownGender(View view) {
+
+        popupWindow = new PopupWindow(this);
+
+        ListView listView = new ListView(this);
+        String[] arr = {"Male", "Female"};
+        List<String> list = Arrays.asList(arr);
+        final CategoryAdapter adapter = new CategoryAdapter(SignupActivityNew.this, R.layout.category_item, list);
+        listView.setAdapter(adapter);
+        popupWindow.setContentView(listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                popupWindow.dismiss();
+
+                genderTxt.setText(adapter.getItem(position));
+            }
+        });
+
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(400);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.showAsDropDown(view);
+
+    }
+
+    private void showDropdown(View view) {
+
+        popupWindow = new PopupWindow(this);
+
+        ListView listView = new ListView(this);
+        String[] arr = {"11-20", "21-30", "31-40", "41-50", "51-60"};
+        List<String> list = Arrays.asList(arr);
+        final CategoryAdapter adapter = new CategoryAdapter(SignupActivityNew.this, R.layout.category_item, list);
+        listView.setAdapter(adapter);
+        popupWindow.setContentView(listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ageTxt.setText(adapter.getItem(position));
+
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(400);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.showAsDropDown(view);
 
     }
 
@@ -315,7 +518,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         String email = email_field.getText().toString();
         String password = passwordField.getText().toString();
         String firstName = firstNameField.getText().toString();
-        String lastName = lastNameField.getText().toString();
+//        String lastName = lastNameField.getText().toString();
         String confirmPassword = confirmPasswordField.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -324,10 +527,10 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             input_username.setError("FirstName field cannot be left blank");
             valid = false;
         }
-        if (TextUtils.isEmpty(lastName)) {
-            input_lastName.setError("LastName field cannot be left blank");
-            valid = false;
-        }
+//        if (TextUtils.isEmpty(lastName)) {
+//            input_lastName.setError("LastName field cannot be left blank");
+//            valid = false;
+//        }
 
 
         if (TextUtils.isEmpty(password)) {
@@ -375,6 +578,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
             input_mobileNumber.setError("Please enter a valid phone number");
             valid = false;
         }
+
 
         return valid;
     }
@@ -498,7 +702,7 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     }
 
 
-    private void sendInfoToServer(final String first_name, final String last_name, final String email, final String password, final String phone) {
+    private void sendInfoToServer(final String first_name, final String last_name, final String email, final String password, final String phone, final String ageGroup, final String gender) {
         if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
 
             Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
@@ -606,6 +810,8 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
                     params.put("last_name", last_name);
                     params.put("email", email);
                     params.put("password", password);
+                    params.put("age_group", ageGroup);
+                    params.put("gender", gender);
                     params.put("phone", phone);
                     params.put("devicedetail", ddjson);
                     params.put("device_other_detail", dodjson);
@@ -747,21 +953,36 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
     @Override
     protected void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(this);
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
+
+
+        if (mGoogleApiClient1 != null) {
+            mGoogleApiClient1.disconnect();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mGoogleApiClient.stopAutoManage(this);
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
+
+        if (mGoogleApiClient1 != null) {
+            mGoogleApiClient1.disconnect();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
@@ -954,4 +1175,116 @@ public class SignupActivityNew extends AppCompatActivity implements SignUpListen
         }
 
     }
+
+
+    private void showSettingDialog() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient1, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+                        Log.d(this.getClass().getName(), "successfull");
+
+//                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient1, createLocationRequest(), new LocationListener() {
+//                            @Override
+//                            public void onLocationChanged(Location location) {
+//
+//                                Log.d(this.getClass().getName(), "location found");
+//                            }
+//                        });
+
+
+//                        checkLocationAndInit();
+//                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,UPDATE_INTERVAL_IN_MILLISECONDS,5.1f,SignupActivityNew.this);
+
+
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(SignupActivityNew.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+
+//    private void createLocationRequest() {
+//            mLocationRequest = new LocationRequest();
+//
+//        // Sets the desired interval for active location updates. This interval is
+//        // inexact. You may not receive updates at all if no location sources are available, or
+//        // you may receive them slower than requested. You may also receive updates faster than
+//        // requested if other applications are requesting location at a faster interval.
+//        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+//
+//        // Sets the fastest rate for active location updates. This interval is exact, and your
+//        // application will never receive updates faster than this value.
+//        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+//
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//    }
+//
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mGoogleApiClient1.connect();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+
+        Toast.makeText(SignupActivityNew.this, "location found  " + location.getLatitude(), Toast.LENGTH_LONG).show();
+
+
+    }
+
+    @Override
+    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+
+    }
+
+
+    private LocationRequest createLocationRequest() {
+        if (mLocationRequest == null) {
+            mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(5000);
+            mLocationRequest.setFastestInterval(1000);
+            mLocationRequest.setNumUpdates(1);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        }
+        return mLocationRequest;
+    }
+
 }

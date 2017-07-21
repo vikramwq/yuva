@@ -177,6 +177,8 @@ dependencies {
     compile 'com.facebook.network.connectionclass:connectionclass:1.0.1'
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
+
+    compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'jp.wasabeef:blurry:2.0.3'
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     compile 'com.google.android.gms:play-services-ads:10.0.1'
