@@ -274,7 +274,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         });
 
         popupWindow.setFocusable(true);
-        popupWindow.setWidth(400);
+        popupWindow.setWidth(200);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.showAsDropDown(view);
     }
@@ -298,7 +298,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         });
 
         popupWindow.setFocusable(true);
-        popupWindow.setWidth(400);
+        popupWindow.setWidth(200);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.showAsDropDown(view);
 
@@ -769,7 +769,6 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                 Log.e("LocationAddress", "Canont get Address!");
             }
         }
-
     }
 
     @Override
