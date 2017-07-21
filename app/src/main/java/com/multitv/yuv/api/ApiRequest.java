@@ -22,7 +22,7 @@ public class ApiRequest {
     public static String TV_GUIDE = DateToStr + "&token=5285sd5sdf&channel=";
 
     public static String UPDATE_DEVICE = "/user/udatedevice?token=" + TOKEN;
-    public static String HOME_URL = "/content/home1/token/" + TOKEN;
+    public static String HOME_URL = "/content/home/token/" + TOKEN;
     public static String LANGUAGES = "/content/langlist/token/" + TOKEN;
     public static String NEW_SEARCH_URL = "/content/clist/token/" + TOKEN;
     public static String SEARCH_SUGGESTION = "/content/autosuggest/token/" + TOKEN;

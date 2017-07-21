@@ -258,9 +258,8 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                                AppUtils.generateUrl(getActivity(), ApiRequest.HOME_URL), new Response.Listener<String>() {
+                                AppUtils.generateUrlVersion3(getActivity(), ApiRequest.HOME_URL), new Response.Listener<String>() {
                             @Override
                             public void onResponse(final String response) {
                                 new Thread(new Runnable() {
@@ -329,12 +328,13 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
                                 params.put("lan", LocaleHelper.getLanguage(getApplicationContext()));
 //                                params.put("m_filter", (PreferenceData.isMatureFilterEnable(getApplicationContext()) ? "" + 1 : "" + 0));
 //                                params.put("m_filter", "");
-
                                 params.put("device", "android");
                                 params.put("content_count", "15");
                                 params.put("display_offset", "" + offset);
                                 params.put("display_limit", "3");
                                 params.put("user_id", userID);
+                                params.put("flag", homeDataModel != null ? "" + homeDataModel.flag : "0");
+
                                 return params;
                             }
                         };

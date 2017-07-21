@@ -6,15 +6,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
-
+import com.multitv.yuv.api.ApiRequest;
+import com.multitv.yuv.application.AppController;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import com.multitv.yuv.application.AppController;
 
 /**
  * Created by naseeb on 10/14/2016.
@@ -34,6 +33,11 @@ public class AppUtils {
     public static String generateUrl(Context context, String apiUrl) {
         Tracer.error(TAG, "generateUrl: " + apiUrl);
         return PreferenceData.getBaseUrl(AppController.getInstance()) + apiUrl;
+    }
+
+    public static String generateUrlVersion3(Context context, String apiUrl) {
+        Tracer.error(TAG, "generateUrl: " + apiUrl);
+        return ApiRequest.BASE_URL_VERSION_3 + apiUrl;
     }
 
 
