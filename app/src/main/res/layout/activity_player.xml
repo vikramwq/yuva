@@ -211,18 +211,18 @@
                                     </com.ms.square.android.expandabletextview.ExpandableTextView>
 
 
-                                    <com.multitv.yuv.ui.CustomTextView
-                                        android:id="@+id/like_txt"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentBottom="true"
-                                        android:layout_alignParentLeft="true"
-                                        android:layout_marginLeft="6dp"
-                                        android:layout_marginTop="1dp"
-                                        android:text="Likes : 22"
-                                        android:textColor="@color/see_more"
-                                        android:textSize="14sp"
-                                        android:textStyle="normal" />
+                                    <!--<com.multitv.yuv.ui.CustomTextView-->
+                                     <!---->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:layout_alignParentBottom="true"-->
+                                        <!--android:layout_alignParentLeft="true"-->
+                                        <!--android:layout_marginLeft="6dp"-->
+                                        <!--android:layout_marginTop="1dp"-->
+                                        <!--android:text="Likes : 22"-->
+                                        <!--android:textColor="@color/see_more"-->
+                                        <!--android:textSize="14sp"-->
+                                        <!--android:textStyle="normal" />-->
 
 
                                 </RelativeLayout>
@@ -255,6 +255,7 @@
 
 
                                         <com.multitv.yuv.ui.CustomTextView
+                                            android:id="@+id/like_txt"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="3dp"
@@ -409,6 +410,7 @@
 
 
                                 <LinearLayout
+                                    android:id="@+id/channelLayout"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
@@ -417,7 +419,7 @@
 
 
                                     <de.hdodenhof.circleimageview.CircleImageView
-                                        android:id="@+id/profile_image"
+                                        android:id="@+id/channel_image"
                                         android:layout_width="40dp"
                                         android:layout_marginTop="5dp"
                                         android:layout_marginBottom="5dp"
@@ -429,20 +431,35 @@
 
 
                                     <com.multitv.yuv.ui.CustomTextView
+                                        android:id="@+id/channelName"
                                         android:layout_marginLeft="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:layout_gravity="center_vertical"
-                                        android:text="Madras central"
                                         android:textColor="#FFF" />
 
                                     <ImageView
+                                        android:id="@+id/subscribeLayout"
                                         android:layout_marginRight="10dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@mipmap/ic_subscription"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content" />
+
+
+
+
+                                    <ImageView
+                                        android:id="@+id/notificationBtn"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="left|center"
+                                        android:layout_marginRight="10dp"
+                                        android:padding="6dp"
+                                        android:scaleType="fitXY"
+                                        android:src="@mipmap/ic_notification_disabled" />
+
 
 
 
