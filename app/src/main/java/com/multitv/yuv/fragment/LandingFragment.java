@@ -470,7 +470,7 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
 
     @Subscribe(sticky = true)
     public void updateWatchingHistorySection(UpdateWatchingHistorySection updateWatchingHistorySection) {
-        EventBus.getDefault().cancelEventDelivery(updateWatchingHistorySection);
+        //EventBus.getDefault().cancelEventDelivery(updateWatchingHistorySection);
         updateWatchingHistorySection();
     }
 

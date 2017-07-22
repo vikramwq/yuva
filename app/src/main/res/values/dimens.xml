@@ -20,6 +20,8 @@
 
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_resend">16sp</dimen>
+    <dimen name="text_size_resend_otp">12sp</dimen>
 
     <dimen name="text_size_medium_low">15sp</dimen>
     <dimen name="text_size_large">22sp</dimen>

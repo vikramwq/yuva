@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
 
@@ -66,6 +67,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_name"
                             android:hint="@string/first_name"
                             android:textColor="@color/white"
                             android:textColorHint="@color/white"
@@ -74,45 +77,102 @@
                     </android.support.design.widget.TextInputLayout>
 
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_lastName"
+                    <!--<android.support.design.widget.TextInputLayout-->
+                        <!--android:id="@+id/input_lastName"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:textColorHint="@color/white">-->
+
+                        <!--<com.multitv.yuv.ui.CustomEditText-->
+                            <!--android:id="@+id/lastName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "-->
+                            <!--android:hint="@string/last_name"-->
+                            <!--android:textColor="@color/white"-->
+                            <!--android:textColorHint="@color/white"-->
+                            <!--android:textSize="@dimen/text_size_small" />-->
+
+                    <!--</android.support.design.widget.TextInputLayout>-->
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:textColorHint="@color/white">
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="20dp">
 
-                        <com.multitv.yuv.ui.CustomEditText
-                            android:id="@+id/lastName"
+
+                        <LinearLayout
+                            android:id="@+id/genderLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                            android:hint="@string/last_name"
-                            android:textColor="@color/white"
-                            android:textColorHint="@color/white"
-                            android:textSize="@dimen/text_size_small" />
-
-                    </android.support.design.widget.TextInputLayout>
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
 
-                    <!--  <android.support.design.widget.TextInputLayout
-                          android:id="@+id/input_phone_field"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="5dp">
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/genderTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:drawableEnd="@mipmap/ic_dropdown_login"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@mipmap/gender"
+                                android:hint="Gender"
+                                android:textColor="#FFF"
+                                android:textColorHint="#a2a2a2"
+                                android:textSize="14sp" />
 
-                          <com.multitv.ott.custom.CustomEditText
-                              android:id="@+id/mobileNumber"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:layout_gravity="center"
-                              android:hint="@string/mobile_txt"
-                              android:inputType="phone"
-                              android:digits="0123456789"
-                              android:textColorHint="@color/white_bg"
-                              android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
-                      </android.support.design.widget.TextInputLayout>-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="2dp"
+                                android:background="#FFF"></LinearLayout>
 
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/ageLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/ageTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:drawableEnd="@mipmap/ic_dropdown_login"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@mipmap/ic_age"
+                                android:hint="Age"
+                                android:textColor="#FFF"
+                                android:textColorHint="#a2a2a2"
+                                android:textSize="14sp" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="2dp"
+                                android:background="#FFF"></LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/input_email_field"
@@ -126,13 +186,45 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_email"
                             android:hint="@string/email_txt"
-                            android:textColor="@color/white"
                             android:inputType="textEmailAddress"
+                            android:textColor="@color/white"
                             android:textColorHint="@color/white"
                             android:textSize="@dimen/text_size_small" />
                     </android.support.design.widget.TextInputLayout>
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <com.multitv.yuv.ui.CustomTextView
+                            android:id="@+id/locationTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_location"
+                            android:hint="Location"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:textSize="@dimen/text_size_small" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="2dp"
+                            android:background="#FFF"></LinearLayout>
+
+                    </LinearLayout>
 
                     <!-- <ImageView
                          android:id="@+id/or_img"
@@ -156,9 +248,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_mobile"
                             android:hint="@string/mobile_txt"
-                            android:textColor="@color/white"
                             android:inputType="number"
+                            android:textColor="@color/white"
                             android:textColorHint="@color/white"
                             android:textSize="@dimen/text_size_small" />
 
@@ -170,8 +264,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        app:passwordToggleTint="#FFF"
-                        android:textColorHint="@color/white">
+                        android:textColorHint="@color/white"
+                        app:passwordToggleTint="#FFF">
 
                         <com.multitv.yuv.ui.CustomEditText
                             android:id="@+id/password"
@@ -179,6 +273,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_pass"
                             android:hint="@string/password_txt"
                             android:textColor="@color/white"
                             android:textColorHint="@color/white"
@@ -191,8 +287,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        app:passwordToggleTint="#FFF"
-                        android:textColorHint="@color/white">
+                        android:textColorHint="@color/white"
+                        app:passwordToggleTint="#FFF">
 
                         <com.multitv.yuv.ui.CustomEditText
                             android:id="@+id/confirm_password"
@@ -200,8 +296,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@mipmap/ic_pass"
                             android:hint="@string/confirm_password"
-android:textColor="@color/white"
+                            android:textColor="@color/white"
                             android:textColorHint="@color/white"
                             android:textSize="@dimen/text_size_small" />
                     </android.support.design.widget.TextInputLayout>
@@ -224,48 +322,48 @@ android:textColor="@color/white"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
-                    <com.multitv.yuv.ui.CustomTextView
-                        android:id="@+id/or"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/or_signup_other"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="normal" />
+                    <!--<com.multitv.yuv.ui.CustomTextView-->
+                    <!--android:id="@+id/or"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:text="@string/or_signup_other"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/text_size_medium"-->
+                    <!--android:textStyle="normal" />-->
 
 
-                    <LinearLayout
-                        android:id="@+id/social_bg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:background="@null"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                    <!--<LinearLayout-->
+                    <!--android:id="@+id/social_bg"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentBottom="true"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="@null"-->
+                    <!--android:gravity="center"-->
+                    <!--android:orientation="vertical">-->
 
 
-                        <ImageView
-                            android:id="@+id/facebook_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="signUpFromFacebook"
-                            android:src="@drawable/ic_fb" />
+                    <!--<ImageView-->
+                    <!--android:id="@+id/facebook_btn"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:onClick="signUpFromFacebook"-->
+                    <!--android:src="@drawable/ic_fb" />-->
 
-                        <ImageView
-                            android:id="@+id/google_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:onClick="signUpFromGoogle"
-                            android:src="@drawable/google_plus" />
+                    <!--<ImageView-->
+                    <!--android:id="@+id/google_btn"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--android:onClick="signUpFromGoogle"-->
+                    <!--android:src="@drawable/google_plus" />-->
 
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
 
                 </LinearLayout>

@@ -212,14 +212,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             createAppSession();
         }
 
-
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Object value = getIntent().getExtras().get(key);
                 Tracer.debug(TAG, "Key: " + key + " Value: " + value);
             }
         }
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

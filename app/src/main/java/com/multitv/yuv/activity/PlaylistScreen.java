@@ -140,12 +140,10 @@ public class PlaylistScreen extends AppCompatActivity {
                 public void onClick(View v) {
                     ContentController.getInstance().subscribeChannel(id, channel.getIs_subscriber());
                     if (channel.getIs_subscriber().equals("0")) {
-//                    subscribeTxt.setTextColor(Color.parseColor("#a2a2a2"));
                         channel.setIs_subscriber("1");
                         subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
                         notificationBtn.setVisibility(View.VISIBLE);
                     } else {
-//                    subscribeTxt.setTextColor(Color.parseColor("#e8711b"));
                         channel.setIs_subscriber("0");
                         subscribeLayout.setImageResource(R.mipmap.ic_subscription);
                         notificationBtn.setVisibility(View.GONE);

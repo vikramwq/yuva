@@ -1,6 +1,7 @@
 package com.multitv.yuv.controller;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -254,6 +255,67 @@ public class ContentController {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
+    }
+
+
+    public void reportContent(final String contentId) {
+        Log.d(this.getClass().getName(), "contentId =====>" + contentId);
+
+        SharedPreference sharedPreference = new SharedPreference();
+        final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
+
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                ApiRequest.REPORT_ABUSE, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject mObj = new JSONObject(response);
+                    if (mObj.optInt("code") == 1) {
+                        MultitvCipher mcipher = new MultitvCipher();
+                        Toast.makeText(AppController.getInstance(), "Content Reported", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Tracer.error("ContentController", "" + e.getMessage());
+
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                try {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("content_id", contentId);
+                    params.put("user_id", userID);
+
+
+                    Set<String> keySet = params.keySet();
+                    for (String key : keySet) {
+                        Log.d(this.getClass().getName(), "parameters for content" + key + "   " + params.get(key));
+                    }
+                    return checkParams(params);
+                } catch (Exception e) {
+                    ExceptionUtils.printStacktrace(e);
+                } catch (IncompatibleClassChangeError e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+        // Adding request to request queue
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
 

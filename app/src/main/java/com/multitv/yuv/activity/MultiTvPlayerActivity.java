@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,8 +22,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +41,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -51,6 +58,7 @@ import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.MyFragmentPageAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.controller.ContentController;
 import com.multitv.yuv.customview.GifImageView;
 import com.multitv.yuv.db.MediaDbConnector;
 import com.multitv.yuv.download.DownloadUtils;
@@ -59,6 +67,7 @@ import com.multitv.yuv.fragment.MultiTVMoreFragment;
 import com.multitv.yuv.fragment.MultiTVRecommendedFragment;
 import com.multitv.yuv.interfaces.HeartbeatInterface;
 import com.multitv.yuv.locale.LocaleHelper;
+import com.multitv.yuv.models.Channel;
 import com.multitv.yuv.models.MediaItem;
 import com.multitv.yuv.models.ModelSLAT;
 import com.multitv.yuv.models.home.Cat_cntn;
@@ -73,6 +82,7 @@ import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.ExceptionHandler;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.FirebaseUtils;
+import com.multitv.yuv.utilities.Json;
 import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.ScreenUtils;
 import com.multitv.yuv.utilities.SendAnalytics;
@@ -106,16 +116,18 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private String typePlayer,
             favorite, like;
     private Button btnPlay;
-    private TextView tittle_text, start_catTxt, like_txt;
+    private TextView tittle_text, like_txt;
     private ExpandableTextView desc_text;
     private Handler handler;
-
+    private ImageView subscribeLayout;
     private FrameLayout framePlayerLayout;
     private ImageView player_image, btn_share, btn_like, btn_favorite, btn_download;
     private Intent intent;
 
     private CoordinatorLayout coordinator_layout;
     private LinearLayout content_nestedlayout;
+
+
     @BindView(R.id.sliding_tabs)
     TabLayout slidingTabLayout;
     @BindView(R.id.view_pager)
@@ -124,11 +136,13 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     ProgressBar progressBar;
     @BindView(R.id.rl_before_play)
     RelativeLayout pbViewBeforePlay;
+
+
     private Adutils mAdutils;
     private boolean isActivityInitialized, isOnCreateCalled = true, isHorizontalOrientation;
     public boolean isYoutubePlayerInitializationGoingOn;
     MediaDbConnector mediaDbConnector;
-    Cat_cntn contentData;
+    //    Cat_cntn contentData;
     private String local_path;
     SharedPreference sharedPreference;
     boolean isLoggedIn, isOTPVerified;
@@ -136,6 +150,13 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private GifImageView downloadGifImg;
     private boolean isHandlerStarted;
     private String contentSessionId;
+    private LinearLayout menuLayout;
+    private Cat_cntn contentNewData;
+    private ImageView channel_image, notificationBtn;
+    private TextView channelName;
+    private Channel channel;
+    private LinearLayout channelLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,14 +166,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
-
         setContentView(R.layout.activity_player_parent);
-
-//        downloadThread = new DownloadThread(this);
-//        downloadThread.start();
-
         sharedPreference = new SharedPreference();
-
         user_id = sharedPreference.getPreferencesString(this, "user_id" + "_" + ApiRequest.TOKEN);
         isLoggedIn = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_LOGGED_IN);
         isOTPVerified = sharedPreference.getPreferenceBoolean(this, sharedPreference.KEY_IS_OTP_VERIFIED);
@@ -180,20 +195,27 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private void initialize() {
         tittle_text = (TextView) findViewById(R.id.tittle);
         like_txt = (TextView) findViewById(R.id.like_txt);
-        start_catTxt = (TextView) findViewById(R.id.start_catTxt);
+//        start_catTxt = (TextView) findViewById(R.id.start_catTxt);
         desc_text = (ExpandableTextView) findViewById(R.id.expand_text_view);
         framePlayerLayout = (FrameLayout) findViewById(R.id.sony_player_layout);
         player_image = (ImageView) findViewById(R.id.player_image);
         btn_share = (ImageView) findViewById(R.id.btn_share);
         btn_like = (ImageView) findViewById(R.id.like);
+        menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
         btn_favorite = (ImageView) findViewById(R.id.btn_favorite);
         btn_download = (ImageView) findViewById(R.id.btn_download);
         downloadGifImg = (GifImageView) findViewById(R.id.btn_download_gif);
         downloadGifImg.setGifImageResource(R.drawable.down_update);
         content_nestedlayout = (LinearLayout) findViewById(R.id.content_nestedlayout);
+        channel_image = (ImageView) findViewById(R.id.channel_image);
+        channelName = (TextView) findViewById(R.id.channelName);
+        subscribeLayout = (ImageView) findViewById(R.id.subscribeLayout);
         btn_like.setVisibility(View.VISIBLE);
+        notificationBtn = (ImageView) findViewById(R.id.notificationBtn);
+        btnPlay = (Button) findViewById(R.id.btn_play);
 //        btn_share.setVisibility(View.VISIBLE);
 
+        channelLayout = (LinearLayout) findViewById(R.id.channelLayout);
         coordinator_layout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
         framePlayerLayout.setLayoutParams(new RelativeLayout.LayoutParams
@@ -211,78 +233,110 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
         //-------get data from server-----
         intent = getIntent();
 
-        contentData = intent.getExtras().getParcelable(CONTENT_TRANSFER_KEY);
+        Cat_cntn contentData = intent.getExtras().getParcelable(CONTENT_TRANSFER_KEY);
         content_type_multitv = intent.getStringExtra("CONTENT_TYPE_MULTITV");
         local_path = intent.getStringExtra("local_path");
 
 
         if (contentData != null) {
-            video_Url = contentData.url;
-            share_url = contentData.share_url;
-            title = contentData.title;
-            des = contentData.des;
-            download_path = contentData.download_path;
-
-            typePlayer = contentData.media_type;
+//            video_Url = contentData.url;
+//            share_url = contentData.share_url;
+//            title = contentData.title;
+//            des = contentData.des;
+//            download_path = contentData.download_path;
+//
+//            typePlayer = contentData.media_type;
             content_id = contentData.id;
-            video_id = content_id;
-            if (contentData.category_id != null)
-                categoryID = contentData.category_id;
-            else {
-                if (contentData.category_ids != null && contentData.category_ids.size() > 0)
-                    categoryID = contentData.category_ids.get(0);
-            }
-            if (contentData.start_cast != null && !contentData.start_cast.isEmpty()) {
-                start_catTxt.setVisibility(View.VISIBLE);
-                start_catTxt.setText(getResources().getString(R.string.star_cast_hint) + contentData.start_cast);
-            } else {
-                start_catTxt.setVisibility(View.GONE);
-            }
-            setupViewPager();
+//            video_id = content_id;
+//            if (contentData.category_id != null)
+//                categoryID = contentData.category_id;
+//            else {
+//                if (contentData.category_ids != null && contentData.category_ids.size() > 0)
+//                    categoryID = contentData.category_ids.get(0);
+//            }
+
+
+            getContentDetails(content_id);
+
+
+            menuLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    PopupMenu popup = new PopupMenu(MultiTvPlayerActivity.this, v);
+
+                    popup.getMenuInflater().inflate(R.menu.player_menu, popup.getMenu());
+
+                    MenuItem menu = popup.getMenu().getItem(0);
+                    MenuItem menu1 = popup.getMenu().getItem(1);
+
+
+                    SpannableString s = new SpannableString(menu.getTitle());
+                    s.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, s.length(), 0);
+                    menu.setTitle(s);
+
+
+                    SpannableString s1 = new SpannableString(menu1.getTitle());
+                    s1.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, s1.length(), 0);
+                    menu1.setTitle(s1);
+
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getTitle().toString().equalsIgnoreCase("Report")) {
+                                ContentController.getInstance().reportContent(content_id);
+                            }
+
+
+                            return true;
+                        }
+                    });
+
+                    popup.show();//showing popup menu
+
+
+                }
+            });
             //createTabIcons();
 
             //--likes----
-            String likeStoredFromPreference =
-                    sharedPreference.getPreferencesString(this, "like_" + video_id + "_" + user_id);
-            String likeCountStoredFromPreference =
-                    sharedPreference.getPreferencesString(MultiTvPlayerActivity.this, "like_count" + video_id + "_" + user_id);
+//            String likeStoredFromPreference =
+//                    sharedPreference.getPreferencesString(this, "like_" + video_id + "_" + user_id);
+//            String likeCountStoredFromPreference =
+//                    sharedPreference.getPreferencesString(MultiTvPlayerActivity.this, "like_count" + video_id + "_" + user_id);
+//
+//            if (!TextUtils.isEmpty(likeCountStoredFromPreference)) {
+//                likes_count = Integer.parseInt(likeCountStoredFromPreference);
+//                like_txt.setText(getResources().getString(R.string.likes_hint) + " " + likes_count);
+//            } else {
+//                getLikeToServer();
+//            }
 
-            if (!TextUtils.isEmpty(likeCountStoredFromPreference)) {
-                likes_count = Integer.parseInt(likeCountStoredFromPreference);
-                like_txt.setText(getResources().getString(R.string.likes_hint) + " " + likes_count);
-            } else {
-                getLikeToServer();
-            }
-
-            if (!TextUtils.isEmpty(likeStoredFromPreference)) {
-                like = likeStoredFromPreference;
-                if (like.equalsIgnoreCase("0"))
-                    btn_like.setImageResource(R.mipmap.unlike_bg);
-                else
-                    btn_like.setImageResource(R.mipmap.like_fill);
-            } else {
-                getLikeToServer();
-            }
+//            if (!TextUtils.isEmpty(likeStoredFromPreference)) {
+//                like = likeStoredFromPreference;
+//                if (like.equalsIgnoreCase("0"))
+//                    btn_like.setImageResource(R.mipmap.unlike_bg);
+//                else
+//                    btn_like.setImageResource(R.mipmap.like_fill);
+//            } else {
+//                getLikeToServer();
+//            }
 
 
             btn_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
-
                         if (share_url != null && share_url.length() > 0) {
                             String appPackageName = getPackageName();
-
                             String appLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
                             Log.d(this.getClass().getName(), "appLink============>>>" + appLink);
-
                             StringBuffer stringBuffer = new StringBuffer();
-                            stringBuffer.append("I am watching this awesome video " + share_url + " on Dollywood Play. \n\n Visit Dollywood app on " + appLink);
-
+                            stringBuffer.append("I am watching this awesome video " + share_url + " on YUV. \n\n Visit YUV app on " + appLink);
                             Uri shreVideoUrl = Uri.parse(share_url);
                             Intent intent = new Intent(Intent.ACTION_SEND);
                             intent.setType("text/plain");
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "Dollywood Play");
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "YUV");
                             intent.putExtra(Intent.EXTRA_TEXT, stringBuffer.toString());
                             startActivity(Intent.createChooser(intent, "choose one"));
                         }
@@ -292,59 +346,38 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                 }
             });
 
-            btn_like.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isOTPVerified) {
-                        if (like != null && like.equalsIgnoreCase("1")) {
-                            markContentFvrtOrLike(0, 0);
-                        } else {
-                            markContentFvrtOrLike(0, 1);
-                        }
-                    } else {
-                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
-                    }
-
-                }
-            });
 
             //---faveroite----
-            String faveroiteStoredFromPreference =
-                    sharedPreference.getPreferencesString(this, "favorite_" + video_id);
+//            String faveroiteStoredFromPreference =
+//                    sharedPreference.getPreferencesString(this, "favorite_" + video_id);
+//
+//            if (!TextUtils.isEmpty(faveroiteStoredFromPreference))
+//                favorite = faveroiteStoredFromPreference;
+//            else
+//                favorite = "" + contentData.favorite;
 
-            if (!TextUtils.isEmpty(faveroiteStoredFromPreference))
-                favorite = faveroiteStoredFromPreference;
-            else
-                favorite = "" + contentData.favorite;
+//            if (!TextUtils.isEmpty(favorite)) {
+//                if (favorite.equalsIgnoreCase("1")) {
+//                    btn_favorite.setImageResource(R.mipmap.fav_fill);
+//                } else {
+//                    btn_favorite.setImageResource(R.mipmap.favorite);
+//                }
+//            }
+//            btn_favorite.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (isOTPVerified) {
+//                        if (favorite != null && favorite.equalsIgnoreCase("1")) {
+//                            markContentFvrtOrLike(1, 0);
+//                        } else {
+//                            markContentFvrtOrLike(1, 1);
+//                        }
+//                    } else {
+//                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
+//                    }
+//                }
+//            });
 
-            if (!TextUtils.isEmpty(favorite)) {
-                if (favorite.equalsIgnoreCase("1")) {
-                    btn_favorite.setImageResource(R.mipmap.fav_fill);
-                } else {
-                    btn_favorite.setImageResource(R.mipmap.favorite);
-                }
-            }
-            btn_favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isOTPVerified) {
-                        if (favorite != null && favorite.equalsIgnoreCase("1")) {
-                            markContentFvrtOrLike(1, 0);
-                        } else {
-                            markContentFvrtOrLike(1, 1);
-                        }
-                    } else {
-                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
-                    }
-                }
-            });
-
-
-            if (download_path != null && download_path.length() > 0 && contentData.download_expiry > 0) {
-                btn_download.setImageResource(R.drawable.ic_download);
-            } else {
-                btn_download.setImageResource(R.drawable.ic_download_disable);
-            }
 
             downloadGifImg.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -361,13 +394,13 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                             if (mediaDbConnector.checkExistingContent(content_id) > 0) {
                                 Toast.makeText(MultiTvPlayerActivity.this, "This media is already downloaded", Toast.LENGTH_LONG).show();
                             } else {
-                                if (download_path != null && download_path.length() > 0 && contentData.download_expiry > 0) {
+                                if (download_path != null && download_path.length() > 0 && contentNewData.download_expiry > 0) {
                                     MediaItem mediaItem = mediaDbConnector.getMediaItem(content_id);
                                     if (mediaItem == null || mediaItem.getDownloadStatus() == DownloadManager.STATUS_FAILED) {
                                         btn_download.setVisibility(View.GONE);
                                         downloadGifImg.setVisibility(View.VISIBLE);
 
-                                        DownloadUtils.download(MultiTvPlayerActivity.this, contentData, mediaDbConnector);
+                                        DownloadUtils.download(MultiTvPlayerActivity.this, contentNewData, mediaDbConnector);
 
                                         loadImages();
 
@@ -390,32 +423,6 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             });
 
 
-            if (title != null && !title.isEmpty()) {
-                tittle_text.setText(title.trim());
-            } else {
-                tittle_text.setText(" N/A");
-            }
-
-            if (des != null && !des.isEmpty()) {
-                desc_text.setText(des.trim());
-            } else {
-                desc_text.setText(getResources().getString(R.string.player_decs) + " N/A");
-            }
-
-
-            btnPlay = (Button) findViewById(R.id.btn_play);
-            if (!TextUtils.isEmpty(content_type_multitv)) {
-                setMultitvPlayer(video_Url, content_type_multitv);
-            } else {
-                setMultitvPlayer(video_Url, "VOD");
-            }
-            try {
-                playVideo();
-            } catch (Exception e) {
-                ExceptionUtils.printStacktrace(e);
-            }
-
-
             btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -434,8 +441,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             showInterstitialAd();
             showBannerAd();
 
-            progressBar.setVisibility(View.GONE);
-            findViewById(R.id.player_top_layout).setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.GONE);
+
         }
     }
 
@@ -582,8 +589,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     @Override
     public void onPlayerReady() {
         try {
-            if (contentData != null && contentData.seekDuration > 0) {
-                player.resumeFromPosition(contentData.seekDuration);
+            if (contentNewData != null && contentNewData.seekDuration > 0) {
+                player.resumeFromPosition(contentNewData.seekDuration);
             }
             player.start();
 
@@ -715,8 +722,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
         }
         player.setKeyToken(ApiRequest.TOKEN);
         player.setPreRollEnable(true);
-        if (contentData.subtitle != null && contentData.subtitle.trim().length() > 0) {
-            Uri subtitleUrl = Uri.parse(contentData.subtitle);
+        if (contentNewData.subtitle != null && contentNewData.subtitle.size() > 0) {
+            Uri subtitleUrl = Uri.parse(contentNewData.subtitle.get(0));
             player.setSubtitleUri(subtitleUrl);
         }
 
@@ -813,7 +820,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
         }
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                AppUtils.generateUrl(getApplicationContext(), requestType == 0 ? ApiRequest.LIKE_URL_Post : ApiRequest.FAVORITE_URL), new Response.Listener<String>() {
+                AppUtils.generateUrl(getApplicationContext(), ApiRequest.LIKE_URL_Post), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -821,30 +828,6 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                     JSONObject mObj = new JSONObject(response);
                     if (mObj.optInt("code") == 1) {
 
-                        if (requestType == 0) {
-                            if (requestedOption == 1) {
-                                like = "1";
-                                likes_count++;
-                                btn_like.setImageResource(R.mipmap.like_fill);
-
-                            } else {
-                                like = "0";
-                                likes_count--;
-                                btn_like.setImageResource(R.mipmap.unlike_bg);
-                            }
-                            sharedPreference.setPreferencesString(MultiTvPlayerActivity.this, "like_" + video_id + "_" + user_id, "" + requestedOption);
-                            sharedPreference.setPreferencesString(MultiTvPlayerActivity.this, "like_count" + video_id + "_" + user_id, "" + likes_count);
-                            like_txt.setText(getResources().getString(R.string.likes_hint) + likes_count);
-                        } else {
-                            if (requestedOption == 1) {
-                                favorite = "1";
-                                btn_favorite.setImageResource(R.mipmap.fav_fill);
-                            } else {
-                                favorite = "0";
-                                btn_favorite.setImageResource(R.mipmap.favorite);
-                            }
-                            sharedPreference.setPreferencesString(MultiTvPlayerActivity.this, "favorite_" + video_id, "" + requestedOption);
-                        }
                     } else {
                         Toast.makeText(MultiTvPlayerActivity.this, "Something went wrong, please try again", Toast.LENGTH_LONG).show();
                     }
@@ -917,24 +900,14 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
         }
 
         mAdutils.onPause();
-//        AudioManager audio = (AudioManager) getSystemService(this.AUDIO_SERVICE);
-//        storedMediaVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-//        audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
 
-        mediaDbConnector.addDataForPersistencePlayback(content_id, new Gson().toJson(contentData), current_position);
+        mediaDbConnector.addDataForPersistencePlayback(content_id, new Gson().toJson(contentNewData), current_position);
         EventBus.getDefault().postSticky(new UpdateWatchingHistorySection());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-//        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-//        registerReceiver(downloadReceiver, filter);
-
-//        AudioManager audio = (AudioManager) getSystemService(this.AUDIO_SERVICE);
-//        audio.setStreamVolume(AudioManager.STREAM_MUSIC, storedMediaVolume, 0);
-
 
         if (!TextUtils.isEmpty(contentSessionId))
             AppController.getInstance().setContentSessionId(contentSessionId);
@@ -976,9 +949,9 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
 
     private void loadImages() {
 
-        for (int i = 0; i < contentData.thumbs.size(); i++) {
-            if (contentData.thumbs.get(i).getName().equalsIgnoreCase("rectangle")) {
-                final String url = contentData.thumbs.get(i).getThumb().getMedium();
+        for (int i = 0; i < contentNewData.thumbs.size(); i++) {
+            if (contentNewData.thumbs.get(i).getName().equalsIgnoreCase("rectangle")) {
+                final String url = contentNewData.thumbs.get(i).getThumb().getMedium();
 
                 Picasso.with(MultiTvPlayerActivity.this)
                         .load(url).fetch();
@@ -998,8 +971,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
                     }
                 });
-            } else if (contentData.thumbs.get(i).getName().equalsIgnoreCase("verticle_rectangle")) {
-                final String url = contentData.thumbs.get(i).getThumb().getMedium();
+            } else if (contentNewData.thumbs.get(i).getName().equalsIgnoreCase("verticle_rectangle")) {
+                final String url = contentNewData.thumbs.get(i).getThumb().getMedium();
                 Picasso.with(MultiTvPlayerActivity.this)
                         .load(url).fetch();
 
@@ -1033,4 +1006,245 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     }
 
 
+    private void getContentDetails(String contentId) {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (contentId != null) {
+            String url;
+            url = ApiRequest.CONTENT_DETAILS + "content_id=" + contentId + "&token=" + ApiRequest.TOKEN + "&device=android&owner_info=1";
+            Log.d(this.getClass().getName(), "url=========details===  " + url);
+
+
+            StringRequest jsonObjReq = new StringRequest(Request.Method.GET,
+                    url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressBar.setVisibility(View.GONE);
+
+                    try {
+                        JSONObject mObj = new JSONObject(response.trim());
+                        if (mObj.optInt("code") == 1) {
+                            MultitvCipher mcipher = new MultitvCipher();
+
+
+                            String result = new String(mcipher.decryptmyapi(mObj.optString("result")));
+
+                            JSONObject jsonObject = new JSONObject(result);
+                            JSONObject contentJson = jsonObject.getJSONObject("content");
+
+
+                            Log.d("Content details", "" + contentJson.toString());
+
+                            contentNewData = Json.parse(contentJson.toString(), Cat_cntn.class);
+
+                            Log.d(this.getClass().getName(), "des======" + contentNewData.des);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+
+                                    addDataToUI(contentNewData);
+                                }
+                            });
+
+
+                        }
+                    } catch (Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                        e.printStackTrace();
+                        Tracer.error("ContentController", "" + e.getMessage());
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.setVisibility(View.GONE);
+                    Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
+
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    try {
+                        Map<String, String> params = new HashMap<>();
+
+
+                        return Utilities.checkParams(params);
+                    } catch (Exception e) {
+                        ExceptionUtils.printStacktrace(e);
+                    } catch (IncompatibleClassChangeError e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+            };
+            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(jsonObjReq);
+
+        }
+
+    }
+
+
+    private void addDataToUI(Cat_cntn content) {
+
+
+        if (content != null) {
+            like = content.likes;
+
+            video_Url = content.url;
+            share_url = content.share_url;
+            title = content.title;
+            des = content.des;
+            download_path = content.download_path;
+
+            typePlayer = content.media_type;
+            content_id = content.id;
+            video_id = content_id;
+            if (content.category_id != null)
+                categoryID = content.category_id;
+            else {
+                if (content.category_ids != null && content.category_ids.size() > 0)
+                    categoryID = content.category_ids.get(0);
+            }
+
+            if (download_path != null && download_path.length() > 0 && content.download_expiry > 0) {
+                btn_download.setImageResource(R.mipmap.ic_download_player);
+            } else {
+                btn_download.setImageResource(R.mipmap.ic_download_disabled);
+            }
+
+
+            setupViewPager();
+
+
+            if (title != null && !title.isEmpty()) {
+                tittle_text.setText(title.trim());
+            } else {
+                tittle_text.setText(" N/A");
+            }
+
+            if (des != null && !des.isEmpty()) {
+                desc_text.setText(des.trim());
+            } else {
+                desc_text.setText(getResources().getString(R.string.player_decs) + " N/A");
+            }
+
+
+            if (!TextUtils.isEmpty(content_type_multitv)) {
+                setMultitvPlayer(video_Url, content_type_multitv);
+            } else {
+                setMultitvPlayer(video_Url, "VOD");
+            }
+            try {
+                playVideo();
+            } catch (Exception e) {
+                ExceptionUtils.printStacktrace(e);
+            }
+
+
+            if (content.likes_count != null && content.likes_count.length() > 0)
+                likes_count = Integer.parseInt(content.likes_count);
+
+
+            if (like.equalsIgnoreCase("0"))
+                btn_like.setImageResource(R.mipmap.ic_like);
+            else
+                btn_like.setImageResource(R.mipmap.ic_like_disable);
+
+
+            like_txt.setText(content.likes_count);
+
+
+            btn_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isOTPVerified) {
+                        if (like != null && like.equalsIgnoreCase("1")) {
+                            like = "0";
+                            likes_count--;
+                            btn_like.setImageResource(R.mipmap.ic_like_disable);
+                            markContentFvrtOrLike(0, 0);
+                        } else {
+                            like = "1";
+                            likes_count++;
+                            btn_like.setImageResource(R.mipmap.ic_like);
+                            markContentFvrtOrLike(0, 1);
+                        }
+                        like_txt.setText("" + likes_count);
+
+
+                    } else {
+                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
+                    }
+
+                }
+            });
+
+
+            if (content.owner_info != null) {
+                channelLayout.setVisibility(View.VISIBLE);
+                channel = content.owner_info;
+                channelName.setText(content.owner_info.getFirst_name());
+                Picasso.with(MultiTvPlayerActivity.this)
+                        .load(content.owner_info.getPrfile_pic())
+                        .placeholder(R.mipmap.intex_profile)
+                        .error(R.mipmap.intex_profile)
+                        .into(channel_image);
+
+                if (channel.getIs_subscriber().equals("1")) {
+                    subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
+                    notificationBtn.setVisibility(View.VISIBLE);
+                } else {
+                    subscribeLayout.setImageResource(R.mipmap.ic_subscription);
+                    notificationBtn.setVisibility(View.GONE);
+                }
+
+
+                Log.d(this.getClass().getName(), "subscribeLayout=====>>>> " + subscribeLayout);
+
+
+                subscribeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ContentController.getInstance().subscribeChannel(channel.getId(), channel.getIs_subscriber());
+                        if (channel.getIs_subscriber().equals("0")) {
+                            channel.setIs_subscriber("1");
+                            subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
+                            notificationBtn.setVisibility(View.VISIBLE);
+                        } else {
+                            channel.setIs_subscriber("0");
+                            subscribeLayout.setImageResource(R.mipmap.ic_subscription);
+                            notificationBtn.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                notificationBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                    }
+                });
+
+            } else {
+                channelLayout.setVisibility(View.GONE);
+            }
+
+        }
+
+
+        findViewById(R.id.player_top_layout).setVisibility(View.VISIBLE);
+    }
+
 }
+
+
+
+
+

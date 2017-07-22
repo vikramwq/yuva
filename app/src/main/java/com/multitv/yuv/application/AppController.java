@@ -38,6 +38,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -89,6 +90,7 @@ public class AppController extends MultiDexApplication {
         applicationContext = getApplicationContext();
         // LeakCanary.install(this);
         MultiDex.install(this);
+        ButterKnife.setDebug(true);
         LocaleHelper.onCreate(this);
         ConnectionManager.getInstance(this).startConnectionTracking();
         applicationHandler = new Handler(applicationContext.getMainLooper());

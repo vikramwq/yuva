@@ -3,7 +3,10 @@ package com.multitv.yuv.models.home;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.multitv.yuv.models.Channel;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by root on 24/10/16.
@@ -28,7 +31,7 @@ public class Cat_cntn implements Parcelable {
     public ArrayList<String> category_ids = new ArrayList<String>();
 
     public ArrayList<Thumb> thumbs = null;
-    public Integer likes_count;
+    public String likes_count;
     public Integer rating;
     public String watch;
     public Integer favorite;
@@ -39,10 +42,14 @@ public class Cat_cntn implements Parcelable {
     public int social_view;
     public String share_url;
     public String download_path;
-    public String subtitle;
+    public List<String> subtitle;
     public long seekDuration;
     public int download_expiry;
 
+    public Channel owner_info;
+
+    public Cat_cntn() {
+    }
 
     @Override
     public int describeContents() {
@@ -67,8 +74,8 @@ public class Cat_cntn implements Parcelable {
         dest.writeString(this.likes);
         dest.writeParcelable(this.thumbnail, flags);
         dest.writeStringList(this.category_ids);
-        dest.writeList(this.thumbs);
-        dest.writeValue(this.likes_count);
+        dest.writeTypedList(this.thumbs);
+        dest.writeString(this.likes_count);
         dest.writeValue(this.rating);
         dest.writeString(this.watch);
         dest.writeValue(this.favorite);
@@ -79,12 +86,10 @@ public class Cat_cntn implements Parcelable {
         dest.writeInt(this.social_view);
         dest.writeString(this.share_url);
         dest.writeString(this.download_path);
-        dest.writeString(this.subtitle);
+        dest.writeStringList(this.subtitle);
         dest.writeLong(this.seekDuration);
         dest.writeInt(this.download_expiry);
-    }
-
-    public Cat_cntn() {
+        dest.writeSerializable(this.owner_info);
     }
 
     protected Cat_cntn(Parcel in) {
@@ -104,9 +109,8 @@ public class Cat_cntn implements Parcelable {
         this.likes = in.readString();
         this.thumbnail = in.readParcelable(Thumbnail.class.getClassLoader());
         this.category_ids = in.createStringArrayList();
-        this.thumbs = new ArrayList<Thumb>();
-        in.readList(this.thumbs, Thumb.class.getClassLoader());
-        this.likes_count = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.thumbs = in.createTypedArrayList(Thumb.CREATOR);
+        this.likes_count = in.readString();
         this.rating = (Integer) in.readValue(Integer.class.getClassLoader());
         this.watch = in.readString();
         this.favorite = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -117,12 +121,13 @@ public class Cat_cntn implements Parcelable {
         this.social_view = in.readInt();
         this.share_url = in.readString();
         this.download_path = in.readString();
-        this.subtitle = in.readString();
+        this.subtitle = in.createStringArrayList();
         this.seekDuration = in.readLong();
         this.download_expiry = in.readInt();
+        this.owner_info = (Channel) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<Cat_cntn> CREATOR = new Parcelable.Creator<Cat_cntn>() {
+    public static final Creator<Cat_cntn> CREATOR = new Creator<Cat_cntn>() {
         @Override
         public Cat_cntn createFromParcel(Parcel source) {
             return new Cat_cntn(source);

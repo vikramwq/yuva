@@ -58,7 +58,7 @@ public class ConnectionDetector {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setMessage("You are not connected to internet .");
-            Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/Ubuntu-regular.ttf");
+            Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/Montserrat-Regular.ttf");
             CustomTFSpan tfSpan = new CustomTFSpan(tf);
             SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.app_name));
             spannableString.setSpan(tfSpan, 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -83,7 +83,7 @@ public class ConnectionDetector {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setMessage("You are not connected to internet .");
-            Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/Ubuntu-regular.ttf");
+            Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/Montserrat-Regular.ttf");
             CustomTFSpan tfSpan = new CustomTFSpan(tf);
             SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.app_name));
             spannableString.setSpan(tfSpan, 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
