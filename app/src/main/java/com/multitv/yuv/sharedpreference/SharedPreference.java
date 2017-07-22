@@ -69,6 +69,10 @@ public class SharedPreference {
     }
 
 
+
+
+
+
     public String getPreferencesString(Context context, String key) {
         if (context == null)
             return null;
@@ -136,6 +140,23 @@ public class SharedPreference {
     }
 
     public String getPreferencesLikes(Context context, String key) {
+        if (context == null)
+            return null;
+        SharedPreferences prefs = context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE);
+        String position = prefs.getString(key, "");
+        return position;
+    }
+
+
+    public void setUserLocation(Context context,String key, String value) {
+        if (context == null)
+            return;
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String getUserLocation(Context context, String key) {
         if (context == null)
             return null;
         SharedPreferences prefs = context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE);

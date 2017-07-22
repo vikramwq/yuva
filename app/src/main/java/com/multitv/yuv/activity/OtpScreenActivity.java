@@ -79,7 +79,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.light_gray));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
         setContentView(R.layout.otp_screen);
 
@@ -371,7 +371,9 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
 
         switch (item.getItemId()) {
             case android.R.id.home:
-
+                Intent intent = new Intent(OtpScreenActivity.this, SignupActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
                 return true;
 
@@ -460,7 +462,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
             valid = false;
         }
         if (!AppConstants.isValidMobile(mobile)) {
-            mobileNumberField.setError("Invalid phone number");
+            mobileNumberField.setError("Invalid Mobile Number");
             valid = false;
         }
 

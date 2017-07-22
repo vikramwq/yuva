@@ -48,6 +48,7 @@ public class User implements Parcelable {
    public String  gender;
 
    public String app_session_id;
+   public String age_group;
 
 
    @Override
