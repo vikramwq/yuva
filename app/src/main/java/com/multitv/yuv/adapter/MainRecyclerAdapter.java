@@ -5,39 +5,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.multitv.yuv.R;
-import com.multitv.yuv.activity.MoreDataActivity;
-import com.multitv.yuv.activity.MultiTvPlayerActivity;
-import com.multitv.yuv.models.SectionDataModel;
-import com.multitv.yuv.sharedpreference.SharedPreference;
-import com.multitv.yuv.utilities.Constant;
-import com.multitv.yuv.utilities.Tracer;
-import com.multitv.yuv.utilities.Utilities;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.multitv.yuv.R;
+import com.multitv.yuv.activity.MoreDataActivity;
+import com.multitv.yuv.activity.MultiTvPlayerActivity;
+import com.multitv.yuv.eventbus.MoveToLiveChannelSection;
+import com.multitv.yuv.models.ChannelsData;
+import com.multitv.yuv.models.SectionDataModel;
+import com.multitv.yuv.models.home.Cat_cntn;
+import com.multitv.yuv.models.home.Thumb;
+import com.multitv.yuv.sharedpreference.SharedPreference;
+import com.multitv.yuv.utilities.Constant;
+import com.multitv.yuv.utilities.Tracer;
+import com.multitv.yuv.utilities.Utilities;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.multitv.yuv.models.home.Cat_cntn;
-
 /**
  * Created by multitv on 24-04-2017.
  */
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSliderView.OnSliderClickListener,
+        ViewPagerEx.OnPageChangeListener {
 
     private static String FEATURE_BANNER_DATA_KEY = "feature_key";
     private ArrayList<SectionDataModel> dataList;
@@ -47,10 +54,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
     private String TAG = "MainRecyclerAdapter ";
     private String fragmentName;
     private boolean isLoggedIn, isOTPVerified;
-    SharedPreference sharedPreference;
+    private SharedPreference sharedPreference;
+    private ChannelsData channelsData;
 
-
-    public MainRecyclerAdapter(Context context, ArrayList<SectionDataModel> dataList, boolean isFeatureEnable, String layoutOrientation, String fragmentName) {
+    public MainRecyclerAdapter(Context context, ArrayList<SectionDataModel> dataList,
+                               boolean isFeatureEnable, String layoutOrientation, String fragmentName) {
         this.dataList = dataList;
         this.mContext = context;
         this.layoutOrientation = layoutOrientation;
@@ -61,63 +69,76 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
         isOTPVerified = sharedPreference.getPreferenceBoolean(mContext, sharedPreference.KEY_IS_OTP_VERIFIED);
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (i == 0) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.feature_slider_xml, null);
-            SliderHolder holder = new SliderHolder(v);
-            return holder;
-        } else {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_recycler_row, null);
-            ItemRowHolder mh = new ItemRowHolder(v);
-            return mh;
-        }
+    public void setLiveChannels(ChannelsData channelsData) {
+        this.channelsData = channelsData;
+    }
 
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        switch (viewType) {
+            case 0:
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.feature_slider_xml, null);
+                return new SliderHolder(view);
+            case 1:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.live_recycler_row, null);
+                return new LiveItemRowHolder(view);
+            default:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.main_recycler_row, null);
+                return new ItemRowHolder(view);
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-
-
         if (position == 0 && isFeatureEnable)
             return 0;
-        else
+        else if (position == 1 && channelsData != null)
             return 1;
+        else
+            return 2;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int i) {
+        try {
+            if (holder != null && holder.getItemViewType() == 0) {
+                initilizeBannerSlider(((SliderHolder) holder).featureBannerSlider);
+                setFeatureBannerMeta(((SliderHolder) holder).featureBannerSlider, dataList.get(0).getAllItemsInSection());
+            } else if (holder != null && holder.getItemViewType() == 1) {
+                ((LiveItemRowHolder) holder).liveRecyclerView.setHasFixedSize(true);
+                ((LiveItemRowHolder) holder).liveRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                LiveSectionListDataAdapter liveSectionListDataAdapter = new LiveSectionListDataAdapter(mContext,
+                        channelsData.getChannels(), channelsData.getProfile_base(),
+                        channelsData.getBanner_page());
+                ((LiveItemRowHolder) holder).liveRecyclerView.setAdapter(liveSectionListDataAdapter);
+                ((LiveItemRowHolder) holder).btnMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EventBus.getDefault().post(new MoveToLiveChannelSection());
+                    }
+                });
+            } else {
+                SectionDataModel sectionDataModel = channelsData != null ? dataList.get(i - 1) : dataList.get(i);
+                final String sectionName = sectionDataModel.getHeaderTitle();
+                final String sectionID = sectionDataModel.getSectionID();
+                ArrayList singleSectionItems = sectionDataModel.getAllItemsInSection();
+                ((ItemRowHolder) holder).itemTitle.setText(sectionName);
+                SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, layoutOrientation, fragmentName);
+                ((ItemRowHolder) holder).mainRecyclerView.setHasFixedSize(true);
+                ((ItemRowHolder) holder).mainRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                ((ItemRowHolder) holder).mainRecyclerView.setAdapter(itemListDataAdapter);
+                if (sectionID != null && sectionID.equalsIgnoreCase("-2"))
+                    ((ItemRowHolder) holder).btnMore.setVisibility(View.GONE);
 
-        if (holder != null && holder.getItemViewType() == 0) {
-            initilizeBannerSlider(((SliderHolder) holder).featureBannerSlider);
-            setFeatureBannerMeta(((SliderHolder) holder).featureBannerSlider, dataList.get(0).getAllItemsInSection());
-
-        } else {
-            final String sectionName = dataList.get(i).getHeaderTitle();
-
-            final String sectionID = dataList.get(i).getSectionID();
-
-            ArrayList singleSectionItems = dataList.get(i).getAllItemsInSection();
-
-
-            ((ItemRowHolder) holder).itemTitle.setText(sectionName);
-
-            SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, layoutOrientation, fragmentName);
-
-
-            ((ItemRowHolder) holder).mainRecyclerView.setHasFixedSize(true);
-            ((ItemRowHolder) holder).mainRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            ((ItemRowHolder) holder).mainRecyclerView.setAdapter(itemListDataAdapter);
-            if (sectionID != null && sectionID.equalsIgnoreCase("-2"))
-                ((ItemRowHolder) holder).btnMore.setVisibility(View.GONE);
-
-
-            ((ItemRowHolder) holder).btnMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    navigateToMoreData(sectionName, sectionID);
-                }
-            });
+                ((ItemRowHolder) holder).btnMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateToMoreData(sectionName, sectionID);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -140,7 +161,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
                 textSliderView.bundle(new Bundle());
                 textSliderView.getBundle().putParcelable(FEATURE_BANNER_DATA_KEY, datalist.get(i));
 
-                String url = datalist.get(i).thumbnail.large;
+                String url = "";
+                if (datalist.get(i).thumbs != null && !datalist.get(i).thumbs.isEmpty()) {
+                    Thumb thumb = datalist.get(i).thumbs.get(0);
+                    if (thumb != null && thumb.getThumb() != null && !TextUtils.isEmpty(thumb.getThumb().getMedium()))
+                        url = thumb.getThumb().getMedium();
+                }
+
                 if (url != null && !url.equals(null) && !url.equals("")) {
                     textSliderView
                             .description(datalist.get(i).title)
@@ -166,7 +193,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
 
     @Override
     public int getItemCount() {
-        return (null != dataList ? dataList.size() : 0);
+        int itemCount = dataList != null ? dataList.size() : 0;
+        if (channelsData != null && dataList != null && !dataList.isEmpty()) {
+            itemCount++;
+        }
+        return itemCount;
     }
 
     public class ItemRowHolder extends RecyclerView.ViewHolder {
@@ -196,6 +227,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
         }
     }
 
+    public class LiveItemRowHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.itemTitle)
+        protected TextView itemTitle;
+        @BindView(R.id.live_recycler_view)
+        protected RecyclerView liveRecyclerView;
+        @BindView(R.id.btnMore)
+        protected Button btnMore;
+        @BindView(R.id.live_progress_bar)
+        ProgressBar liveProgressBar;
+
+        public LiveItemRowHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+
     private void navigateToMoreData(String catName, String catID) {
         Intent intent = new Intent(mContext, MoreDataActivity.class);
         if (catID != null && !catID.equalsIgnoreCase("-1"))
@@ -210,8 +257,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-
-
         if (isOTPVerified) {
             Cat_cntn contentObj = slider.getBundle().getParcelable(FEATURE_BANNER_DATA_KEY);
             Intent intent = new Intent(mContext, MultiTvPlayerActivity.class);

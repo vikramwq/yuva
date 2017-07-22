@@ -198,6 +198,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         context = this;
 
         setContentView(R.layout.activity_main_parent);
+        ButterKnife.setDebug(true);
+        ButterKnife.bind(HomeActivity.this);
         MediaDbHelper.getInstance(HomeActivity.this).getWritableDatabase();
 
         mediaDbConnector = new MediaDbConnector(HomeActivity.this);
@@ -216,7 +218,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Tracer.debug(TAG, "Key: " + key + " Value: " + value);
             }
         }
-        ButterKnife.bind(HomeActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -1199,10 +1200,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         }
-
-
     }
-
 
     class UpdateBadgerNotification extends BroadcastReceiver {
         @Override

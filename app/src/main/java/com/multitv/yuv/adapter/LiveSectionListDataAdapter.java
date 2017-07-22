@@ -11,15 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.multitv.yuv.R;
-import com.multitv.yuv.activity.PlayerActivity;
 import com.multitv.yuv.activity.PlaylistScreen;
 import com.multitv.yuv.models.Channel;
-import com.multitv.yuv.models.home.Live;
 import com.multitv.yuv.sharedpreference.SharedPreference;
-import com.multitv.yuv.utilities.ConnectionManager;
 import com.multitv.yuv.utilities.ScreenUtils;
 import com.squareup.picasso.Picasso;
 
@@ -122,14 +118,14 @@ public class LiveSectionListDataAdapter extends RecyclerView.Adapter<LiveSection
             super(view);
             ButterKnife.bind(this, view);
 
-
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, PlaylistScreen.class);
-                    intent.putExtra("channel", itemsList.get(getAdapterPosition()));
-                    intent.putExtra("baseUrl",bannerbaseUrl);
-                    intent.putExtra("profileBaseUrl",mediaBaseUrl);
+                    /*intent.putExtra("channel", itemsList.get(getAdapterPosition()));*/
+                    intent.putExtra("channel_position", getAdapterPosition());
+                    intent.putExtra("baseUrl", bannerbaseUrl);
+                    intent.putExtra("profileBaseUrl", mediaBaseUrl);
                     mContext.startActivity(intent);
 
                 }

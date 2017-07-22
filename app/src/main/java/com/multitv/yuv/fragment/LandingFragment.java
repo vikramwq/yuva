@@ -19,12 +19,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.iainconnor.objectcache.GetCallback;
+import com.multitv.cipher.MultitvCipher;
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.MainRecyclerAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.db.MediaDbConnector;
+import com.multitv.yuv.eventbus.UpdateWatchingHistorySection;
 import com.multitv.yuv.locale.LocaleHelper;
+import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.PersistenceDataItem;
 import com.multitv.yuv.models.SectionDataModel;
 import com.multitv.yuv.models.home.Cat_cntn;
@@ -36,14 +41,14 @@ import com.multitv.yuv.utilities.AppUtils;
 import com.multitv.yuv.utilities.ConnectionManager;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Json;
+import com.multitv.yuv.utilities.LiveChannelUtils;
 import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
-import com.google.gson.reflect.TypeToken;
-import com.iainconnor.objectcache.GetCallback;
-import com.multitv.cipher.MultitvCipher;
 import com.multitv.yuv.utilities.VersionUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -54,6 +59,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -61,7 +67,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by multitv on 24-04-2017.
  */
 
-public class LandingFragment extends Fragment {
+public class LandingFragment extends Fragment implements LiveChannelUtils.LiveChannelInterface {
 
     private static String TAG = "LANDING_FRAGMENT";
 
@@ -91,10 +97,8 @@ public class LandingFragment extends Fragment {
     private ArrayList<Cat_cntn> persistanceDataList;
     private String fragmentName;
     private Context parentContext;
-    Version version;
-
+    private ChannelsData channelsData;
     private boolean isDataUpdated;
-
 
     @Override
     public void onAttach(Context context) {
@@ -111,22 +115,7 @@ public class LandingFragment extends Fragment {
 //        Utilities.saveDatabase();
         userID = new SharedPreference().getPreferencesString(parentContext, "user_id" + "_" + ApiRequest.TOKEN);
         selectedGenre = sharedPreference.getPreferencesString(parentContext, "GENRES");
-        MediaDbConnector mediaDbConnector = new MediaDbConnector(parentContext);
-        List<PersistenceDataItem> persistenceDataItems = mediaDbConnector.getPersistenceMedia();
-        if (persistenceDataItems != null && persistenceDataItems.size() > 0) {
-            persistanceDataList = new ArrayList<>();
-            for (int i = 0; i < persistenceDataItems.size(); i++) {
-                String persistenceObj = persistenceDataItems.get(i).getData();
-//                Log.d(this.getClass().getName(),"persistenceObj=====>>>"+persistenceObj);
-                if (persistenceObj != null) {
-                    Cat_cntn content = Json.parse(persistenceObj.trim(), Cat_cntn.class);
-                    content.seekDuration = persistenceDataItems.get(i).getDuration();
-                    persistanceDataList.add(content);
-                }
-            }
-        }
-
-
+        prepareWatchingList();
     }
 
     @Nullable
@@ -150,7 +139,9 @@ public class LandingFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (ConnectionManager.getInstance(getApplicationContext()).isConnected()) {
-
+            getVersionData();
+            //Getting live channels
+            LiveChannelUtils.getLiveChannelResponse(userID, 0, this);
 //            Home home = (Home) Utilities.readObjectFromFile("home.ser");
 //
 //            if(home!=null) {
@@ -177,8 +168,7 @@ public class LandingFragment extends Fragment {
 
 
     private void getVersionData() {
-
-        progressBarMain.setVisibility(View.VISIBLE);
+        //progressBarMain.setVisibility(View.VISIBLE);
         if (getActivity() == null)
             return;
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
@@ -196,17 +186,25 @@ public class LandingFragment extends Fragment {
 
                                 Tracer.error("Version_api_response", str);
 
-                                version = new Gson().fromJson(str, Version.class);
+                                final Version version = new Gson().fromJson(str.trim(), Version.class);
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        realm.copyToRealmOrUpdate(version);
+                                    }
+                                });
+                                if (!realm.isClosed())
+                                    realm.close();
 
-                                handleDataVersions(str);
+                                Log.d(this.getClass().getName(), "dash version changed or not==>>> " + VersionUtils.getIsHomeVersionChanged1(parentContext, version));
+                                //handleDataVersions(str);
                             }
                         } catch (Exception e) {
                             ExceptionUtils.printStacktrace(e);
                         }
 
-                        Log.d(this.getClass().getName(), "dash version changed or not==>>> " + VersionUtils.getIsHomeVersionChanged1(parentContext, version));
-
-                        getContentData(false);
+                        //getContentData(false);
                     }
                 }).start();
             }
@@ -248,9 +246,8 @@ public class LandingFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                                AppUtils.generateUrl(getActivity(), ApiRequest.HOME_URL), new Response.Listener<String>() {
+                                AppUtils.generateUrlVersion3(getActivity(), ApiRequest.HOME_URL), new Response.Listener<String>() {
                             @Override
                             public void onResponse(final String response) {
                                 new Thread(new Runnable() {
@@ -319,12 +316,13 @@ public class LandingFragment extends Fragment {
                                 params.put("lan", LocaleHelper.getLanguage(getApplicationContext()));
 //                                params.put("m_filter", (PreferenceData.isMatureFilterEnable(getApplicationContext()) ? "" + 1 : "" + 0));
 //                                params.put("m_filter", "");
-
                                 params.put("device", "android");
                                 params.put("content_count", "15");
                                 params.put("display_offset", "" + offset);
                                 params.put("display_limit", "3");
                                 params.put("user_id", userID);
+                                params.put("flag", homeDataModel != null ? "" + homeDataModel.flag : "0");
+
                                 return params;
                             }
                         };
@@ -346,11 +344,11 @@ public class LandingFragment extends Fragment {
         });
     }
 
-    private void handleDataVersions(final String versionApiResponse) {
+  /*  private void handleDataVersions(final String versionApiResponse) {
         SharedPreference sharedPreference = new SharedPreference();
 
         sharedPreference.setPreferencesString(parentContext, "VERSION", versionApiResponse.trim());
-    }
+    }*/
 
     private void showDisplayPlaylistData(Home homeMetaData, boolean isLoadMoreRequest) {
         if (homeMetaData == null)
@@ -373,8 +371,6 @@ public class LandingFragment extends Fragment {
                 dataModel = new SectionDataModel("Continue Watching", "-2", persistanceDataList);
                 sectionList.add(dataModel);
             }
-
-
         }
         if (homeMetaData.dashboard != null && homeMetaData.dashboard.home_category != null && homeMetaData.dashboard.home_category.size() > 0)
             for (int i = 0; i < homeMetaData.dashboard.home_category.size(); i++) {
@@ -392,13 +388,16 @@ public class LandingFragment extends Fragment {
     }
 
     private void initilizeMainRecyclerView(boolean isFeatureAvailable) {
-        sectionList = new ArrayList<SectionDataModel>();
-        mainSectionAdapter = new MainRecyclerAdapter(parentContext, sectionList, isFeatureAvailable, "verticle_rectangle", "Home");
+        sectionList = new ArrayList<>();
+        mainSectionAdapter = new MainRecyclerAdapter(parentContext, sectionList, isFeatureAvailable,
+                "verticle_rectangle", "Home");
+        if (channelsData != null) {
+            mainSectionAdapter.setLiveChannels(channelsData);
+        }
         homeContentRecycler.setHasFixedSize(true);
         homeContentRecycler.setLayoutManager(new LinearLayoutManager(parentContext, LinearLayoutManager.VERTICAL, false));
         homeContentRecycler.setAdapter(mainSectionAdapter);
         homeContentRecycler.addOnScrollListener(scrollListener);
-
     }
 
 
@@ -438,4 +437,73 @@ public class LandingFragment extends Fragment {
     };
 
 
+    @Override
+    public void onLiveChannelApiResponse(final ChannelsData channelsData) {
+        this.channelsData = channelsData;
+        if (mainSectionAdapter != null && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mainSectionAdapter.setLiveChannels(channelsData);
+                    mainSectionAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLiveChannelApiFailure() {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(sticky = true)
+    public void updateWatchingHistorySection(UpdateWatchingHistorySection updateWatchingHistorySection) {
+        //EventBus.getDefault().cancelEventDelivery(updateWatchingHistorySection);
+        updateWatchingHistorySection();
+    }
+
+    private void updateWatchingHistorySection() {
+        try {
+            prepareWatchingList();
+            for (SectionDataModel sectionDataModel : sectionList) {
+                if (sectionDataModel.getSectionID().equalsIgnoreCase("-2")) {
+                    sectionDataModel.setAllItemsInSection(persistanceDataList);
+                    if (mainSectionAdapter != null)
+                        mainSectionAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void prepareWatchingList() {
+        MediaDbConnector mediaDbConnector = new MediaDbConnector(parentContext);
+        List<PersistenceDataItem> persistenceDataItems = mediaDbConnector.getPersistenceMedia();
+        if (persistenceDataItems != null && persistenceDataItems.size() > 0) {
+            persistanceDataList = new ArrayList<>();
+            for (int i = 0; i < persistenceDataItems.size(); i++) {
+                String persistenceObj = persistenceDataItems.get(i).getData();
+//                Log.d(this.getClass().getName(),"persistenceObj=====>>>"+persistenceObj);
+                if (persistenceObj != null) {
+                    Cat_cntn content = Json.parse(persistenceObj.trim(), Cat_cntn.class);
+                    content.seekDuration = persistenceDataItems.get(i).getDuration();
+                    persistanceDataList.add(content);
+                }
+            }
+        }
+    }
 }

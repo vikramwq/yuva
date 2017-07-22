@@ -1,8 +1,8 @@
 package com.multitv.yuv.models;
 
-import java.util.ArrayList;
-
 import com.multitv.yuv.models.home.Cat_cntn;
+
+import java.util.ArrayList;
 
 /**
  * Created by Created by Sunil on 09-08-2016.

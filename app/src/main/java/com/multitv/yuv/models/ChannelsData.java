@@ -2,21 +2,25 @@ package com.multitv.yuv.models;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by arungoyal on 17/07/17.
  */
 
-public class ChannelsData {
-
-
+public class ChannelsData extends RealmObject {
+    @PrimaryKey
+    private int id;
     private int cur_page;
     private int total_page;
     private String next_page;
     private String previous_page;
     private String profile_base;
     private String banner_page;
-
-    private List<Channel> channels;
+    private String version;
+    private RealmList<Channel> channels;
 
 
     public int getCur_page() {
@@ -71,7 +75,11 @@ public class ChannelsData {
         return channels;
     }
 
-    public void setChannels(List<Channel> channels) {
+    public void setChannels(RealmList<Channel> channels) {
         this.channels = channels;
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

@@ -10,6 +10,7 @@ public class Home implements Parcelable {
     public Version version;
     public int display_offset;
     public int display_count;
+    public int flag;
     public Dashboard dashboard;
     public ArrayList<Live> live = new ArrayList<>();
     public ArrayList<Cat_cntn> recomended = new ArrayList<>();
