@@ -144,6 +144,7 @@ public class PlaylistScreen extends AppCompatActivity {
                     channel.setIs_subscriber("1");
                     subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
                     notificationBtn.setVisibility(View.VISIBLE);
+                    notificationBtn.setImageResource(R.mipmap.ic_notification);
                 } else {
                     channel.setIs_subscriber("0");
                     subscribeLayout.setImageResource(R.mipmap.ic_subscription);
@@ -165,6 +166,15 @@ public class PlaylistScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if ("1".equals(channel.getNotification())) {
+                    channel.setNotification("0");
+                    notificationBtn.setImageResource(R.mipmap.ic_notification_disabled);
+                    ContentController.getInstance().doNotificationTask(channel.getId(), "2");
+                } else {
+                    channel.setNotification("1");
+                    notificationBtn.setImageResource(R.mipmap.ic_notification);
+                    ContentController.getInstance().doNotificationTask(channel.getId(), "1");
+                }
 
             }
         });

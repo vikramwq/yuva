@@ -144,7 +144,7 @@ public class ContentController {
         SharedPreference sharedPreference = new SharedPreference();
         final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
 
-        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + "    " + url);
+        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + " userid   " + userID);
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {
@@ -167,7 +167,6 @@ public class ContentController {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
-                NotificationCenter.getInstance().postNotificationName(NotificationCenter.didContentReceivedFailed, null);
 
             }
         }) {
@@ -238,7 +237,7 @@ public class ContentController {
                     params.put("channel_id", channelId);
                     params.put("customer_id", "" + userID);
                     params.put("token", ApiRequest.TOKEN);
-                    params.put("donot_notify", "1");
+                    params.put("donot_notify", isNotified);
 
                     return checkParams(params);
                 } catch (Exception e) {

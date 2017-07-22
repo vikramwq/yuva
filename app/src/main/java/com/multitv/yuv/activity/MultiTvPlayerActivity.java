@@ -1091,7 +1091,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     }
 
 
-    private void addDataToUI(Cat_cntn content) {
+    private void addDataToUI(final Cat_cntn content) {
 
 
         if (content != null) {
@@ -1215,8 +1215,10 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                         ContentController.getInstance().subscribeChannel(channel.getId(), channel.getIs_subscriber());
                         if (channel.getIs_subscriber().equals("0")) {
                             channel.setIs_subscriber("1");
+                            channel.setNotification("1");
                             subscribeLayout.setImageResource(R.mipmap.ic_subsd_diable);
                             notificationBtn.setVisibility(View.VISIBLE);
+                            notificationBtn.setImageResource(R.mipmap.ic_notification);
                         } else {
                             channel.setIs_subscriber("0");
                             subscribeLayout.setImageResource(R.mipmap.ic_subscription);
@@ -1228,6 +1230,15 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                     @Override
                     public void onClick(View v) {
 
+                        if("1".equals(channel.getNotification())) {
+                            channel.setNotification("0");
+                            notificationBtn.setImageResource(R.mipmap.ic_notification_disabled);
+                            ContentController.getInstance().doNotificationTask(channel.getId(), "2");
+                        }else{
+                            channel.setNotification("1");
+                            notificationBtn.setImageResource(R.mipmap.ic_notification);
+                            ContentController.getInstance().doNotificationTask(channel.getId(), "1");
+                        }
 
                     }
                 });
