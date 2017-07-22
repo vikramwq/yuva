@@ -28,6 +28,7 @@ public class LiveChannelUtils {
                                               final LiveChannelInterface liveChannelInterface) {
         final Realm realm = Realm.getDefaultInstance();
         ChannelsData channelsData = realm.where(ChannelsData.class).findFirst();
+        channelsData = realm.copyFromRealm(channelsData);
         if (channelsData != null) {
             if (!realm.isClosed())
                 realm.close();

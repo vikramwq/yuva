@@ -44,7 +44,6 @@ public class Cat_cntn implements Parcelable {
     public int download_expiry;
 
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -120,7 +119,7 @@ public class Cat_cntn implements Parcelable {
         this.download_path = in.readString();
         this.subtitle = in.readString();
         this.seekDuration = in.readLong();
-        this.download_expiry=in.readInt();
+        this.download_expiry = in.readInt();
     }
 
     public static final Parcelable.Creator<Cat_cntn> CREATOR = new Parcelable.Creator<Cat_cntn>() {

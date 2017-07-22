@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,8 +27,8 @@ import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.PagerAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.eventbus.MoveToLiveChannelSection;
 import com.multitv.yuv.locale.LocaleHelper;
-import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.categories.Category;
 import com.multitv.yuv.models.categories.Vod;
 import com.multitv.yuv.models.menu.MenuModel;
@@ -87,6 +88,8 @@ public class BaseFragment extends Fragment {
     @BindView(R.id.base_fragment_shadow)
     View mDarkBackground;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     private Context parentContext;
     private Version version;
@@ -206,7 +209,7 @@ public class BaseFragment extends Fragment {
     }
 
     @Subscribe
-    public void onEvent(ChannelsData channelsData) {
+    public void onEvent(MoveToLiveChannelSection moveToLiveChannelSection) {
         if (pager != null)
             pager.setCurrentItem(5);
     }
@@ -376,6 +379,14 @@ public class BaseFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        if (getActivity() == null)
+                            return;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
                         category = (Category) object;
                         if (getActivity() == null)
                             return;
@@ -429,7 +440,13 @@ public class BaseFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Tracer.error("categoryName---", response.toString());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                        Tracer.error("categoryName---", response);
                         try {
                             JSONObject mObj = new JSONObject(response);
                             if (mObj.optInt("code") == 1) {
@@ -477,6 +494,7 @@ public class BaseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Tracer.error("video", "Error: " + error.getMessage());
+                progressBar.setVisibility(View.GONE);
             }
         }) {
 

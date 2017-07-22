@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.multitv.yuv.R;
 import com.multitv.yuv.activity.MoreDataActivity;
 import com.multitv.yuv.activity.MultiTvPlayerActivity;
+import com.multitv.yuv.eventbus.MoveToLiveChannelSection;
 import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.SectionDataModel;
 import com.multitv.yuv.models.home.Cat_cntn;
+import com.multitv.yuv.models.home.Thumb;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.Tracer;
@@ -111,13 +114,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
                 ((LiveItemRowHolder) holder).btnMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EventBus.getDefault().post(channelsData);
+                        EventBus.getDefault().post(new MoveToLiveChannelSection());
                     }
                 });
             } else {
-                final String sectionName = dataList.get(i).getHeaderTitle();
-                final String sectionID = dataList.get(i).getSectionID();
-                ArrayList singleSectionItems = dataList.get(i).getAllItemsInSection();
+                SectionDataModel sectionDataModel = channelsData != null ? dataList.get(i - 1) : dataList.get(i);
+                final String sectionName = sectionDataModel.getHeaderTitle();
+                final String sectionID = sectionDataModel.getSectionID();
+                ArrayList singleSectionItems = sectionDataModel.getAllItemsInSection();
                 ((ItemRowHolder) holder).itemTitle.setText(sectionName);
                 SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, layoutOrientation, fragmentName);
                 ((ItemRowHolder) holder).mainRecyclerView.setHasFixedSize(true);
@@ -157,7 +161,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
                 textSliderView.bundle(new Bundle());
                 textSliderView.getBundle().putParcelable(FEATURE_BANNER_DATA_KEY, datalist.get(i));
 
-                String url = datalist.get(i).thumbnail.large;
+                String url = "";
+                if (datalist.get(i).thumbs != null && !datalist.get(i).thumbs.isEmpty()) {
+                    Thumb thumb = datalist.get(i).thumbs.get(0);
+                    if (thumb != null && thumb.getThumb() != null && !TextUtils.isEmpty(thumb.getThumb().getMedium()))
+                        url = thumb.getThumb().getMedium();
+                }
+
                 if (url != null && !url.equals(null) && !url.equals("")) {
                     textSliderView
                             .description(datalist.get(i).title)
@@ -184,11 +194,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements BaseSli
     @Override
     public int getItemCount() {
         int itemCount = dataList != null ? dataList.size() : 0;
-        if (channelsData != null) {
-            if (dataList != null && !dataList.isEmpty() && itemCount < dataList.size())
-                itemCount++;
-            else if (itemCount == 0)
-                itemCount++;
+        if (channelsData != null && dataList != null && !dataList.isEmpty()) {
+            itemCount++;
         }
         return itemCount;
     }

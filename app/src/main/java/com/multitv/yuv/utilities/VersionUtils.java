@@ -190,8 +190,9 @@ public class VersionUtils {
     private static Version getSavedVersion() {
         Realm realm = Realm.getDefaultInstance();
         Version version = realm.where(Version.class).findFirst();
-        /*if (!realm.isClosed())
-            realm.close();*/
+        version = realm.copyFromRealm(version);
+        if (!realm.isClosed())
+            realm.close();
         return version;
        /* SharedPreference sharedPreference = new SharedPreference();
         String versionApiResponse = sharedPreference.getPreferencesString(context, "VERSION");

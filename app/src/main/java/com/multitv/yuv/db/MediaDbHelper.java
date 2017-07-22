@@ -10,12 +10,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.multitv.yuv.models.MediaItem;
+import com.multitv.yuv.models.PersistenceDataItem;
+import com.multitv.yuv.utilities.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.multitv.yuv.models.PersistenceDataItem;
-import com.multitv.yuv.utilities.Constant;
 
 public class MediaDbHelper extends SQLiteOpenHelper {
 
@@ -187,7 +186,7 @@ public class MediaDbHelper extends SQLiteOpenHelper {
         String whereClause = null;
         final String orderBy = Constant.TABLE_ID + " DESC";
 
-        String limitnum = "1000";
+        String limitnum = "10";
 
 
         Cursor c = db.query(table, columns, whereClause, selectionArgs, groupBy, having, orderBy, limitnum);

@@ -1,7 +1,6 @@
 package com.multitv.yuv.adapter;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -31,7 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> {
 
     private List<Cat_cntn> itemsList;
@@ -39,7 +37,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     private String layoutOrientation;
     private int size;
     private String fragmentName;
-    boolean isLoggedIn,isOTPVerified;
+    boolean isLoggedIn, isOTPVerified;
     SharedPreference sharedPreference;
 
 
@@ -50,11 +48,8 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         this.fragmentName = fragmentName;
         sharedPreference = new SharedPreference();
         isLoggedIn = sharedPreference.getPreferenceBoolean(mContext, sharedPreference.KEY_IS_LOGGED_IN);
-        isOTPVerified=sharedPreference.getPreferenceBoolean(mContext, sharedPreference.KEY_IS_OTP_VERIFIED);
+        isOTPVerified = sharedPreference.getPreferenceBoolean(mContext, sharedPreference.KEY_IS_OTP_VERIFIED);
 //        Log.d(this.getClass().getName(),"fragmentName========="+fragmentName);
-
-
-
 
 
     }
@@ -112,7 +107,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             String duration = String.valueOf(singleItem.duration);
 
 
-            Log.d(this.getClass().getName(),"duration==========>>>> "+duration);
+            Log.d(this.getClass().getName(), "duration==========>>>> " + duration);
 
             if (duration != null && !duration.equals(null)) {
                 String splitTime[] = duration.split(":");
@@ -134,7 +129,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 //                Log.d(this.getClass().getName(),"layoutOrientation=======>>>>"+singleItem.thumbs.get(i).getName());
 
-                if(singleItem.thumbs.get(i)!=null) {
+                if (singleItem.thumbs.get(i) != null) {
                     if (singleItem.thumbs.get(i).getName().equalsIgnoreCase(layoutOrientation)) {
                         url = singleItem.thumbs.get(i).getThumb().getMedium();
                         break;
@@ -148,13 +143,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 //            Log.d(this.getClass().getName(),"url of image========>> "+url);
 
             int placeHolder;
-            if(fragmentName.equalsIgnoreCase("Clip TV") || fragmentName.equalsIgnoreCase("Music Videos")){
-                 placeHolder=R.mipmap.place_holder_land;
-            }else{
-                placeHolder= R.mipmap.place_holder;
+            if (fragmentName.equalsIgnoreCase("Clip TV") || fragmentName.equalsIgnoreCase("Music Videos")) {
+                placeHolder = R.mipmap.place_holder_land;
+            } else {
+                placeHolder = R.mipmap.place_holder;
             }
-
-
 
 
             if (url != null && !url.equals(null) && !url.equals("")) {
@@ -193,7 +186,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         public TextView contentTitle;
 
 
-
         public SingleItemRowHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -206,13 +198,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
             if (isLoggedIn && isOTPVerified) {
-                String videoUrl = itemsList.get(position).url;
-                if (!videoUrl.equals("")) {
-                    Intent videoIntent = new Intent(mContext, MultiTvPlayerActivity.class);
-                    videoIntent.putExtra(Constant.CONTENT_TRANSFER_KEY, itemsList.get(position));
-                    videoIntent.putExtra("CONTENT_TYPE_MULTITV", "VOD");
-                    mContext.startActivity(videoIntent);
-                }
+               /* String videoUrl = itemsList.get(position).url;
+                if (!videoUrl.equals("")) {*/
+                Intent videoIntent = new Intent(mContext, MultiTvPlayerActivity.class);
+                videoIntent.putExtra(Constant.CONTENT_TRANSFER_KEY, itemsList.get(position));
+                videoIntent.putExtra("CONTENT_TYPE_MULTITV", "VOD");
+                mContext.startActivity(videoIntent);
+                /*}*/
             } else {
                 if ("Movie Promos".equalsIgnoreCase(fragmentName)) {
                     String videoUrl = itemsList.get(position).url;

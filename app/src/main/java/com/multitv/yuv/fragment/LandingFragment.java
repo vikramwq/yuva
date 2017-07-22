@@ -27,6 +27,7 @@ import com.multitv.yuv.adapter.MainRecyclerAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.db.MediaDbConnector;
+import com.multitv.yuv.eventbus.UpdateWatchingHistorySection;
 import com.multitv.yuv.locale.LocaleHelper;
 import com.multitv.yuv.models.ChannelsData;
 import com.multitv.yuv.models.PersistenceDataItem;
@@ -46,6 +47,8 @@ import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
 import com.multitv.yuv.utilities.VersionUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -112,22 +115,7 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
 //        Utilities.saveDatabase();
         userID = new SharedPreference().getPreferencesString(parentContext, "user_id" + "_" + ApiRequest.TOKEN);
         selectedGenre = sharedPreference.getPreferencesString(parentContext, "GENRES");
-        MediaDbConnector mediaDbConnector = new MediaDbConnector(parentContext);
-        List<PersistenceDataItem> persistenceDataItems = mediaDbConnector.getPersistenceMedia();
-        if (persistenceDataItems != null && persistenceDataItems.size() > 0) {
-            persistanceDataList = new ArrayList<>();
-            for (int i = 0; i < persistenceDataItems.size(); i++) {
-                String persistenceObj = persistenceDataItems.get(i).getData();
-//                Log.d(this.getClass().getName(),"persistenceObj=====>>>"+persistenceObj);
-                if (persistenceObj != null) {
-                    Cat_cntn content = Json.parse(persistenceObj.trim(), Cat_cntn.class);
-                    content.seekDuration = persistenceDataItems.get(i).getDuration();
-                    persistanceDataList.add(content);
-                }
-            }
-        }
-
-
+        prepareWatchingList();
     }
 
     @Nullable
@@ -383,8 +371,6 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
                 dataModel = new SectionDataModel("Continue Watching", "-2", persistanceDataList);
                 sectionList.add(dataModel);
             }
-
-
         }
         if (homeMetaData.dashboard != null && homeMetaData.dashboard.home_category != null && homeMetaData.dashboard.home_category.size() > 0)
             for (int i = 0; i < homeMetaData.dashboard.home_category.size(); i++) {
@@ -468,5 +454,56 @@ public class LandingFragment extends Fragment implements LiveChannelUtils.LiveCh
     @Override
     public void onLiveChannelApiFailure() {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(sticky = true)
+    public void updateWatchingHistorySection(UpdateWatchingHistorySection updateWatchingHistorySection) {
+        EventBus.getDefault().cancelEventDelivery(updateWatchingHistorySection);
+        updateWatchingHistorySection();
+    }
+
+    private void updateWatchingHistorySection() {
+        try {
+            prepareWatchingList();
+            for (SectionDataModel sectionDataModel : sectionList) {
+                if (sectionDataModel.getSectionID().equalsIgnoreCase("-2")) {
+                    sectionDataModel.setAllItemsInSection(persistanceDataList);
+                    if (mainSectionAdapter != null)
+                        mainSectionAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void prepareWatchingList() {
+        MediaDbConnector mediaDbConnector = new MediaDbConnector(parentContext);
+        List<PersistenceDataItem> persistenceDataItems = mediaDbConnector.getPersistenceMedia();
+        if (persistenceDataItems != null && persistenceDataItems.size() > 0) {
+            persistanceDataList = new ArrayList<>();
+            for (int i = 0; i < persistenceDataItems.size(); i++) {
+                String persistenceObj = persistenceDataItems.get(i).getData();
+//                Log.d(this.getClass().getName(),"persistenceObj=====>>>"+persistenceObj);
+                if (persistenceObj != null) {
+                    Cat_cntn content = Json.parse(persistenceObj.trim(), Cat_cntn.class);
+                    content.seekDuration = persistenceDataItems.get(i).getDuration();
+                    persistanceDataList.add(content);
+                }
+            }
+        }
     }
 }
