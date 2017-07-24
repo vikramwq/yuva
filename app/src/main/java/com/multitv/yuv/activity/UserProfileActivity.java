@@ -225,12 +225,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         if (!TextUtils.isEmpty(name))
             usernameEditText.setText(name);
 
-        String email = sharedPreference.getPreferencesString(this, Constant.EMAIL_KEY);
+        String email = sharedPreference.getEmailID(this, Constant.EMAIL_KEY);
         if (!TextUtils.isEmpty(email))
             emailEditText.setText(email);
 
-        String  gender = sharedPreference.getGender(this, Constant.GENDER_KEY);
-      if(!TextUtils.isEmpty(gender))
+        String gender = sharedPreference.getGender(this, Constant.GENDER_KEY);
+        if (!TextUtils.isEmpty(gender)) {
+            if (gender.equalsIgnoreCase("1"))
+                selectedGenderTextview.setText("Female");
+            else if (gender.equalsIgnoreCase("0"))
+                selectedGenderTextview.setText("Male");
+            else
+                selectedGenderTextview.setText(gender);
+
+        }
         selectedGenderTextview.setText(gender);
 
         String dateOfBirth = sharedPreference.getDob(this, Constant.AGEGROUP_KEY);
@@ -285,7 +293,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         }
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                AppUtils.generateUrl(this, ApiRequest.USER_EDIT), new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3+ApiRequest.USER_EDIT, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Tracer.error("api_responce---", response);
@@ -302,19 +310,28 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                         User user = Json.parse(str.trim(), User.class);
                         if (user != null) {
-                            sharedPreference.setPreferencesString(UserProfileActivity.this, NAME, user.first_name);
-                            sharedPreference.setPreferencesString(UserProfileActivity.this, EMAIL, user.email);
-                            sharedPreference.setPreferencesString(UserProfileActivity.this, DATE_OF_BIRTH, user.dob);
-                            sharedPreference.setPreferencesString(UserProfileActivity.this, CONTACT_NUMBER, user.contact_no);
-                            sharedPreference.setPreferencesString(UserProfileActivity.this, LOCATION, user.location);
                             if (!TextUtils.isEmpty(user.gender)) {
                                 try {
-                                    sharedPreference.setPreferencesInt(UserProfileActivity.this, GENDER, Integer.parseInt(user.gender));
+                                    sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, user.gender);
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }
                             }
                             sharedPreference.setPreferencesString(UserProfileActivity.this, IMAGE_URL, user.image);
+
+                            if (!TextUtils.isEmpty(user.location))
+                                sharedPreference.setUserLocation(UserProfileActivity.this, Constant.LOCATION_KEY, user.location);
+
+                            sharedPreference.setUserName(UserProfileActivity.this, Constant.USERNAME_KEY, user.first_name);
+                            sharedPreference.setPhoneNumber(UserProfileActivity.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
+                            sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.dob);
+                            sharedPreference.setEmailId(UserProfileActivity.this, Constant.EMAIL_KEY, user.email);
+
+                            if (!TextUtils.isEmpty(user.image))
+                                sharedPreference.setImageUrl(UserProfileActivity.this, Constant.IMAGE_URL_KEY, user.image);
+
+                            if (!TextUtils.isEmpty(user.age_group))
+                                sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.age_group);
                         }
 
                         Toast.makeText(UserProfileActivity.this, "Profile successfully saved", Toast.LENGTH_LONG).show();

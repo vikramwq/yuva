@@ -61,7 +61,7 @@ public class ApiRequest {
 
     public static String APP_SESSION = "/analytics/usersession/token/" + TOKEN;
 
-    public static final String BASE_URL_VERSION_3 = "http://api.multitvsolution.com/automatorapi/v3/";
+    public static final String BASE_URL_VERSION_3 = "http://yuvadmin.multitvsolution.com/v3/";
 
     public static final String LOGIN_API = "/user/login/token/" + TOKEN;
 

@@ -59,6 +59,7 @@ import com.multitv.yuv.models.CountryCode;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppNetworkAlertDialog;
+import com.multitv.yuv.utilities.AppUtils;
 import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.Utilities;
 
@@ -423,8 +424,9 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         }
 
         progressBar.setVisibility(View.VISIBLE);
+        goToHomeActivityFromSignUp.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.SIGNUP_URL, new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3+ ApiRequest.SIGNUP_URL, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -437,28 +439,27 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                         String otp = mObj.optString("otp");
                         String id = mObj.optString("id");
                         Log.e("***SIGNUP-URL**", str);
-                        sharedPreference.setUserName(SignupActivityNew.this,Constant.USERNAME_KEY,first_name);
-                        sharedPreference.setPhoneNumber(SignupActivityNew.this,Constant.MOBILE_NUMBER_KEY,phone);
-                        sharedPreference.setDob(SignupActivityNew.this,Constant.AGEGROUP_KEY,ageGroup);
-                        sharedPreference.setGender(SignupActivityNew.this,Constant.GENDER_KEY,gender);
-                        sharedPreference.setEmailId(SignupActivityNew.this,Constant.EMAIL_KEY,email);
 
-                        String statusVerifieOtp = sharedPreference.getLoginOtpSentStatus(SignupActivityNew.this, "status");
-                        if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(id) && TextUtils.isEmpty(statusVerifieOtp)) {
+                       // String statusVerifieOtp = sharedPreference.getLoginOtpSentStatus(SignupActivityNew.this, "status");
+                       /* if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(id) && TextUtils.isEmpty(statusVerifieOtp)) {
                             comeFromSubscription(phone, id);
                         } else {
                             sharedPreference.setUserIfLoginVeqta(SignupActivityNew.this, "through", "1");
                             comeFromSubscriptionToHOme(phone, id);
-                        }
+                        }*/
+                        goToHomeActivityFromSignUp.setEnabled(true);
+                        comeFromSubscription(phone, id);
                     } else if (mObj.optInt("code") == 0) {
                         String error = mObj.optString("error");
                         Toast.makeText(SignupActivityNew.this, "This Email Id or phone number is already registered.Please sign in using your account\n", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
+                        goToHomeActivityFromSignUp.setEnabled(false);
                     }
 
                 } catch (Exception e) {
                     Log.e("SIGNUPACTIVITY", "Error" + "" + e.getMessage());
                     progressBar.setVisibility(View.GONE);
+                    goToHomeActivityFromSignUp.setEnabled(false);
                 }
             }
         }, new Response.ErrorListener() {
@@ -467,6 +468,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
             public void onErrorResponse(VolleyError error) {
                 Log.e("Verify_otp_api", "Error: " + error.getMessage());
                 progressBar.setVisibility(View.GONE);
+                goToHomeActivityFromSignUp.setEnabled(false);
             }
         }) {
 
@@ -558,7 +560,6 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                 } catch (IncompatibleClassChangeError e) {
                     Log.e("LoginApi2", e.getMessage());
                 }
-
                 return null;
             }
         };

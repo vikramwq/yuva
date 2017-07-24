@@ -258,19 +258,15 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         User user = Json.parse(str.trim(), User.class);
                         Log.e("LoginActivity", "***code-1**" + str);
 
-                            if (!TextUtils.isEmpty(user.gender)){
-                                if(user.gender.equalsIgnoreCase("0"))
-                                    sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "Male");
-                                else if(user.gender.equalsIgnoreCase("1"))
-                                    sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "female");
-                            }
+                            if (!TextUtils.isEmpty(user.gender))
+                             sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
+
 
                         if (!TextUtils.isEmpty(user.location))
                             sharedPreference.setUserLocation(LoginScreen.this, Constant.LOCATION_KEY, user.location);
 
                         sharedPreference.setEmailId(LoginScreen.this, Constant.EMAIL_KEY, user.email);
                         sharedPreference.setUserName(LoginScreen.this, Constant.USERNAME_KEY, user.first_name);
-                        sharedPreference.setUserLastName(LoginScreen.this, Constant.LOCATION_KEY, user.location);
                         sharedPreference.setPhoneNumber(LoginScreen.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
                         sharedPreference.setPassword(LoginScreen.this, "password", user.app_session_id);
 
@@ -633,12 +629,9 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
 
                 String provider = user.provider;
                 if (!TextUtils.isEmpty(provider)) {
-                    if (!TextUtils.isEmpty(user.gender)){
-                        if(user.gender.equalsIgnoreCase("0"))
-                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "Male");
-                        else if(user.gender.equalsIgnoreCase("1"))
-                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "female");
-                    }
+                    if (!TextUtils.isEmpty(user.gender))
+                        sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
+
 
 
                     if (!TextUtils.isEmpty(user.location))

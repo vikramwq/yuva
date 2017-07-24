@@ -39,6 +39,7 @@ import com.multitv.yuv.locale.LocaleHelper;
 import com.multitv.yuv.models.User;
 import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppSessionUtil1;
+import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Json;
 
@@ -95,7 +96,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         timerTxt = (TextView) findViewById(R.id.timerTxt);
 
         sharedPreference = new SharedPreference();
-
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.didReceiveSmsCode);
 
         sharedPreference.setLoginOtpSentStatus(OtpScreenActivity.this, "status", "0");
@@ -199,7 +199,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         }
         progressBar.setVisibility(View.VISIBLE);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3+ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -258,14 +258,13 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         progressBar.setVisibility(View.VISIBLE);
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                AppUtils.generateUrl(getApplicationContext(), ApiRequest.VERIFY_OTP), new Response.Listener<String>() {
+                ApiRequest.BASE_URL_VERSION_3+ ApiRequest.VERIFY_OTP, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 Log.e("Verify_otp_api", response);
                 progressBar.setVisibility(View.GONE);
                 verifieBtn.setEnabled(true);
-
                 try {
                     JSONObject mObj = new JSONObject(response);
                     MultitvCipher mcipher = new MultitvCipher();
@@ -278,13 +277,23 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
                         sharedPreference.setPreferenceBoolean(OtpScreenActivity.this, sharedPreference.KEY_IS_LOGGED_IN);
 
                         User user = Json.parse(str.trim(), User.class);
+                        if (!TextUtils.isEmpty(user.gender))
+                            sharedPreference.setGender(OtpScreenActivity.this, Constant.GENDER_KEY, user.gender);
 
-                        sharedPreference.setEmailId(OtpScreenActivity.this, "email_id", user.email);
-                        sharedPreference.setUserName(OtpScreenActivity.this, "first_name", user.first_name);
-                        sharedPreference.setUserLastName(OtpScreenActivity.this, "last_name", user.last_name);
-                        if (!TextUtils.isEmpty(user.contact_no)) {
-                            sharedPreference.setPhoneNumber(OtpScreenActivity.this, "phone", user.contact_no);
-                        }
+                        if (!TextUtils.isEmpty(user.location))
+                            sharedPreference.setUserLocation(OtpScreenActivity.this, Constant.LOCATION_KEY, user.location);
+
+                        sharedPreference.setEmailId(OtpScreenActivity.this, Constant.EMAIL_KEY, user.email);
+                        sharedPreference.setUserName(OtpScreenActivity.this, Constant.USERNAME_KEY, user.first_name);
+                        if (!TextUtils.isEmpty(user.image))
+                            sharedPreference.setImageUrl(OtpScreenActivity.this, Constant.IMAGE_URL_KEY, user.image);
+
+                        if (!TextUtils.isEmpty(user.age_group))
+                            sharedPreference.setDob(OtpScreenActivity.this, Constant.AGEGROUP_KEY, user.age_group);
+
+                        if (!TextUtils.isEmpty(user.contact_no))
+                            sharedPreference.setPhoneNumber(OtpScreenActivity.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
+
                         sharedPreference.setPreferencesString(OtpScreenActivity.this, "user_id" + "_" + ApiRequest.TOKEN, "" + user.id);
                         progressBar.setVisibility(View.GONE);
 
@@ -294,7 +303,6 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
                             if (!TextUtils.isEmpty(mobile)) {
                                 sharedPreference.setPhoneNumber(OtpScreenActivity.this, "phone", mobile);
                             }
-
                         } else {
                             sharedPreference.setFromLogedIn(OtpScreenActivity.this, "fromLogedin", "veqta");
                         }

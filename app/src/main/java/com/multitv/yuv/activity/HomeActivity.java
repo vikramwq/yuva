@@ -254,14 +254,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         profile_image = (ImageView) headerLayout.findViewById(R.id.profile_image);
 
         if (sharedPreference.getUSerName(this, "first_name") != null) {
-            txtName.setText(sharedPreference.getUSerName(this, "first_name"));
+            txtName.setText(sharedPreference.getUSerName(this, Constant.USERNAME_KEY));
         }
 
 
         if (sharedPreference.getImageUrl(HomeActivity.this, "imgUrl") != null && sharedPreference.getImageUrl(HomeActivity.this, "imgUrl").length() > 0) {
 
             Picasso.with(HomeActivity.this)
-                    .load(sharedPreference.getImageUrl(HomeActivity.this, "imgUrl").replace("\\", ""))
+                    .load(sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY).replace("\\", ""))
                     .placeholder(R.mipmap.intex_profile)
                     .error(R.mipmap.intex_profile)
                     .into(profile_image);
