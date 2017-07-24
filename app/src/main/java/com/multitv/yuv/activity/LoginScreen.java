@@ -244,7 +244,7 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
         }
         progressBar.setVisibility(View.VISIBLE);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.LOGIN_API, new Response.Listener<String>() {
+                AppUtils.generateUrl(this,ApiRequest.LOGIN_API), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("LoginActivity", "LoginResponce-URL_:_" + response);
@@ -816,14 +816,13 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
     private void sendOtp(final String mobileNumber, final String user_id, final String provider1) {
         if (!AppNetworkAlertDialog.isNetworkConnected(LoginScreen.this)) {
             Toast.makeText(LoginScreen.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-
             progressBar.setVisibility(View.GONE);
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3 + ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
+                AppUtils.generateUrl(this,ApiRequest.GENERATE_OTP) , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

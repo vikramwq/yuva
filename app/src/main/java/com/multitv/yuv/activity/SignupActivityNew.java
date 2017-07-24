@@ -426,7 +426,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         progressBar.setVisibility(View.VISIBLE);
         goToHomeActivityFromSignUp.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3+ ApiRequest.SIGNUP_URL, new Response.Listener<String>() {
+                AppUtils.generateUrl(this,ApiRequest.SIGNUP_URL) , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

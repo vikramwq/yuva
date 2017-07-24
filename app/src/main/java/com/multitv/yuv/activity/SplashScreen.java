@@ -203,8 +203,8 @@ public class SplashScreen extends AppCompatActivity implements NotificationCente
                         String str = new String(mcipher.decryptmyapi(mObj.optString("result")));
                         Tracer.error("Base and EPG api---", str);
                         BaseAndEpg baseAndEpg = Json.parse(str.trim(), BaseAndEpg.class);
-//                        String baseUrl = "http://api.multitvsolution.com/automatorapi/v2";
-//                        baseAndEpg.base_url = baseUrl;
+                        String baseUrl = "http://yuvadmin.multitvsolution.com/v3";
+                        baseAndEpg.base_url = baseUrl;
                         if (baseAndEpg != null && !TextUtils.isEmpty(baseAndEpg.base_url) && !TextUtils.isEmpty(baseAndEpg.epg_url) && !TextUtils.isEmpty(baseAndEpg.drive_url)) {
                             PreferenceData.setBaseAndEPGUrlAndDriveUrl(SplashScreen.this, baseAndEpg.base_url, baseAndEpg.epg_url, baseAndEpg.drive_url);
 

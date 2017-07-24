@@ -58,6 +58,11 @@
     </style>
 
 
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/transparent</item>
+    </style>
+
     <style name="SignTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">#373737</item>

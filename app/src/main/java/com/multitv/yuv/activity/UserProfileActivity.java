@@ -3,6 +3,7 @@ package com.multitv.yuv.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,10 +25,14 @@ import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.multitv.cipher.MultitvCipher;
 import com.multitv.yuv.R;
+import com.multitv.yuv.adapter.CategoryAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.imagecrop.CropImage;
@@ -66,8 +72,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -132,6 +140,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private Uri cameraImageUri;
     private SharedPreference sharedPreference = new SharedPreference();
     private Bitmap croppedBitmap = null;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,25 +164,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         clearInterestImageView.setOnClickListener(this);
         editProfileButton.setOnClickListener(this);
         saveTextView.setOnClickListener(this);
+        contactNumberGenderEditText.setEnabled(false);
+        emailEditText.setEnabled(false);
         updateViewFromSharedPreference();
-        setDate();
-    }
 
-    private void setDate() {
-        Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH); //Default DOB is (today - 20) years
-        //date picker things
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mYear = year;
-                mMonth = monthOfYear;
-                mDay = dayOfMonth;
-                selectedDateTextview.setText(new StringBuilder().append(mYear)
-                        .append("-").append(mMonth + 1).append("-").append(mDay));
-            }
-        };
     }
 
     @Override
@@ -192,9 +186,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 popup.show();
                 break;
             case R.id.dateListcollospeButton:
-                new DatePickerDialog(UserProfileActivity.this,
-                        mDateSetListener,
-                        mYear, mMonth, mDay).show();
+                showDropdown(view);
                 break;
             case R.id.clearUserNameImageView:
                 usernameEditText.setText("");
@@ -237,13 +229,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 selectedGenderTextview.setText("Male");
             else
                 selectedGenderTextview.setText(gender);
-
         }
-        selectedGenderTextview.setText(gender);
 
-        String dateOfBirth = sharedPreference.getDob(this, Constant.AGEGROUP_KEY);
-        if (!TextUtils.isEmpty(dateOfBirth))
-            selectedDateTextview.setText(dateOfBirth);
+        String ageGroup = sharedPreference.getDob(this, Constant.AGEGROUP_KEY);
+        if (!TextUtils.isEmpty(ageGroup))
+            selectedDateTextview.setText(ageGroup);
 
         String contactNumber = sharedPreference.getPhoneNumber(this, Constant.MOBILE_NUMBER_KEY);
         if (!TextUtils.isEmpty(contactNumber))
@@ -275,11 +265,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             switch (genderText) {
                 case "Male":
                     genderCode = 0;
+                    break;
                 case "Female":
                     genderCode = 1;
+                    break;
             }
         }
-        final String dateOfBirth = selectedDateTextview.getText().toString();
+        final String ageGroup = selectedDateTextview.getText().toString();
         final String contactNumber = contactNumberGenderEditText.getText().toString();
         final String location = locationEditText.getText().toString();
 
@@ -293,7 +285,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         }
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3+ApiRequest.USER_EDIT, new Response.Listener<String>() {
+                AppUtils.generateUrl(this, ApiRequest.USER_EDIT), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Tracer.error("api_responce---", response);
@@ -313,6 +305,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             if (!TextUtils.isEmpty(user.gender)) {
                                 try {
                                     sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, user.gender);
+                                    if(user.gender.equalsIgnoreCase("0"))
+                                        sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, "Male");
+                                    else if(user.gender.equalsIgnoreCase("1"))
+                                        sharedPreference.setGender(UserProfileActivity.this,Constant.GENDER_KEY, "Female");
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }
@@ -324,7 +320,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                             sharedPreference.setUserName(UserProfileActivity.this, Constant.USERNAME_KEY, user.first_name);
                             sharedPreference.setPhoneNumber(UserProfileActivity.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
-                            sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.dob);
+                            sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.age_group);
                             sharedPreference.setEmailId(UserProfileActivity.this, Constant.EMAIL_KEY, user.email);
 
                             if (!TextUtils.isEmpty(user.image))
@@ -365,8 +361,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 params.put("gender", "" + genderCode);
                 if (!TextUtils.isEmpty(email))
                     params.put("email", email);
-                if (!TextUtils.isEmpty(dateOfBirth))
-                    params.put("dob", dateOfBirth);
+                if (!TextUtils.isEmpty(ageGroup))
+                    params.put("dob", ageGroup);
                 if (!TextUtils.isEmpty(contactNumber))
                     params.put("contact_no", contactNumber);
                 if (!TextUtils.isEmpty(location))
@@ -440,16 +436,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     //==============selectImage from camera===================
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        /*File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File output = new File(dir, System.currentTimeMillis() + ".jpg");*/
         String output = FileUtils.getDirectory(foldername) + File.separator
                 + Calendar.getInstance().getTimeInMillis() + ".jpg";
         File fileOutput = new File(output);
-        //cameraImageUri = Uri.fromFile(fileOutput);
         cameraImageUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", fileOutput);
         cameraImagePath = "file:" + fileOutput.getAbsolutePath();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-        //startActivityForResult(intent, REQUEST_CAMERA);
         startActivityForResult(intent, ChooserType.REQUEST_CAPTURE_PICTURE);
     }
 
@@ -483,42 +475,16 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 Uri resultUri = result.getUri();
                 try {
                     croppedBitmap = MediaStore.Images.Media.getBitmap(UserProfileActivity.this.getContentResolver(), resultUri);
-                    //Bitmap croppedBitmap = result.getBitmap();
                     profileImage.setImageBitmap(croppedBitmap);
-                    /*profile_buller.setImageBitmap(croppedBitmap);*/
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Blurry.with(UserProfileActivity.this)
-                                    .radius(25)
-                                    .sampling(2)
-                                    .async()
-                                    .capture(findViewById(profile_buller))
-                                    .into((ImageView) findViewById(profile_buller));
-                        }
-                    }, SPLASH_DISPLAY_LENGTH);*/
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                /*if (croppedBitmap != null) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-                    byte[] byteArrayImage = baos.toByteArray();
-                    encodedImageSendToServerFromLocal = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-                    userEditProfile(encodedImageSendToServerFromLocal);
-                }*/
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
 
-           /* if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == SELECT_FILE)
-                    onSelectFromGalleryResult(data);
-                else if (requestCode == REQUEST_CAMERA)
-                    onCaptureImageResult(data);
-            }*/
     }
 
     private void cropImage(Intent data, int requestCode) {
@@ -597,5 +563,29 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 .setAutoZoomEnabled(false)
                 .setInitialCropWindowPaddingRatio(0)
                 .start(this);
+    }
+
+    private void showDropdown(View view) {
+        popupWindow = new PopupWindow(this);
+        ListView listView = new ListView(this);
+        String[] arr = {"Below 18", "18-24", "25-35", "Above 35"};
+        List<String> list = Arrays.asList(arr);
+        final CategoryAdapter adapter = new CategoryAdapter(UserProfileActivity.this, R.layout.category_item, list);
+        listView.setAdapter(adapter);
+        popupWindow.setContentView(listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                selectedDateTextview.setText(adapter.getItem(position));
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.showAsDropDown(view);
     }
 }

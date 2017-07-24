@@ -253,18 +253,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         txtName = (TextView) headerLayout.findViewById(R.id.txtName);
         profile_image = (ImageView) headerLayout.findViewById(R.id.profile_image);
 
-        if (sharedPreference.getUSerName(this, "first_name") != null) {
-            txtName.setText(sharedPreference.getUSerName(this, Constant.USERNAME_KEY));
-        }
-
-
-        if (sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY) != null && sharedPreference.getImageUrl(HomeActivity.this, "imgUrl").length() > 0) {
-            Picasso.with(HomeActivity.this)
-                    .load(sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY).replace("\\", ""))
-                    .placeholder(R.mipmap.intex_profile)
-                    .error(R.mipmap.intex_profile)
-                    .into(profile_image);
-        }
+        updateProfilePicAndName();
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -342,8 +331,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         }
-
-
         emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -361,6 +348,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LocalBroadcastManager.getInstance(this).registerReceiver(updateBadgerNotification, new IntentFilter("UPDATE-BADGE-COUNT"));
         updateNotificationCount();
         showSearchMice();
+        updateProfilePicAndName();
     }
 
     @Override
@@ -482,6 +470,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             ft.replace(R.id.container1, homeFragment).addToBackStack(null);
             ft.commitAllowingStateLoss();
             showSearchMice();
+
+        }
+    }
+    private void updateProfilePicAndName(){
+        String userName= sharedPreference.getUSerName(this, Constant.USERNAME_KEY);
+        if (!TextUtils.isEmpty(userName))
+            txtName.setText(userName);
+
+        String imgUrl=sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY);
+        if (!TextUtils.isEmpty(imgUrl)) {
+            Picasso.with(HomeActivity.this)
+                    .load(sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY).replace("\\", ""))
+                    .placeholder(R.mipmap.intex_profile)
+                    .error(R.mipmap.intex_profile)
+                    .into(profile_image);
         }
     }
 

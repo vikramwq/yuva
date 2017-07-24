@@ -199,7 +199,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         }
         progressBar.setVisibility(View.VISIBLE);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3+ApiRequest.GENERATE_OTP, new Response.Listener<String>() {
+                AppUtils.generateUrl(this,ApiRequest.GENERATE_OTP) , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -258,7 +258,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         progressBar.setVisibility(View.VISIBLE);
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                ApiRequest.BASE_URL_VERSION_3+ ApiRequest.VERIFY_OTP, new Response.Listener<String>() {
+                AppUtils.generateUrl(this,ApiRequest.VERIFY_OTP) , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
