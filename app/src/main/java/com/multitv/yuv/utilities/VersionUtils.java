@@ -190,7 +190,9 @@ public class VersionUtils {
     private static Version getSavedVersion() {
         Realm realm = Realm.getDefaultInstance();
         Version version = realm.where(Version.class).findFirst();
+        if(version !=null)
         version = realm.copyFromRealm(version);
+
         if (!realm.isClosed())
             realm.close();
         return version;

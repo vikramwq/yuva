@@ -21,8 +21,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.multitv.yuv.R;
 import com.multitv.yuv.customview.RecyclerItemClickListener;
 import com.multitv.yuv.models.video.Video;
-import com.google.gson.reflect.TypeToken;
-import com.iainconnor.objectcache.GetCallback;
 import com.multitv.cipher.MultitvCipher;
 
 import org.json.JSONObject;
@@ -186,109 +184,86 @@ public class GenreBasedContentScreen extends AppCompatActivity {
 
 
     private void getContentData(final boolean isLoadMoreRequest) {
-
-        final Type homeObjectType = new TypeToken<Home>() {
-        }.getType();
-
-        String key = "home";
-        AppController.getInstance().getCacheManager().getAsync(key, Home.class, homeObjectType, new GetCallback() {
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                AppUtils.generateUrl(GenreBasedContentScreen.this, ApiRequest.VIDEO_CAT_URL_CLIST), new Response.Listener<String>() {
             @Override
-            public void onSuccess(final Object object) {
+            public void onResponse(final String response) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        try {
+                            JSONObject mObj = new JSONObject(response);
+                            if (mObj.optInt("code") == 1) {
+                                MultitvCipher mcipher = new MultitvCipher();
+                                String response = new String(mcipher.decryptmyapi(mObj.optString("result")));
+                                Log.d(TAG, "response for genre id===" + response);
 
-                        Log.d(this.getClass().getName(), "content api==" + AppUtils.generateUrl(GenreBasedContentScreen.this, ApiRequest.VIDEO_CAT_URL_CLIST));
+                                JSONObject jsonObject = new JSONObject(response);
+                                count = jsonObject.getInt("offset");
+                                totalCount = jsonObject.getInt("totalCount");
 
-                        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                                AppUtils.generateUrl(GenreBasedContentScreen.this, ApiRequest.VIDEO_CAT_URL_CLIST), new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(final String response) {
-                                new Thread(new Runnable() {
+                                Log.d(this.getClass().getName(), "count======" + count);
+                                videoData = Json.parse(response.trim(), Video.class);
+                                runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        try {
-                                            JSONObject mObj = new JSONObject(response);
-                                            if (mObj.optInt("code") == 1) {
-                                                MultitvCipher mcipher = new MultitvCipher();
-                                                String response = new String(mcipher.decryptmyapi(mObj.optString("result")));
-                                                Log.d(TAG, "response for genre id==="+response);
 
-                                                JSONObject jsonObject = new JSONObject(response);
-                                                count = jsonObject.getInt("offset");
-                                                totalCount = jsonObject.getInt("totalCount");
+                                        showDisplayPlaylistData(videoData, isLoadMoreRequest);
 
-                                                Log.d(this.getClass().getName(), "count======" + count);
-                                                videoData = Json.parse(response.trim(), Video.class);
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        showDisplayPlaylistData(videoData, isLoadMoreRequest);
-
-                                                    }
-                                                });
-                                            }
-                                        } catch (Exception e) {
-                                            ExceptionUtils.printStacktrace(e);
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    isLoading = false;
-                                                    if (progressBarMain != null && progressBarMain.isShown())
-                                                        progressBarMain.setVisibility(View.GONE);
-                                                }
-                                            });
-                                        }
                                     }
-                                }).start();
+                                });
                             }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Tracer.error("HomeFragment", "Error: " + error.getMessage());
-                                isLoading = false;
-                                if (progressBarMain != null && progressBarMain.isShown())
-                                    progressBarMain.setVisibility(View.GONE);
-                            }
-                        }) {
-
-                            @Override
-                            protected Map<String, String> getParams() {
-                                Map<String, String> params = new HashMap<>();
-
-
-                                params.put("lan", LocaleHelper.getLanguage(getApplicationContext()));
-                                params.put("genre_id", selectedGenre);
-                                params.put("device", "android");
-                                params.put("user_id", userID);
-                                params.put("current_offset", String.valueOf(count));
-                                params.put("max_counter", "10");
-                                params.put("cat_type", "video");
-
-                                Log.d("Params:", "current_offset===" + String.valueOf(count) + "user_id===" + userID + " selectedGenre" + selectedGenre + " lan==" + LocaleHelper.getLanguage(getApplicationContext()) + "m_filter==" + (PreferenceData.isMatureFilterEnable(getApplicationContext()) ? "" + 1 : "" + 0));
-
-
-                                return params;
-                            }
-                        };
-
-                        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
-                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                        // Adding request to request queue
-                        AppController.getInstance().addToRequestQueue(jsonObjReq);
-
+                        } catch (Exception e) {
+                            ExceptionUtils.printStacktrace(e);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    isLoading = false;
+                                    if (progressBarMain != null && progressBarMain.isShown())
+                                        progressBarMain.setVisibility(View.GONE);
+                                }
+                            });
+                        }
                     }
                 }).start();
             }
+        }, new Response.ErrorListener() {
 
             @Override
-            public void onFailure(Exception e) {
-                ExceptionUtils.printStacktrace(e);
+            public void onErrorResponse(VolleyError error) {
+                Tracer.error("HomeFragment", "Error: " + error.getMessage());
+                isLoading = false;
+                if (progressBarMain != null && progressBarMain.isShown())
+                    progressBarMain.setVisibility(View.GONE);
             }
-        });
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+
+
+                params.put("lan", LocaleHelper.getLanguage(getApplicationContext()));
+                params.put("genre_id", selectedGenre);
+                params.put("device", "android");
+                params.put("user_id", userID);
+                params.put("current_offset", String.valueOf(count));
+                params.put("max_counter", "10");
+                params.put("cat_type", "video");
+
+                Log.d("Params:", "current_offset===" + String.valueOf(count) + "user_id===" + userID + " selectedGenre" + selectedGenre + " lan==" + LocaleHelper.getLanguage(getApplicationContext()) + "m_filter==" + (PreferenceData.isMatureFilterEnable(getApplicationContext()) ? "" + 1 : "" + 0));
+
+
+                return params;
+            }
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+
     }
 
 

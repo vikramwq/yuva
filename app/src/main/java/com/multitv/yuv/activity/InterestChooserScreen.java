@@ -1,18 +1,19 @@
 /*
-import com.multitv.yuv.application.AppController;
-import com.multitv.yuv.models.InterestData;
 package com.multitv.yuv.activity;
-
-import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.igalata.bubblepicker.adapter.BubblePickerAdapter;
 import com.igalata.bubblepicker.model.BubbleGradient;
 import com.igalata.bubblepicker.model.PickerItem;
 import com.igalata.bubblepicker.rendering.BubblePicker;
 import com.multitv.yuv.R;
+import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.models.InterestData;
+
+import android.content.res.TypedArray;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,16 +35,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.igalata.bubblepicker.model.BubbleGradient;
-import com.igalata.bubblepicker.model.PickerItem;
-import com.igalata.bubblepicker.rendering.BubblePicker;
-import com.multitv.cipher.MultitvCipher;
-import com.multitv.yuv.application.AppController;
 import com.multitv.yuv.models.Interest;
 import com.multitv.yuv.models.InterestData;
 import com.multitv.yuv.utilities.Json;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
