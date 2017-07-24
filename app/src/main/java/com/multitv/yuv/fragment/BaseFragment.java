@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -22,22 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.reflect.TypeToken;
 import com.iainconnor.objectcache.GetCallback;
-
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.PagerAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.eventbus.MoveToLiveChannelSection;
 import com.multitv.yuv.locale.LocaleHelper;
 import com.multitv.yuv.models.categories.Category;
 import com.multitv.yuv.models.categories.Vod;
@@ -54,6 +44,19 @@ import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
 import com.multitv.yuv.utilities.VersionUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.multitv.yuv.utilities.Constant.EXTRA_SHOW_LIVE_TAB;
@@ -85,6 +88,8 @@ public class BaseFragment extends Fragment {
     @BindView(R.id.base_fragment_shadow)
     View mDarkBackground;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     private Context parentContext;
     private Version version;
@@ -203,10 +208,28 @@ public class BaseFragment extends Fragment {
 
     }
 
+    @Subscribe
+    public void onEvent(MoveToLiveChannelSection moveToLiveChannelSection) {
+        if (pager != null)
+            pager.setCurrentItem(5);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -356,6 +379,14 @@ public class BaseFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        if (getActivity() == null)
+                            return;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
                         category = (Category) object;
                         if (getActivity() == null)
                             return;
@@ -409,7 +440,13 @@ public class BaseFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Tracer.error("categoryName---", response.toString());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                        Tracer.error("categoryName---", response);
                         try {
                             JSONObject mObj = new JSONObject(response);
                             if (mObj.optInt("code") == 1) {
@@ -457,6 +494,7 @@ public class BaseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Tracer.error("video", "Error: " + error.getMessage());
+                progressBar.setVisibility(View.GONE);
             }
         }) {
 

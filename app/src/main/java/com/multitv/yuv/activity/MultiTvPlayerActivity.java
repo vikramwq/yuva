@@ -27,7 +27,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +47,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.multitv.cipher.MultitvCipher;
+import com.multitv.multitvcommonsdk.MultiTVCommonSdk;
+import com.multitv.multitvcommonsdk.permission.PermissionChecker;
+import com.multitv.multitvcommonsdk.utils.MultiTVException;
+import com.multitv.multitvplayersdk.MultiTvPlayer;
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.MyFragmentPageAdapter;
 import com.multitv.yuv.api.ApiRequest;
@@ -56,6 +62,7 @@ import com.multitv.yuv.controller.ContentController;
 import com.multitv.yuv.customview.GifImageView;
 import com.multitv.yuv.db.MediaDbConnector;
 import com.multitv.yuv.download.DownloadUtils;
+import com.multitv.yuv.eventbus.UpdateWatchingHistorySection;
 import com.multitv.yuv.fragment.MultiTVMoreFragment;
 import com.multitv.yuv.fragment.MultiTVRecommendedFragment;
 import com.multitv.yuv.interfaces.HeartbeatInterface;
@@ -76,22 +83,15 @@ import com.multitv.yuv.utilities.ExceptionHandler;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.FirebaseUtils;
 import com.multitv.yuv.utilities.Json;
-import com.multitv.yuv.utilities.NotificationCenter;
 import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.ScreenUtils;
 import com.multitv.yuv.utilities.SendAnalytics;
 import com.multitv.yuv.utilities.Tracer;
 import com.multitv.yuv.utilities.Utilities;
-import com.google.gson.Gson;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
-import com.multitv.cipher.MultitvCipher;
-import com.multitv.multitvcommonsdk.MultiTVCommonSdk;
-import com.multitv.multitvcommonsdk.permission.PermissionChecker;
-import com.multitv.multitvcommonsdk.utils.MultiTVException;
-import com.multitv.multitvplayersdk.MultiTvPlayer;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -901,8 +901,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
 
         mAdutils.onPause();
 
-
         mediaDbConnector.addDataForPersistencePlayback(content_id, new Gson().toJson(contentNewData), current_position);
+        EventBus.getDefault().postSticky(new UpdateWatchingHistorySection());
     }
 
     @Override

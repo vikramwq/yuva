@@ -22,7 +22,7 @@ public class ApiRequest {
     public static String TV_GUIDE = DateToStr + "&token=5285sd5sdf&channel=";
 
     public static String UPDATE_DEVICE = "/user/udatedevice?token=" + TOKEN;
-    public static String HOME_URL = "/content/home1/token/" + TOKEN;
+    public static String HOME_URL = "/content/home/token/" + TOKEN;
     public static String LANGUAGES = "/content/langlist/token/" + TOKEN;
     public static String NEW_SEARCH_URL = "/content/clist/token/" + TOKEN;
     public static String SEARCH_SUGGESTION = "/content/autosuggest/token/" + TOKEN;
@@ -68,9 +68,7 @@ public class ApiRequest {
     public static String SIGNUP_URL = "/user/add/token/" + TOKEN;
     public static String LOGIN_URL1 = "/user/social/token/" + TOKEN;
     public static String FORGET_URL = "/user/forgot/token/" + TOKEN;
+    public static String LIVE_URL = BASE_URL_VERSION_3 + "/channel/list/token/" + TOKEN;
     public static String CONTENT_DETAILS = BASE_URL_VERSION_3 + "content/detail?";
-
     public static String REPORT_ABUSE = BASE_URL_VERSION_3 + "content/abuse/token/" + TOKEN;
-
-
 }

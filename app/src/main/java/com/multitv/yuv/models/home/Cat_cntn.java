@@ -31,7 +31,7 @@ public class Cat_cntn implements Parcelable {
     public ArrayList<String> category_ids = new ArrayList<String>();
 
     public ArrayList<Thumb> thumbs = null;
-    public String  likes_count;
+    public String likes_count;
     public Integer rating;
     public String watch;
     public Integer favorite;
@@ -47,7 +47,6 @@ public class Cat_cntn implements Parcelable {
     public int download_expiry;
 
     public Channel owner_info;
-
 
     public Cat_cntn() {
     }

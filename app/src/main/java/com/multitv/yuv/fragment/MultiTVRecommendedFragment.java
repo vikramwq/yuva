@@ -17,12 +17,25 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.multitv.yuv.R;
-import com.multitv.yuv.activity.MultiTvPlayerActivity;
-import com.multitv.yuv.customview.RecyclerItemClickListener;
-import com.multitv.yuv.utilities.Json;
 import com.google.gson.reflect.TypeToken;
 import com.iainconnor.objectcache.GetCallback;
+import com.multitv.yuv.R;
+import com.multitv.yuv.activity.MultiTvPlayerActivity;
+import com.multitv.yuv.adapter.MoreRecommendedAdapter;
+import com.multitv.yuv.api.ApiRequest;
+import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.customview.RecyclerItemClickListener;
+import com.multitv.yuv.locale.LocaleHelper;
+import com.multitv.yuv.models.home.Cat_cntn;
+import com.multitv.yuv.models.home.Home;
+import com.multitv.yuv.models.recommended.Recommended;
+import com.multitv.yuv.sharedpreference.SharedPreference;
+import com.multitv.yuv.utilities.AppUtils;
+import com.multitv.yuv.utilities.Constant;
+import com.multitv.yuv.utilities.ExceptionUtils;
+import com.multitv.yuv.utilities.Json;
+import com.multitv.yuv.utilities.Tracer;
+import com.multitv.yuv.utilities.Utilities;
 
 import org.json.JSONObject;
 
@@ -35,20 +48,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import com.multitv.yuv.adapter.MoreRecommendedAdapter;
-import com.multitv.yuv.api.ApiRequest;
-import com.multitv.yuv.application.AppController;
-import com.multitv.yuv.locale.LocaleHelper;
-import com.multitv.yuv.models.home.Cat_cntn;
-import com.multitv.yuv.models.home.Home;
-import com.multitv.yuv.models.recommended.Recommended;
-import com.multitv.yuv.sharedpreference.SharedPreference;
-import com.multitv.yuv.utilities.AppUtils;
-import com.multitv.yuv.utilities.Constant;
-import com.multitv.yuv.utilities.ExceptionUtils;
-import com.multitv.yuv.utilities.Tracer;
-import com.multitv.yuv.utilities.Utilities;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -203,16 +202,17 @@ public class MultiTVRecommendedFragment extends Fragment {
                                                 Log.d(this.getClass().getName(), "response for genre id===" + response);
 
                                                 JSONObject newObj = new JSONObject(response);
-                                                 recommended = Json.parse(newObj.toString(), Recommended.class);
+                                                recommended = Json.parse(newObj.toString(), Recommended.class);
 
 
-                                                 count = recommended.offset;
-                                                 totalCount = recommended.totalCount;
+                                                count = recommended.offset;
+                                                totalCount = recommended.totalCount;
 
 
                                                 Log.d(this.getClass().getName(), "count======" + count);
 
-
+                                                if (getActivity() == null)
+                                                    return;
                                                 getActivity().runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -296,16 +296,15 @@ public class MultiTVRecommendedFragment extends Fragment {
         if (!isLoadMoreRequest) {
             if (video != null && video.content.size() > 0) {
 
-                contents= Collections.synchronizedList(video.content);
+                contents = Collections.synchronizedList(video.content);
                 ListIterator<Cat_cntn> it = contents.listIterator();
-                while (it.hasNext()){
-                    Cat_cntn cat_cntn= it.next();
+                while (it.hasNext()) {
+                    Cat_cntn cat_cntn = it.next();
                     if (contentId.equalsIgnoreCase(cat_cntn.id)) {
                         contents.remove(cat_cntn);
                         break;
                     }
                 }
-
 
 
                 moreRecommendedAdapter = new MoreRecommendedAdapter(getActivity(), contents, recyclerView, true);
