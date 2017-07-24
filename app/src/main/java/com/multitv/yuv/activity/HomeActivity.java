@@ -258,8 +258,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-        if (sharedPreference.getImageUrl(HomeActivity.this, "imgUrl") != null && sharedPreference.getImageUrl(HomeActivity.this, "imgUrl").length() > 0) {
-
+        if (sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY) != null && sharedPreference.getImageUrl(HomeActivity.this, "imgUrl").length() > 0) {
             Picasso.with(HomeActivity.this)
                     .load(sharedPreference.getImageUrl(HomeActivity.this, Constant.IMAGE_URL_KEY).replace("\\", ""))
                     .placeholder(R.mipmap.intex_profile)

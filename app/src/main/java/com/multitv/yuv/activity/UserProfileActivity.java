@@ -397,7 +397,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         SpannableString spannableString = new SpannableString(getResources().getString(R.string.app_name));
         spannableString.setSpan(tfSpan, 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         alertDialogBuilder.setTitle(spannableString);
-        alertDialogBuilder.setIcon(R.drawable.ic_launcher);
+        alertDialogBuilder.setIcon(R.drawable.icon_launcher);
         alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {

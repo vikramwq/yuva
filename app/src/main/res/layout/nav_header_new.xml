@@ -57,7 +57,6 @@
                 android:id="@+id/ageTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="musician, singer, songwriter"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
