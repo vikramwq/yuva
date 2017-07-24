@@ -51,6 +51,7 @@ import com.multitv.yuv.models.User;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.ui.CustomEditText;
 import com.multitv.yuv.utilities.AppUtils;
+import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.CustomTFSpan;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.Json;
@@ -73,12 +74,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.multitv.yuv.utilities.Constant.AGEGROUP_KEY;
 import static com.multitv.yuv.utilities.Constant.CONTACT_NUMBER;
 import static com.multitv.yuv.utilities.Constant.DATE_OF_BIRTH;
 import static com.multitv.yuv.utilities.Constant.EMAIL;
 import static com.multitv.yuv.utilities.Constant.GENDER;
 import static com.multitv.yuv.utilities.Constant.IMAGE_URL;
 import static com.multitv.yuv.utilities.Constant.LOCATION;
+import static com.multitv.yuv.utilities.Constant.MOBILE_NUMBER_KEY;
 import static com.multitv.yuv.utilities.Constant.NAME;
 import static com.multitv.yuv.utilities.Constant.foldername;
 
@@ -218,33 +221,31 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void updateViewFromSharedPreference() {
-        String name = sharedPreference.getPreferencesString(this, NAME);
+        String name = sharedPreference.getUSerName(this, Constant.USERNAME_KEY);
         if (!TextUtils.isEmpty(name))
             usernameEditText.setText(name);
-        String email = sharedPreference.getPreferencesString(this, EMAIL);
+
+        String email = sharedPreference.getPreferencesString(this, Constant.EMAIL_KEY);
         if (!TextUtils.isEmpty(email))
             emailEditText.setText(email);
-        int gender = sharedPreference.getPreferencesInt(this, GENDER);
-        String genderText = "";
-        switch (gender) {
-            case 0:
-                genderText = "Male";
-                break;
-            case 1:
-                genderText = "Female";
-                break;
-        }
-        selectedGenderTextview.setText(genderText);
-        String dateOfBirth = sharedPreference.getPreferencesString(this, DATE_OF_BIRTH);
+
+        String  gender = sharedPreference.getGender(this, Constant.GENDER_KEY);
+      if(!TextUtils.isEmpty(gender))
+        selectedGenderTextview.setText(gender);
+
+        String dateOfBirth = sharedPreference.getDob(this, Constant.AGEGROUP_KEY);
         if (!TextUtils.isEmpty(dateOfBirth))
             selectedDateTextview.setText(dateOfBirth);
-        String contactNumber = sharedPreference.getPreferencesString(this, CONTACT_NUMBER);
+
+        String contactNumber = sharedPreference.getPhoneNumber(this, Constant.MOBILE_NUMBER_KEY);
         if (!TextUtils.isEmpty(contactNumber))
             contactNumberGenderEditText.setText(contactNumber);
-        String location = sharedPreference.getPreferencesString(this, LOCATION);
+
+        String location = sharedPreference.getUserLocation(this, Constant.LOCATION_KEY);
         if (!TextUtils.isEmpty(location))
             locationEditText.setText(location);
-        String imageUrl = sharedPreference.getPreferencesString(this, IMAGE_URL);
+
+        String imageUrl = sharedPreference.getImageUrl(this, Constant.IMAGE_URL_KEY);
         if (!TextUtils.isEmpty(imageUrl)) {
             Picasso.with(this).load(imageUrl)
                     .placeholder(R.mipmap.intex_profile)

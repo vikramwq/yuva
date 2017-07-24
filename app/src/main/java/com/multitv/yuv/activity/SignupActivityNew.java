@@ -52,16 +52,22 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.multitv.yuv.R;
 import com.multitv.yuv.adapter.CategoryAdapter;
+import com.multitv.yuv.adapter.CountryListAdapter;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.models.CountryCode;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppNetworkAlertDialog;
+import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.Utilities;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +113,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
     private Toolbar toolbar;
     private TextInputLayout input_username, /*input_lastName,*/
             input_email_field, input_mobileNumber, input_password, input_confirm_password;
-    private TextView genderTxt, ageTxt, locationTxt;
+    private TextView genderTxt, ageTxt, locationTxt, codeSelectedTextview;
     private LinearLayout ageLayout, genderLayout;
 
     //--for Location update -----
@@ -159,6 +165,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         input_confirm_password = (TextInputLayout) findViewById(R.id.input_confirm_password);
         genderTxt = (TextView) findViewById(R.id.genderTxt);
         ageTxt = (TextView) findViewById(R.id.ageTxt);
+        codeSelectedTextview = (TextView) findViewById(R.id.codeSelectedTextview);
 
         passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         confirmPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -173,7 +180,6 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                 hideKeyboard(v);
                 if (!AppNetworkAlertDialog.isNetworkConnected(SignupActivityNew.this)) {
                     Toast.makeText(SignupActivityNew.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
-
                     progressBar.setVisibility(View.GONE);
                     return;
                 } else {
@@ -228,6 +234,12 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                 showDropdown(v);
             }
         });
+        codeSelectedTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getJsonForCountryList(v);
+            }
+        });
 
         genderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,7 +286,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         });
 
         popupWindow.setFocusable(true);
-        popupWindow.setWidth(200);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.showAsDropDown(view);
     }
@@ -298,10 +310,9 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         });
 
         popupWindow.setFocusable(true);
-        popupWindow.setWidth(200);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.showAsDropDown(view);
-
     }
 
     public String getNetType() {
@@ -332,27 +343,21 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         String firstName = firstNameField.getText().toString();
         String confirmPassword = confirmPasswordField.getText().toString();
         String genderString = genderTxt.getText().toString();
-        String locationAddress = locationTxt.getText().toString();
         String ageString = ageTxt.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-        if (TextUtils.isEmpty(locationAddress)) {
-            Toast.makeText(SignupActivityNew.this, "Location field cannot be lefte blank", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-
         if (TextUtils.isEmpty(ageString)) {
-            Toast.makeText(SignupActivityNew.this, "Age field cannot be lefte blank", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignupActivityNew.this, "Age field cannot be left blank", Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
         if (TextUtils.isEmpty(genderString)) {
-            Toast.makeText(SignupActivityNew.this, "Gender field cannot be lefte blank", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignupActivityNew.this, "Gender field cannot be left blank", Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
         if (TextUtils.isEmpty(firstName)) {
-            input_username.setError("FirstName field cannot be left blank");
+            input_username.setError("First Name field cannot be left blank");
             valid = false;
         }
 
@@ -432,6 +437,12 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                         String otp = mObj.optString("otp");
                         String id = mObj.optString("id");
                         Log.e("***SIGNUP-URL**", str);
+                        sharedPreference.setUserName(SignupActivityNew.this,Constant.USERNAME_KEY,first_name);
+                        sharedPreference.setPhoneNumber(SignupActivityNew.this,Constant.MOBILE_NUMBER_KEY,phone);
+                        sharedPreference.setDob(SignupActivityNew.this,Constant.AGEGROUP_KEY,ageGroup);
+                        sharedPreference.setGender(SignupActivityNew.this,Constant.GENDER_KEY,gender);
+                        sharedPreference.setEmailId(SignupActivityNew.this,Constant.EMAIL_KEY,email);
+
                         String statusVerifieOtp = sharedPreference.getLoginOtpSentStatus(SignupActivityNew.this, "status");
                         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(id) && TextUtils.isEmpty(statusVerifieOtp)) {
                             comeFromSubscription(phone, id);
@@ -439,7 +450,6 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                             sharedPreference.setUserIfLoginVeqta(SignupActivityNew.this, "through", "1");
                             comeFromSubscriptionToHOme(phone, id);
                         }
-
                     } else if (mObj.optInt("code") == 0) {
                         String error = mObj.optString("error");
                         Toast.makeText(SignupActivityNew.this, "This Email Id or phone number is already registered.Please sign in using your account\n", Toast.LENGTH_LONG).show();
@@ -759,6 +769,9 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                     if (!TextUtils.isEmpty(strReturnedAddress)) {
                         locationTextView.setText(strReturnedAddress.toString());
                         Log.e("LocationAddress", "" + strReturnedAddress.toString());
+                        if (mCurrentLocation != null) {
+                            sharedPreference.setUserLocation(this, Constant.LOCATION_KEY, "" + strReturnedAddress);
+                        }
                     }
                 } else {
                     Log.e("LocationAddress", "Canont get Address!");
@@ -845,4 +858,67 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
             }
         });
     }
+
+
+    //-------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------country code list--------------------------
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("countrycode.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    private void getJsonForCountryList(View view) {
+        try {
+            JSONObject jsonobject = new JSONObject(loadJSONFromAsset());
+            ArrayList<CountryCode> countryCodeList = new ArrayList<CountryCode>();
+            JSONArray jsonArray = jsonobject.getJSONArray("countries");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+                CountryCode countryCode = new CountryCode();
+                countryCode.setName(jsonObj.getString("name"));
+                countryCode.setCode(jsonObj.getString("code"));
+                countryCodeList.add(countryCode);
+            }
+            setCountryList(countryCodeList, view);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setCountryList(final ArrayList<CountryCode> countryCodeList, View view) {
+        if (countryCodeList != null && countryCodeList.size() != 0) {
+            popupWindow = new PopupWindow(this);
+            ListView listView = new ListView(this);
+            final CountryListAdapter adapter = new CountryListAdapter(SignupActivityNew.this, countryCodeList);
+            listView.setAdapter(adapter);
+            popupWindow.setContentView(listView);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    codeSelectedTextview.setText(countryCodeList.get(position).name + " " + countryCodeList.get(position).code);
+                    popupWindow.dismiss();
+                }
+            });
+
+            popupWindow.setFocusable(true);
+            popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow.showAsDropDown(view);
+        }
+
+    }
+
 }

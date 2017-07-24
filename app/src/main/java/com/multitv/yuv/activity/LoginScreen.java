@@ -63,6 +63,7 @@ import com.multitv.yuv.utilities.AppConstants;
 import com.multitv.yuv.utilities.AppNetworkAlertDialog;
 import com.multitv.yuv.utilities.AppSessionUtil1;
 import com.multitv.yuv.utilities.AppUtils;
+import com.multitv.yuv.utilities.Constant;
 import com.multitv.yuv.utilities.Json;
 import com.multitv.yuv.utilities.MultitvCipher;
 import com.multitv.yuv.utilities.Utilities;
@@ -98,7 +99,8 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
     private String mGender = "", mFirstName = "", mLastName = "", mUserName = "", mDob = "", mEmail = "", mPhoneNum, mPassword = "";
 
 
-    private TextInputLayout input_email,input_password;
+    private TextInputLayout input_email, input_password;
+
     public static Context getInstance() {
         return context;
     }
@@ -126,8 +128,8 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
         signupBtn = (TextView) findViewById(R.id.signupBtn);
         forgetPassTxt = (TextView) findViewById(R.id.forgetPassTxt);
         email_field = (EditText) findViewById(R.id.username);
-        input_email=(TextInputLayout)findViewById(R.id.input_email);
-        input_password=(TextInputLayout)findViewById(R.id.input_password);
+        input_email = (TextInputLayout) findViewById(R.id.input_email);
+        input_password = (TextInputLayout) findViewById(R.id.input_password);
         passwordField = (EditText) findViewById(R.id.password);
         passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         progressBar = (ProgressBar) findViewById(R.id.progress_signin);
@@ -215,15 +217,11 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
             input_password.setError("Password field cannot be left blank");
             valid = false;
         }
-        if (password.length() < 8) {
-            input_password.setError("Your password should be atleast 8 character long");
+
+        if (password.length() < 8 && password.length() > 0) {
+            input_password.setError(" The password you entered is incorrect");
             valid = false;
         }
-       /* if(password.length() > 8){
-            passwordField.setError("Your password should be atleast 8 character long");
-            valid = false;
-        }*/
-
 
         if (!email.matches(emailPattern)) {
             input_email.setError("Please enter a valid Email Address");
@@ -261,21 +259,23 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         Log.e("LoginActivity", "***code-1**" + str);
 
                         if (!TextUtils.isEmpty(user.gender))
-                            if (user.gender.equalsIgnoreCase("male"))
-                                sharedPreference.setGender(LoginScreen.this, "gender_id", "" + 0);
-                            else if (user.gender.equalsIgnoreCase("female"))
-                                sharedPreference.setGender(LoginScreen.this, "gender_id", "" + 1);
+                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
 
-                        sharedPreference.setEmailId(LoginScreen.this, "email_id", user.email);
-                        sharedPreference.setUserName(LoginScreen.this, "first_name", user.first_name);
-                        sharedPreference.setUserLastName(LoginScreen.this, "last_name", user.last_name);
-                        sharedPreference.setPhoneNumber(LoginScreen.this, "phone", user.contact_no);
+                        if (!TextUtils.isEmpty(user.location))
+                            sharedPreference.setUserLocation(LoginScreen.this, Constant.LOCATION_KEY, user.location);
+
+                        sharedPreference.setEmailId(LoginScreen.this, Constant.EMAIL_KEY, user.email);
+                        sharedPreference.setUserName(LoginScreen.this, Constant.USERNAME_KEY, user.first_name);
+                        sharedPreference.setUserLastName(LoginScreen.this, Constant.LOCATION_KEY, user.location);
+                        sharedPreference.setPhoneNumber(LoginScreen.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
                         sharedPreference.setPassword(LoginScreen.this, "password", user.app_session_id);
 
-                        sharedPreference.setImageUrl(LoginScreen.this, "imgUrl", user.image);
+                        if (!TextUtils.isEmpty(user.image))
+                            sharedPreference.setImageUrl(LoginScreen.this, Constant.IMAGE_URL_KEY, user.image);
 
-                        if (!TextUtils.isEmpty(user.dob) && !user.dob.equals("0000-00-00"))
-                            sharedPreference.setDob(LoginScreen.this, "dob", user.dob);
+                        if (!TextUtils.isEmpty(user.age_group))
+                            sharedPreference.setDob(LoginScreen.this, Constant.AGEGROUP_KEY, user.age_group);
+
                         sharedPreference.setPreferencesString(LoginScreen.this, "user_id" + "_" + ApiRequest.TOKEN, "" + user.id);
 
                         String otpStatus = sharedPreference.getLoginOtpSentStatus(LoginScreen.this, "status");
@@ -288,7 +288,6 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                                 if (!TextUtils.isEmpty(user.contact_no) && TextUtils.isEmpty(user.otp)) {
                                     sharedPreference.setFromLogedIn(LoginScreen.this, "fromLogedin", "veqta");
                                     sharedPreference.setUserIfLoginVeqta(LoginScreen.this, "through", "1");
-
                                     moveToHomeScreen();
                                 } else {
                                     moveToOtpScreen();
@@ -301,10 +300,6 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         String error = mObj.optString("result");
                         Log.e("LoginActivity", "***code-0**" + error);
                         Toast.makeText(LoginScreen.this, getString(R.string.login_error_msg), Toast.LENGTH_LONG).show();
-
-                        if (!TextUtils.isEmpty(error))
-                            Toast.makeText(LoginScreen.this, error, Toast.LENGTH_LONG).show();
-
                         progressBar.setVisibility(View.GONE);
                     }
                 } catch (
@@ -458,14 +453,13 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
     private void clearSharePrefernces() {
         sharedPreference.setFromLogedIn(LoginScreen.this, "fromLogedin", "");
         sharedPreference.setUserIfLoginVeqta(LoginScreen.this, "through", "");
-        sharedPreference.setGender(LoginScreen.this, "gender_id", "");
-        sharedPreference.setEmailId(LoginScreen.this, "email_id", "");
-        sharedPreference.setUserName(LoginScreen.this, "first_name", "");
-        sharedPreference.setUserLastName(LoginScreen.this, "last_name", "");
-        sharedPreference.setPhoneNumber(LoginScreen.this, "phone", "");
+        sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "");
+        sharedPreference.setEmailId(LoginScreen.this, Constant.EMAIL_KEY, "");
+        sharedPreference.setUserName(LoginScreen.this, Constant.USERNAME_KEY, "");
+        sharedPreference.setPhoneNumber(LoginScreen.this, Constant.MOBILE_NUMBER_KEY, "");
         sharedPreference.setPassword(LoginScreen.this, "password", "");
-        sharedPreference.setImageUrl(LoginScreen.this, "imgUrl", "");
-        sharedPreference.setDob(LoginScreen.this, "dob", "");
+        sharedPreference.setImageUrl(LoginScreen.this, Constant.IMAGE_URL_KEY, "");
+        sharedPreference.setDob(LoginScreen.this, Constant.AGEGROUP_KEY, "");
         sharedPreference.setLoginOtpSentStatus(this, "status", "");
 
         sharedPreference.setPreferencesString(LoginScreen.this, "user_id" + "_" + ApiRequest.TOKEN, "");
@@ -637,36 +631,35 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                 Log.e("#####Social-Login####", "#RESPONCE###" + str);
                 User user = Json.parse(str.trim(), User.class);
 
-                if (!TextUtils.isEmpty(user.gender))
-                    mGender = user.gender;
-                if (!TextUtils.isEmpty(user.first_name))
-                    mFirstName = user.first_name;
-                else mFirstName = "";
-                if (!TextUtils.isEmpty(user.last_name))
-                    mLastName = user.last_name;
-                else mLastName = "";
-                if (!TextUtils.isEmpty(user.dob) && !user.dob.equals("0000-00-00"))
-                    mDob = user.dob;
-                if (!TextUtils.isEmpty(user.email))
-                    mEmail = user.email;
-
-
                 String provider = user.provider;
                 if (!TextUtils.isEmpty(provider)) {
-                    sharedPreference.setUserName(this, "first_name", mFirstName);
-                    sharedPreference.setUserLastName(this, "last_name", mLastName);
-                    sharedPreference.setDob(this, "dob", mDob);
-                    sharedPreference.setEmailId(this, "email_id", mEmail);
+                    if (!TextUtils.isEmpty(user.gender))
+                        sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
 
+                    if (!TextUtils.isEmpty(user.location))
+                        sharedPreference.setUserLocation(LoginScreen.this, Constant.LOCATION_KEY, user.location);
+
+                    if (!TextUtils.isEmpty(user.email))
+                        sharedPreference.setEmailId(LoginScreen.this, Constant.EMAIL_KEY, user.email);
+
+                    if (!TextUtils.isEmpty(user.first_name))
+                        sharedPreference.setUserName(LoginScreen.this, Constant.USERNAME_KEY, user.first_name);
+
+                    if (!TextUtils.isEmpty(user.first_name) && !TextUtils.isEmpty(user.last_name))
+                        sharedPreference.setUserName(LoginScreen.this, Constant.USERNAME_KEY, user.first_name + " " + user.last_name);
+
+
+                    if (!TextUtils.isEmpty(user.contact_no))
+                        sharedPreference.setPhoneNumber(LoginScreen.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
+
+
+                    sharedPreference.setPassword(LoginScreen.this, "password", user.app_session_id);
 
                     if (!TextUtils.isEmpty(user.image))
-                        sharedPreference.setImageUrl(this, "imgUrl", user.image);
+                        sharedPreference.setImageUrl(LoginScreen.this, Constant.IMAGE_URL_KEY, user.image);
 
-                    if (mGender.equalsIgnoreCase("male")) {
-                        sharedPreference.setGender(this, "gender_id", "" + 0);
-                    } else if (mGender.equalsIgnoreCase("female")) {
-                        sharedPreference.setGender(this, "gender_id", "" + 1);
-                    }
+                    if (!TextUtils.isEmpty(user.age_group))
+                        sharedPreference.setDob(LoginScreen.this, "dob", user.age_group);
                 } else {
                     sharedPreference.setEmailId(this, "email_id", mEmail);
                 }
@@ -707,7 +700,7 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         String profilePicUrlFromFb = newObj.optString("url");
                         Log.e("***FB_IMAGE_URL***", profilePicUrlFromFb);
                         if (!TextUtils.isEmpty(profilePicUrlFromFb))
-                            sharedPreference.setImageUrl(LoginScreen.this, "imgUrl", profilePicUrlFromFb);
+                            sharedPreference.setImageUrl(LoginScreen.this, Constant.IMAGE_URL_KEY, profilePicUrlFromFb);
                     } catch (JSONException e) {
 
                     }
@@ -998,7 +991,7 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
             if (information.getPhotoUrl() != null) {
                 profilePic = information.getPhotoUrl().toString();
                 sharedPreference.setGoogleLoginProfilePic(LoginScreen.this, "ImageGoogleProfile", profilePic);
-                sharedPreference.setImageUrl(LoginScreen.this, "imgUrl", profilePic);
+                sharedPreference.setImageUrl(LoginScreen.this, Constant.IMAGE_URL_KEY, profilePic);
                 Log.e("personPhotoUrl", profilePic);
             } else {
                 Log.e("personPhotoUrl", "Empty");

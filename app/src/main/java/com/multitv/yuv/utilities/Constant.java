@@ -119,6 +119,14 @@ public class Constant {
     public static final String LOCATION = "location";
     public static final String INTEREST = "interest";
     public static final String IMAGE_URL = "image_url";
+    public static final String LOCATION_KEY = "location";
+    public static final String USERNAME_KEY = "username";
+    public static final String EMAIL_KEY = "email";
+    public static final String GENDER_KEY = "gender";
+    public static final String AGEGROUP_KEY = "age_group";
+    public static final String MOBILE_NUMBER_KEY = "mobile_number";
+    public static final String COUNTRY_CODE_KEY = "country_code";
+    public static final String IMAGE_URL_KEY = "image_url";
 
 
     public static final String COUNTRIES = "[ \n" +

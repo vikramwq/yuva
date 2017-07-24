@@ -25,7 +25,7 @@
     <string name="add_reminder_mess_3">To set a reminder for</string>
     <string name="add_reminder_mess_4">press ok</string>
     <string name="fb_error">Something went wrong while logging in to Facebook. Please try again</string>
-    <string name="login_error_msg">Please enter registered Email Id</string>
+    <string name="login_error_msg"> Either username or password is incorrect</string>
 
     <string name="activity_setting_notification">Notification</string>
     <string name="activity_setting_mature_filter">Parental Control</string>
