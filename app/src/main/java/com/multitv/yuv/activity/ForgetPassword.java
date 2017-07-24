@@ -153,9 +153,11 @@ public class ForgetPassword extends AppCompatActivity {
         if (!AppNetworkAlertDialog.isNetworkConnected(ForgetPassword.this)) {
             Toast.makeText(ForgetPassword.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
+            btnSubmit.setEnabled(true);
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
+        btnSubmit.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 ApiRequest.BASE_URL_VERSION_3 + ApiRequest.FORGET_URL, new Response.Listener<String>() {
 
@@ -174,17 +176,19 @@ public class ForgetPassword extends AppCompatActivity {
                         ForgetPassword.this.finish();
                         Toast.makeText(ForgetPassword.this, getResources().getString(R.string.forgot_password_successful_message), Toast.LENGTH_LONG).show();
                         Log.e("LOGINACTIVITY", "***FORGOT-URL-RESPONCE**" + str);
-
+                        btnSubmit.setEnabled(true);
                     } else {
                         String error = mObj.optString("result");
                         if (!TextUtils.isEmpty(error))
                             Toast.makeText(ForgetPassword.this, "Please enter a registered Email Id", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
+                        btnSubmit.setEnabled(true);
                         email_et.setError("Please enter a registered Email Id");
                     }
                 } catch (Exception e) {
                     Log.e("LoginActivity", "FORGOT---****--Error" + "" + e.getMessage());
                     progressBar.setVisibility(View.GONE);
+                    btnSubmit.setEnabled(true);
                     Toast.makeText(ForgetPassword.this, getResources().getString(R.string.network_error), Toast.LENGTH_LONG).show();
 
                 }
@@ -195,6 +199,7 @@ public class ForgetPassword extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e("LoginActivity", "FORGOT-Error: " + error.getMessage());
                 progressBar.setVisibility(View.GONE);
+                btnSubmit.setEnabled(true);
             }
         }) {
 

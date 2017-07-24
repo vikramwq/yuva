@@ -174,7 +174,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
         progressBar = (ProgressBar) findViewById(R.id.progress_signin);
         sharedPreference = new SharedPreference();
 
-
+        goToHomeActivityFromSignUp.setEnabled(true);
         goToHomeActivityFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -422,11 +422,12 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
             progressBar.setVisibility(View.GONE);
             return;
         }
+        goToHomeActivityFromSignUp.setEnabled(false);
 
         progressBar.setVisibility(View.VISIBLE);
         goToHomeActivityFromSignUp.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
-                AppUtils.generateUrl(this,ApiRequest.SIGNUP_URL) , new Response.Listener<String>() {
+                AppUtils.generateUrl(this, ApiRequest.SIGNUP_URL), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -440,7 +441,7 @@ public class SignupActivityNew extends AppCompatActivity implements ConnectionCa
                         String id = mObj.optString("id");
                         Log.e("***SIGNUP-URL**", str);
 
-                       // String statusVerifieOtp = sharedPreference.getLoginOtpSentStatus(SignupActivityNew.this, "status");
+                        // String statusVerifieOtp = sharedPreference.getLoginOtpSentStatus(SignupActivityNew.this, "status");
                        /* if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(id) && TextUtils.isEmpty(statusVerifieOtp)) {
                             comeFromSubscription(phone, id);
                         } else {

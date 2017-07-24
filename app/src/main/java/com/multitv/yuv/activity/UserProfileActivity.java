@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -141,6 +142,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private SharedPreference sharedPreference = new SharedPreference();
     private Bitmap croppedBitmap = null;
     private PopupWindow popupWindow;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,6 +156,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.user_profile_activity);
 
         ButterKnife.bind(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         genderSelectedImageView.setOnClickListener(this);
         dateListcollospeButton.setOnClickListener(this);
@@ -210,6 +215,22 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 sendUserInfoToServer();
                 break;
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            default:
+                return false;
+        }
+
     }
 
     private void updateViewFromSharedPreference() {
@@ -305,10 +326,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             if (!TextUtils.isEmpty(user.gender)) {
                                 try {
                                     sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, user.gender);
-                                    if(user.gender.equalsIgnoreCase("0"))
+                                    if (user.gender.equalsIgnoreCase("0"))
                                         sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, "Male");
-                                    else if(user.gender.equalsIgnoreCase("1"))
-                                        sharedPreference.setGender(UserProfileActivity.this,Constant.GENDER_KEY, "Female");
+                                    else if (user.gender.equalsIgnoreCase("1"))
+                                        sharedPreference.setGender(UserProfileActivity.this, Constant.GENDER_KEY, "Female");
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }
@@ -320,7 +341,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                             sharedPreference.setUserName(UserProfileActivity.this, Constant.USERNAME_KEY, user.first_name);
                             sharedPreference.setPhoneNumber(UserProfileActivity.this, Constant.MOBILE_NUMBER_KEY, user.contact_no);
-                            sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.age_group);
+                            sharedPreference.setDob(UserProfileActivity.this, Constant.AGEGROUP_KEY, user.age);
                             sharedPreference.setEmailId(UserProfileActivity.this, Constant.EMAIL_KEY, user.email);
 
                             if (!TextUtils.isEmpty(user.image))
@@ -362,7 +383,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 if (!TextUtils.isEmpty(email))
                     params.put("email", email);
                 if (!TextUtils.isEmpty(ageGroup))
-                    params.put("dob", ageGroup);
+                    params.put("age", ageGroup);
                 if (!TextUtils.isEmpty(contactNumber))
                     params.put("contact_no", contactNumber);
                 if (!TextUtils.isEmpty(location))

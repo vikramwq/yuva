@@ -68,7 +68,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
     private LinearLayout Verifie_bg, mobileNumber_bg;
     private Intent subscriptionIntent;
     private TextView titleTxt;
-    private Button verifieBtn;
+    private Button verifieBtn,submitMobileNumberForOtp;
     private Toolbar toolbar;
     private TextView timerTxt;
     private int counter = 30;
@@ -106,6 +106,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         Verifie_bg = (LinearLayout) findViewById(R.id.Verifie_bg);
         mobileNumber_bg = (LinearLayout) findViewById(R.id.mobileNumber_bg);
         verifieBtn = (Button) findViewById(R.id.verifieBtn);
+        submitMobileNumberForOtp=(Button)findViewById(R.id.submitMobileNumberForOtp);
         TextView resendOtpTextview = (TextView) findViewById(R.id.resendOtpTextview);
         SpannableString content = new SpannableString("RESEND OTP");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -195,9 +196,11 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
         if (!AppNetworkAlertDialog.isNetworkConnected(OtpScreenActivity.this)) {
             Toast.makeText(OtpScreenActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
+            submitMobileNumberForOtp.setEnabled(true);
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
+        submitMobileNumberForOtp.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 AppUtils.generateUrl(this,ApiRequest.GENERATE_OTP) , new Response.Listener<String>() {
 
@@ -212,14 +215,17 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
                         Verifie_bg.setVisibility(View.VISIBLE);
                         mobileNumber_bg.setVisibility(View.GONE);
                         Toast.makeText(OtpScreenActivity.this, "" + mObj.getString("result"), Toast.LENGTH_LONG).show();
+                        submitMobileNumberForOtp.setEnabled(true);
                     } else {
                         String error = new String(mObj.optString("error"));
                         progressBar.setVisibility(View.GONE);
+                        submitMobileNumberForOtp.setEnabled(true);
                         if (!TextUtils.isEmpty(error))
                             Toast.makeText(OtpScreenActivity.this, "" + error, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     Log.e("OTP-FROM-Yuva", "Error" + "" + e.getMessage());
+                    submitMobileNumberForOtp.setEnabled(true);
                 }
             }
         }, new Response.ErrorListener() {
@@ -227,7 +233,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("OTP-FROM-Yuva", "Error: " + error.getMessage());
-
+                submitMobileNumberForOtp.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
             }
         }) {
@@ -256,7 +262,7 @@ public class OtpScreenActivity extends AppCompatActivity implements Notification
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-
+        verifieBtn.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 AppUtils.generateUrl(this,ApiRequest.VERIFY_OTP) , new Response.Listener<String>() {
 

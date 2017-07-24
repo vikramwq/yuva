@@ -235,14 +235,15 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
         return valid;
     }
 
-
     public void sendInfoToServerAndLoginResponse(final String email, final String password) {
         if (!AppNetworkAlertDialog.isNetworkConnected(LoginScreen.this)) {
             Toast.makeText(LoginScreen.this, getString(R.string.network_error), Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
+            signInBtn.setEnabled(true);
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
+        signInBtn.setEnabled(false);
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 AppUtils.generateUrl(this,ApiRequest.LOGIN_API), new Response.Listener<String>() {
             @Override
@@ -296,19 +297,20 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         } else {
                             Toast.makeText(LoginScreen.this, getString(R.string.login_error_msg), Toast.LENGTH_LONG).show();
                         }
+                        signInBtn.setEnabled(true);
                     } else {
                         String error = mObj.optString("result");
                         Log.e("LoginActivity", "***code-0**" + error);
                         Toast.makeText(LoginScreen.this, getString(R.string.login_error_msg), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
+                        signInBtn.setEnabled(true);
                     }
-                } catch (
-                        Exception e
-                        )
+                } catch (Exception e)
 
                 {
                     Log.e("LoginActivity", "Error" + "" + e.getMessage());
                     progressBar.setVisibility(View.GONE);
+                    signInBtn.setEnabled(true);
                 }
             }
         }
@@ -321,6 +323,7 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
                 Log.e("LoginActivity", "****LoginApi****" + "Error: " + error.getMessage());
+                signInBtn.setEnabled(true);
             }
         }
 

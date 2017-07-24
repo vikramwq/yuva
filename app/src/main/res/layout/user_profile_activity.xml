@@ -20,6 +20,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/light_gray"
                 android:orientation="vertical">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+                    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -50,7 +57,7 @@
                         android:textColor="@color/white_shadow"
                         android:textSize="15sp" />
                 </RelativeLayout>
-
+</android.support.v7.widget.Toolbar>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -196,6 +203,13 @@
                     <!--************for Email layout finish********** -->
 
                     <!--************for gender layout********** -->
+
+
+
+
+
+
+
                     <LinearLayout
                         android:id="@+id/genderLinearLayout"
                         android:layout_width="wrap_content"
