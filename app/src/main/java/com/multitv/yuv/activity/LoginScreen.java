@@ -258,8 +258,12 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                         User user = Json.parse(str.trim(), User.class);
                         Log.e("LoginActivity", "***code-1**" + str);
 
-                        if (!TextUtils.isEmpty(user.gender))
-                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
+                            if (!TextUtils.isEmpty(user.gender)){
+                                if(user.gender.equalsIgnoreCase("0"))
+                                    sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "Male");
+                                else if(user.gender.equalsIgnoreCase("1"))
+                                    sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "female");
+                            }
 
                         if (!TextUtils.isEmpty(user.location))
                             sharedPreference.setUserLocation(LoginScreen.this, Constant.LOCATION_KEY, user.location);
@@ -509,9 +513,7 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
                             @Override
                             public void onCompleted(JSONObject obj,
                                                     GraphResponse response) {
-
                                 progressBar.setVisibility(View.GONE);
-
                                 Log.e("facebookResponce===", response.toString());
                                 try {
                                     final String firstName = obj.optString("first_name");
@@ -592,11 +594,9 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
 
             @Override
             public void onError(FacebookException exception) {
-                System.out.println("onError");
                 progressBar.setVisibility(View.GONE);
-
+                exception.printStackTrace();
                 try {
-                    Log.e("SignUpActivity", exception.getCause().toString());
                     Toast.makeText(LoginScreen.this, getString(R.string.fb_error), Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     Log.e("SignUpActivity", e.getMessage());
@@ -633,8 +633,13 @@ public class LoginScreen extends AppCompatActivity implements SignUpListener,
 
                 String provider = user.provider;
                 if (!TextUtils.isEmpty(provider)) {
-                    if (!TextUtils.isEmpty(user.gender))
-                        sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, user.gender);
+                    if (!TextUtils.isEmpty(user.gender)){
+                        if(user.gender.equalsIgnoreCase("0"))
+                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "Male");
+                        else if(user.gender.equalsIgnoreCase("1"))
+                            sharedPreference.setGender(LoginScreen.this, Constant.GENDER_KEY, "female");
+                    }
+
 
                     if (!TextUtils.isEmpty(user.location))
                         sharedPreference.setUserLocation(LoginScreen.this, Constant.LOCATION_KEY, user.location);

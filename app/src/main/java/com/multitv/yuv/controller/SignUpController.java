@@ -46,7 +46,7 @@ public class SignUpController {
 
     private Context mContext;
     private SignUpListener mSignUpListener;
-    private final String TAG = ".SignUpController";
+    private final String TAG = "SignUpController";
 
 
     public SignUpController(Context context, SignUpListener signUpListener) {
@@ -67,7 +67,7 @@ public class SignUpController {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("SIGNUPACTIVITY", "****SIGNUP-SocialApi****" + "Error: " + error.getMessage());
+                Log.e(TAG, "****SIGNUP-SocialApi****" + "Error: " + error.getMessage());
                 mSignUpListener.onError();
             }
         }) {
@@ -164,6 +164,7 @@ public class SignUpController {
                         socialJsonObject.put("location", location);
                         socialJsonObject.put("dob", dob);
 
+                        if(socialJsonObject !=null)
                         socialJson = socialJsonObject.toString();
 
                     } catch (JSONException e) {

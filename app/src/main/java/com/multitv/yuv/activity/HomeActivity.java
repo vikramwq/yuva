@@ -719,18 +719,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     if (!PreferenceData.isHomeFloatDemoDone(HomeActivity.this)) {
                         PreferenceData.setHomeFloatDemoDone(HomeActivity.this);
-
                     }
                 } else {
-
-
                     StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                             AppUtils.generateUrl(getApplicationContext(), ApiRequest.MENU_URL), new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             Tracer.error("Menu_api", response);
-
-
                             Log.d(this.getClass().getName(), "response=========>>>" + response);
 
                             progressbar.setVisibility(View.GONE);
