@@ -523,16 +523,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case "wishlist":
-                Intent wishListIntent = new Intent(HomeActivity.this, UserProfileActivity.class);
-                wishListIntent.putExtra("ClickType", "2");
+                Intent wishListIntent = new Intent(HomeActivity.this, LikedVideosScreen.class);
+                wishListIntent.putExtra("typeOfFragment", 0);
                 startActivity(wishListIntent);
                 //getSupportActionBar().setTitle(title);
 //                hideSearchMice();
                 break;
 
             case "favourite":
-                Intent favoriteIntent = new Intent(HomeActivity.this, UserProfileActivity.class);
-                favoriteIntent.putExtra("ClickType", "3");
+                Intent favoriteIntent = new Intent(HomeActivity.this, LikedVideosScreen.class);
+                favoriteIntent.putExtra("typeOfFragment", 2);
                 startActivity(favoriteIntent);
                 //getSupportActionBar().setTitle(title);
 //                hideSearchMice();

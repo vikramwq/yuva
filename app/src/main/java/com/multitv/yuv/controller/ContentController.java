@@ -9,13 +9,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.common.api.Api;
 import com.multitv.cipher.MultitvCipher;
+import com.multitv.yuv.activity.MultiTvPlayerActivity;
 import com.multitv.yuv.api.ApiRequest;
 import com.multitv.yuv.application.AppController;
+import com.multitv.yuv.locale.LocaleHelper;
 import com.multitv.yuv.sharedpreference.SharedPreference;
 import com.multitv.yuv.utilities.AppUtils;
+import com.multitv.yuv.utilities.ConnectionManager;
 import com.multitv.yuv.utilities.ExceptionUtils;
 import com.multitv.yuv.utilities.NotificationCenter;
+import com.multitv.yuv.utilities.PreferenceData;
 import com.multitv.yuv.utilities.Tracer;
 
 import org.json.JSONObject;
@@ -144,7 +149,7 @@ public class ContentController {
         SharedPreference sharedPreference = new SharedPreference();
         final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
 
-        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + "    " + url);
+        Log.d(this.getClass().getName(), "subscribeChannel called=====>" + channelId + " userid   " + userID);
 
         StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {
@@ -167,7 +172,6 @@ public class ContentController {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Tracer.error("****Get_otp_api****", "Error: " + error.getMessage());
-                NotificationCenter.getInstance().postNotificationName(NotificationCenter.didContentReceivedFailed, null);
 
             }
         }) {
@@ -238,7 +242,7 @@ public class ContentController {
                     params.put("channel_id", channelId);
                     params.put("customer_id", "" + userID);
                     params.put("token", ApiRequest.TOKEN);
-                    params.put("donot_notify", "1");
+                    params.put("donot_notify", isNotified);
 
                     return checkParams(params);
                 } catch (Exception e) {
@@ -315,6 +319,59 @@ public class ContentController {
         // Adding request to request queue
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+
+    public void markContentDisliked(final String contentID, final String request) {
+        if (!ConnectionManager.getInstance(AppController.getInstance()).isConnected()) {
+            return;
+        }
+
+        SharedPreference sharedPreference = new SharedPreference();
+        final String userID = sharedPreference.getPreferencesString(AppController.getInstance(), "user_id" + "_" + ApiRequest.TOKEN);
+
+        StringRequest jsonObjReq = new StringRequest(Request.Method.POST,
+                ApiRequest.DISLIKE_API, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject mObj = new JSONObject(response);
+                    if (mObj.optInt("code") == 1) {
+
+                    } else {
+                        Toast.makeText(AppController.getInstance(), "Something went wrong, please try again", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    ExceptionUtils.printStacktrace(e);
+                    Toast.makeText(AppController.getInstance(), "Something went wrong, please try again", Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tracer.error("", "Error: " + error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("lan", LocaleHelper.getLanguage(AppController.getInstance()));
+                params.put("m_filter", (PreferenceData.isMatureFilterEnable(AppController.getInstance()) ? "" + 1 : "" + 0));
+                params.put("device", "android");
+                params.put("content_id", contentID);
+                params.put("user_id", userID);
+                params.put("dislike", request);
+                params.put("type", "video");
+
+
+                return params;
+            }
+        };
+
+        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 

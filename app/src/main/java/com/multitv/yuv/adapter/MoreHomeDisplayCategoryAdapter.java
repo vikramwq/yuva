@@ -178,13 +178,13 @@ public class MoreHomeDisplayCategoryAdapter extends RecyclerView.Adapter {
                     Picasso
                             .with(mContext)
                             .load(thumbUrl)
-                            .placeholder(R.mipmap.place_holder)
-                            .error(R.mipmap.place_holder)
+                            .placeholder(R.mipmap.place_holder_land)
+                            .error(R.mipmap.place_holder_land)
                             .resize(((MoreHomeDisplayCategoryAdapter.SingleItemRowHolder) holder).mImageView.getWidth(), (int) mContext.getResources().getDimension(R.dimen._100sdp))
                             .into(((MoreHomeDisplayCategoryAdapter.SingleItemRowHolder) holder).mImageView);
                 } else {
                     Picasso.with(mContext)
-                            .load(R.mipmap.place_holder)
+                            .load(R.mipmap.place_holder_land)
                             .into(((MoreHomeDisplayCategoryAdapter.SingleItemRowHolder) holder).mImageView);
 
                 }

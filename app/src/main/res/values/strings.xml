@@ -290,5 +290,6 @@
     <string name="email_forgot_passowrd">Please  enter  your registered  email id</string>
     <string name="email_forgot_passowrd_msg">we have received a forgot password request from your account.To recover your password,Please check here. If you did not make this request please write to feedback @dollywoodplay.com
 </string>
+    <string name="title_activity_liked_videos_screen">LikedVideosScreen</string>
 
 </resources>
