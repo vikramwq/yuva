@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tab_background"
+    android:orientation="vertical"
+    tools:context="com.multitv.yuv.activity.LikedVideosScreen">
+
+
+    <include layout="@layout/toolbar"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/likeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+
+
+        <com.multitv.yuv.ui.CustomTextView
+            android:id="@+id/emptyTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="No video found"
+            android:textColor="#FFF"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/mProgress_bar_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true"
+            android:theme="@style/AppTheme.RedAccent"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+    <ProgressBar
+        android:id="@+id/bottom_progress_bar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/likeRecyclerView"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:theme="@style/AppTheme.RedAccent"
+        android:visibility="gone" />
+</LinearLayout>

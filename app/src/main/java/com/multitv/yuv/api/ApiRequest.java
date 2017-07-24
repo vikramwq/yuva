@@ -71,4 +71,5 @@ public class ApiRequest {
     public static String LIVE_URL = BASE_URL_VERSION_3 + "/channel/list/token/" + TOKEN;
     public static String CONTENT_DETAILS = BASE_URL_VERSION_3 + "content/detail?";
     public static String REPORT_ABUSE = BASE_URL_VERSION_3 + "content/abuse/token/" + TOKEN;
+    public static String DISLIKE_API=BASE_URL_VERSION_3+"content/dislike/token/"+TOKEN;
 }

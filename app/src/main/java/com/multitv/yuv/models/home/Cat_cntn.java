@@ -45,6 +45,10 @@ public class Cat_cntn implements Parcelable {
     public List<String> subtitle;
     public long seekDuration;
     public int download_expiry;
+    public String is_disliked;
+    public String dislike_count;
+
+
 
     public Channel owner_info;
 
@@ -89,6 +93,8 @@ public class Cat_cntn implements Parcelable {
         dest.writeStringList(this.subtitle);
         dest.writeLong(this.seekDuration);
         dest.writeInt(this.download_expiry);
+        dest.writeString(this.is_disliked);
+        dest.writeString(this.dislike_count);
         dest.writeSerializable(this.owner_info);
     }
 
@@ -124,6 +130,8 @@ public class Cat_cntn implements Parcelable {
         this.subtitle = in.createStringArrayList();
         this.seekDuration = in.readLong();
         this.download_expiry = in.readInt();
+        this.is_disliked = in.readString();
+        this.dislike_count = in.readString();
         this.owner_info = (Channel) in.readSerializable();
     }
 

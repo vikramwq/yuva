@@ -121,7 +121,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private Handler handler;
     private ImageView subscribeLayout;
     private FrameLayout framePlayerLayout;
-    private ImageView player_image, btn_share, btn_like, btn_favorite, btn_download;
+    private ImageView player_image, btn_share, btn_like, btn_favorite, btn_download, dislikeImg;
     private Intent intent;
 
     private CoordinatorLayout coordinator_layout;
@@ -155,7 +155,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
     private ImageView channel_image, notificationBtn;
     private TextView channelName;
     private Channel channel;
-    private LinearLayout channelLayout;
+    private LinearLayout channelLayout, dislikeLayout;
 
 
     @Override
@@ -213,6 +213,8 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
         btn_like.setVisibility(View.VISIBLE);
         notificationBtn = (ImageView) findViewById(R.id.notificationBtn);
         btnPlay = (Button) findViewById(R.id.btn_play);
+        dislikeLayout = (LinearLayout) findViewById(R.id.dislikeLayout);
+        dislikeImg = (ImageView) findViewById(R.id.dislikeImg);
 //        btn_share.setVisibility(View.VISIBLE);
 
         channelLayout = (LinearLayout) findViewById(R.id.channelLayout);
@@ -297,30 +299,6 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
 
                 }
             });
-            //createTabIcons();
-
-            //--likes----
-//            String likeStoredFromPreference =
-//                    sharedPreference.getPreferencesString(this, "like_" + video_id + "_" + user_id);
-//            String likeCountStoredFromPreference =
-//                    sharedPreference.getPreferencesString(MultiTvPlayerActivity.this, "like_count" + video_id + "_" + user_id);
-//
-//            if (!TextUtils.isEmpty(likeCountStoredFromPreference)) {
-//                likes_count = Integer.parseInt(likeCountStoredFromPreference);
-//                like_txt.setText(getResources().getString(R.string.likes_hint) + " " + likes_count);
-//            } else {
-//                getLikeToServer();
-//            }
-
-//            if (!TextUtils.isEmpty(likeStoredFromPreference)) {
-//                like = likeStoredFromPreference;
-//                if (like.equalsIgnoreCase("0"))
-//                    btn_like.setImageResource(R.mipmap.unlike_bg);
-//                else
-//                    btn_like.setImageResource(R.mipmap.like_fill);
-//            } else {
-//                getLikeToServer();
-//            }
 
 
             btn_share.setOnClickListener(new View.OnClickListener() {
@@ -347,37 +325,24 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
             });
 
 
-            //---faveroite----
-//            String faveroiteStoredFromPreference =
-//                    sharedPreference.getPreferencesString(this, "favorite_" + video_id);
-//
-//            if (!TextUtils.isEmpty(faveroiteStoredFromPreference))
-//                favorite = faveroiteStoredFromPreference;
-//            else
-//                favorite = "" + contentData.favorite;
+            dislikeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-//            if (!TextUtils.isEmpty(favorite)) {
-//                if (favorite.equalsIgnoreCase("1")) {
-//                    btn_favorite.setImageResource(R.mipmap.fav_fill);
-//                } else {
-//                    btn_favorite.setImageResource(R.mipmap.favorite);
-//                }
-//            }
-//            btn_favorite.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (isOTPVerified) {
-//                        if (favorite != null && favorite.equalsIgnoreCase("1")) {
-//                            markContentFvrtOrLike(1, 0);
-//                        } else {
-//                            markContentFvrtOrLike(1, 1);
-//                        }
-//                    } else {
-//                        Utilities.showLoginDailog(MultiTvPlayerActivity.this);
-//                    }
-//                }
-//            });
+                    if (contentNewData.is_disliked != null) {
+                        if ("1".equals(contentNewData.is_disliked)) {
+                            ContentController.getInstance().markContentDisliked(content_id, "0");
+                            dislikeImg.setImageResource(R.mipmap.ic_like_disable);
+                            contentNewData.is_disliked = "0";
+                        } else {
+                            ContentController.getInstance().markContentDisliked(content_id, "1");
+                            dislikeImg.setImageResource(R.mipmap.ic_like);
+                            contentNewData.is_disliked = "1";
+                        }
 
+                    }
+                }
+            });
 
             downloadGifImg.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1012,7 +977,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
 
         if (contentId != null) {
             String url;
-            url = ApiRequest.CONTENT_DETAILS + "content_id=" + contentId + "&token=" + ApiRequest.TOKEN + "&device=android&owner_info=1";
+            url = ApiRequest.CONTENT_DETAILS + "content_id=" + contentId + "&token=" + ApiRequest.TOKEN + "&device=android&owner_info=1&user_id=" + user_id;
             Log.d(this.getClass().getName(), "url=========details===  " + url);
 
 
@@ -1230,11 +1195,11 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
                     @Override
                     public void onClick(View v) {
 
-                        if("1".equals(channel.getNotification())) {
+                        if ("1".equals(channel.getNotification())) {
                             channel.setNotification("0");
                             notificationBtn.setImageResource(R.mipmap.ic_notification_disabled);
                             ContentController.getInstance().doNotificationTask(channel.getId(), "2");
-                        }else{
+                        } else {
                             channel.setNotification("1");
                             notificationBtn.setImageResource(R.mipmap.ic_notification);
                             ContentController.getInstance().doNotificationTask(channel.getId(), "1");
@@ -1252,6 +1217,7 @@ public class MultiTvPlayerActivity extends AppCompatActivity implements MultiTVC
 
         findViewById(R.id.player_top_layout).setVisibility(View.VISIBLE);
     }
+
 
 }
 
