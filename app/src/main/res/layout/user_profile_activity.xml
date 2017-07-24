@@ -210,127 +210,16 @@
 
 
 
-                    <LinearLayout
-                        android:id="@+id/genderLinearLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center"
-                        android:layout_margin="5dp"
-                        android:orientation="vertical">
-
-                        <com.multitv.yuv.ui.CustomTextView
-                            android:id="@+id/genderTextview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="10dp"
-                            android:maxLines="1"
-                            android:text="Gender"
-                            android:textColor="@color/text_color_secondary"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:id="@+id/genderSelectedRelativeLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edittext_border"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="5dp">
-
-                            <com.multitv.yuv.ui.CustomTextView
-                                android:id="@+id/selectedGenderTextview"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="1"
-                                android:maxLines="1"
-                                android:padding="5dp"
-                                android:text="Male"
-                                android:textColor="@color/text_color_primary"
-                                android:textSize="15sp" />
-
-                            <ImageView
-                                android:id="@+id/genderSelectedImageView"
-                                android:layout_width="@dimen/_20sdp"
-                                android:layout_height="@dimen/_20sdp"
-                                android:layout_gravity="right|center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_collospe_button" />
-                        </LinearLayout>
-                    </LinearLayout>
                     <!--************for gender layout finish********** -->
                 </LinearLayout>
                 <!--************for email and gender in horizontal layout********** -->
 
-
-                <!--************for dob and contact number in horizontal layout********** -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:padding="2dp">
-
-
-                    <!--************for dob layout finish********** -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:orientation="vertical">
-
-                        <com.multitv.yuv.ui.CustomTextView
-                            android:id="@+id/dateTextview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="5dp"
-                            android:maxLines="1"
-                            android:text="Age Group"
-                            android:textColor="@color/text_color_secondary"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:id="@+id/dateRelativeLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edittext_border"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="5dp">
-
-                            <com.multitv.yuv.ui.CustomTextView
-                                android:id="@+id/selectedDateTextview"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:hint="Age"
-                                android:maxLines="1"
-                                android:padding="5dp"
-                                android:textColor="@color/text_color_primary"
-                                android:textSize="15sp" />
-
-                            <ImageView
-                                android:id="@+id/dateListcollospeButton"
-                                android:layout_width="@dimen/_20sdp"
-                                android:layout_height="@dimen/_20sdp"
-                                android:layout_gravity="right|center"
-                                android:layout_marginRight="5dp"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_collospe_button" />
-                        </LinearLayout>
-                    </LinearLayout>
-                    <!--************for dob layout finish********** -->
-
-                    <!--************for contact number layout********** -->
                     <LinearLayout
                         android:id="@+id/contactNumberLinearLayout"
                         android:layout_width="wrap_content"
@@ -391,6 +280,143 @@
                                 android:src="@mipmap/ic_clear_black_button" />
                         </LinearLayout>
                     </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+
+
+
+                <!--************for dob and contact number in horizontal layout********** -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+
+                    <!--************for dob layout finish********** -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.multitv.yuv.ui.CustomTextView
+                            android:id="@+id/dateTextview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:maxLines="1"
+                            android:text="Age Group"
+                            android:textColor="@color/text_color_secondary"
+                            android:textSize="15sp" />
+
+                        <LinearLayout
+                            android:id="@+id/dateRelativeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittext_border"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/selectedDateTextview"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="Age"
+                                android:maxLines="1"
+                                android:padding="5dp"
+                                android:textColor="@color/text_color_primary"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/dateListcollospeButton"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_gravity="right|center"
+                                android:layout_marginRight="5dp"
+                                android:padding="5dp"
+                                android:src="@mipmap/ic_collospe_button" />
+
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+
+
+                    <LinearLayout
+                        android:id="@+id/genderLinearLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.multitv.yuv.ui.CustomTextView
+                            android:id="@+id/genderTextview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:maxLines="1"
+                            android:text="Gender"
+                            android:textColor="@color/text_color_secondary"
+                            android:textSize="15sp" />
+
+                        <LinearLayout
+                            android:id="@+id/genderSelectedRelativeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittext_border"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <com.multitv.yuv.ui.CustomTextView
+                                android:id="@+id/selectedGenderTextview"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:padding="5dp"
+                                android:text="Male"
+                                android:textColor="@color/text_color_primary"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/genderSelectedImageView"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_gravity="right|center"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:padding="5dp"
+                                android:src="@mipmap/ic_collospe_button" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!--************for dob layout finish********** -->
+
+                    <!--************for contact number layout********** -->
                     <!--************for contact number layout finish********** -->
                 </LinearLayout>
                 <!--************for contact number and dob in horizontal layout********** -->
